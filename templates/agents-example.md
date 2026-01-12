@@ -20,9 +20,10 @@
 8. [Security Requirements](#security-requirements)
 9. [Performance Guidelines](#performance-guidelines)
 10. [Common Mistakes](#common-mistakes)
-11. [Deployment Process](#deployment-process)
-12. [Third-Party Integrations](#third-party-integrations)
-13. [Archive](#archive)
+11. [AI Assistant Guidelines](#ai-assistant-guidelines)
+12. [Deployment Process](#deployment-process)
+13. [Third-Party Integrations](#third-party-integrations)
+14. [Archive](#archive)
 
 ---
 
@@ -1205,6 +1206,21 @@ function createUser(email: string) {
 
 **Rationale**: Never trust client input, always validate server-side  
 **Added**: 2026-01-06
+
+---
+
+## AI Assistant Guidelines
+
+### Communication Defaults
+
+**Summaries and results should be communicated in chat, not written to files**
+
+- **Mistake**: Creating markdown report files (e.g., `ANALYSIS.md`, `FIXES-IMPLEMENTED.md`) to document work done
+- **Why wrong**: Creates unnecessary files, adds maintenance overhead, results are self-evident from code changes
+- **Correct**: Communicate findings, fixes, and summaries directly in chat response
+- **Exception**: Only create documentation files when explicitly requested by user
+- **Rationale**: Chat is the primary communication medium; files should only exist when they serve a specific purpose
+- **Added**: 2026-01-13
 
 ---
 

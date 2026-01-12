@@ -28,10 +28,16 @@ mkdir -p docs/specs
 # Create agents.md from template
 echo -e "${GREEN}📝 Creating .cursor/agents.md from template...${NC}"
 
-# Check if template exists
-TEMPLATE_PATH="templates/agents-example.md"
-if [ ! -f "$TEMPLATE_PATH" ]; then
-    echo -e "${YELLOW}⚠️  Template not found at $TEMPLATE_PATH${NC}"
+# Check for template in .cursor/templates/ first (after installation), then templates/ (before installation)
+TEMPLATE_PATH=""
+if [ -f ".cursor/templates/agents-example.md" ]; then
+    TEMPLATE_PATH=".cursor/templates/agents-example.md"
+elif [ -f "templates/agents-example.md" ]; then
+    TEMPLATE_PATH="templates/agents-example.md"
+fi
+
+if [ -z "$TEMPLATE_PATH" ]; then
+    echo -e "${YELLOW}⚠️  Template not found at .cursor/templates/agents-example.md or templates/agents-example.md${NC}"
     echo -e "${YELLOW}   Creating basic agents.md instead...${NC}"
     # Fallback to basic template if example doesn't exist
     cat > .cursor/agents.md << 'EOF'

@@ -36,12 +36,12 @@ fi
 echo -e "${BLUE}Marking task complete: $TASK_ID${NC}"
 echo ""
 
-# Find the task line
-TASK_LINE=$(grep "^- \[ \] \[$TASK_ID\]" "$TASKS_FILE" || true)
+# Find the task line (try both formats: [T011] and T011)
+TASK_LINE=$(grep "^- \[ \] \[$TASK_ID\]" "$TASKS_FILE" || grep "^- \[ \] $TASK_ID " "$TASKS_FILE" || true)
 
 if [ -z "$TASK_LINE" ]; then
-    # Check if already complete
-    COMPLETE_LINE=$(grep "^- \[X\] \[$TASK_ID\]" "$TASKS_FILE" || true)
+    # Check if already complete (try both formats)
+    COMPLETE_LINE=$(grep "^- \[X\] \[$TASK_ID\]" "$TASKS_FILE" || grep "^- \[X\] $TASK_ID " "$TASKS_FILE" || true)
     if [ -n "$COMPLETE_LINE" ]; then
         echo -e "${YELLOW}Task $TASK_ID is already marked complete${NC}"
         echo -e "${GRAY}$COMPLETE_LINE${NC}"
@@ -65,11 +65,16 @@ cp "$TASKS_FILE" "$BACKUP_FILE"
 
 # Replace [ ] with [X] for this specific task
 # Use sed to replace only the first [ ] on lines containing this task ID
-sed -i.tmp "/\[$TASK_ID\]/s/^- \[ \]/- \[X\]/" "$TASKS_FILE"
-rm "${TASKS_FILE}.tmp"
+# Try both formats: [T011] and T011
+if echo "$TASK_LINE" | grep -q "\[$TASK_ID\]"; then
+    sed -i.tmp "/\[$TASK_ID\]/s/^- \[ \]/- \[X\]/" "$TASKS_FILE"
+else
+    sed -i.tmp "/ $TASK_ID /s/^- \[ \]/- \[X\]/" "$TASKS_FILE"
+fi
+rm "${TASKS_FILE}.tmp" 2>/dev/null || true
 
-# Verify the change
-NEW_LINE=$(grep "^- \[X\] \[$TASK_ID\]" "$TASKS_FILE" || true)
+# Verify the change (try both formats)
+NEW_LINE=$(grep "^- \[X\] \[$TASK_ID\]" "$TASKS_FILE" || grep "^- \[X\] $TASK_ID " "$TASKS_FILE" || true)
 
 if [ -z "$NEW_LINE" ]; then
     echo -e "${RED}Error: Failed to mark task complete${NC}"
