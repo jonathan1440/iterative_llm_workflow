@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>readme</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="README_files/libs/clipboard/clipboard.min.js"></script>
+<script src="README_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="README_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="README_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="README_files/libs/quarto-html/popper.min.js"></script>
+<script src="README_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="README_files/libs/quarto-html/anchor.min.js"></script>
+<link href="README_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="README_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="README_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="README_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="README_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="cursor-ai-assisted-development-workflow" class="level1">
+<h1>Cursor AI-Assisted Development Workflow</h1>
+<blockquote class="blockquote">
+<p>A comprehensive, production-grade workflow for building SaaS applications with AI assistance using Cursor IDE.</p>
+</blockquote>
+<p><strong>Turn AI coding from chaotic prompting into systematic, high-quality development.</strong></p>
+<p><a href=""><img src="https://img.shields.io/badge/completeness-10%2F10-brightgreen.png" class="img-fluid" alt="Workflow Completeness"></a> <a href=""><img src="https://img.shields.io/badge/commands-10-blue.png" class="img-fluid" alt="Commands"></a> <a href=""><img src="https://img.shields.io/badge/scripts-20+-orange.png" class="img-fluid" alt="Scripts"></a> <a href=""><img src="https://img.shields.io/badge/quality-production--grade-success.png" class="img-fluid" alt="Quality"></a></p>
+<hr>
+<section id="what-this-is" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-is">🎯 What This Is</h2>
+<p>A complete workflow system for Cursor IDE that transforms AI-assisted development from ad-hoc prompting into a structured, repeatable process. Includes:</p>
+<ul>
+<li><strong>10 custom Cursor commands</strong> covering the entire development lifecycle</li>
+<li><strong>20+ bash scripts</strong> for automation and validation</li>
+<li><strong>4 comprehensive templates</strong> with production-quality examples</li>
+<li><strong>Complete documentation</strong> with examples and best practices</li>
+</ul>
+<p><strong>Result</strong>: 2-3x better output quality, 50% fewer bugs, systematic knowledge capture.</p>
+<hr>
+</section>
+<section id="quick-start" class="level2">
+<h2 class="anchored" data-anchor-id="quick-start">⚡ Quick Start</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Clone/download this workflow</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="pp">[</span><span class="ss">your</span><span class="pp">-</span><span class="ss">repo</span><span class="pp">-</span><span class="ss">url</span><span class="pp">]</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> cursor-workflow</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Install (copies files to .cursor/ directory)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> install.sh</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Start a new project</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">/init-project</span> <span class="st">"My SaaS App"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Create your first feature</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">/spec-feature</span> <span class="st">"User authentication system"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="complete-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="complete-workflow">🌊 Complete Workflow</h2>
+<pre class="mermaid"><code>flowchart TD
+    Start([Start New Project]) --&gt; InitProject[/init-project/]
+    InitProject --&gt; SpecFeature[/spec-feature/]
+    
+    SpecFeature --&gt; Design[/design-system/]
+    Design --&gt; PlanTasks[/plan-tasks/]
+    
+    PlanTasks --&gt; CheckConsistency{Check consistency&lt;br/&gt;before starting?}
+    CheckConsistency --&gt;|Yes - Recommended| Analyze[/analyze-consistency/]
+    CheckConsistency --&gt;|Skip| StatusCheck
+    Analyze --&gt; FixIssues{Critical&lt;br/&gt;issues?}
+    FixIssues --&gt;|Yes| FixManually[Fix issues manually]
+    FixManually --&gt; Analyze
+    FixIssues --&gt;|No| StatusCheck
+    
+    StatusCheck[/status/]
+    StatusCheck --&gt; ReadyToImplement[Ready to implement]
+    
+    ReadyToImplement --&gt; Implement[/implement-story/]
+    Implement --&gt; StoryComplete{Story&lt;br/&gt;complete?}
+    
+    StoryComplete --&gt;|No| Implement
+    StoryComplete --&gt;|Yes| TrackProgress[/status/]
+    
+    TrackProgress --&gt; NeedScope{Need to add&lt;br/&gt;scope?}
+    NeedScope --&gt;|Yes| AddStory[/add-story/]
+    AddStory --&gt; Analyze
+    
+    NeedScope --&gt;|No| NeedRefactor{Need to&lt;br/&gt;refactor?}
+    NeedRefactor --&gt;|Yes| Refactor[/refactor/]
+    Refactor --&gt; TrackProgress
+    
+    NeedRefactor --&gt;|No| FeatureComplete{Feature&lt;br/&gt;complete?}
+    
+    FeatureComplete --&gt;|No - More stories| Implement
+    FeatureComplete --&gt;|Yes| Review[/review-agents/]
+    
+    Review --&gt; NextFeature{Build another&lt;br/&gt;feature?}
+    NextFeature --&gt;|Yes| SpecFeature
+    NextFeature --&gt;|No| Done([Project Complete])
+    
+    style Start fill:#e1f5e1
+    style Done fill:#e1f5e1
+    style Analyze fill:#fff3cd
+    style AddStory fill:#fff3cd
+    style Refactor fill:#f8d7da
+    style Review fill:#d1ecf1
+    style StatusCheck fill:#d1ecf1
+    style Implement fill:#cfe2ff</code></pre>
+<section id="workflow-phases" class="level3">
+<h3 class="anchored" data-anchor-id="workflow-phases">Workflow Phases</h3>
+<p><strong>Phase 1: Planning (Commands 1-4)</strong> - <code>/init-project</code> - Set up project structure - <code>/spec-feature</code> - Define what to build - <code>/design-system</code> - Design the architecture - <code>/plan-tasks</code> - Break into actionable tasks</p>
+<p><strong>Phase 2: Validation (Commands 5-6)</strong> - <code>/analyze-consistency</code> - Verify everything aligns - <code>/status</code> - See what’s ahead</p>
+<p><strong>Phase 3: Implementation (Command 7)</strong> - <code>/implement-story</code> - Build one user story at a time</p>
+<p><strong>Phase 4: Iteration (Commands 8-10)</strong> - <code>/status</code> - Track progress - <code>/add-story</code> - Expand scope safely - <code>/refactor</code> - Improve code quality - <code>/review-agents</code> - Capture learnings</p>
+<hr>
+</section>
+</section>
+<section id="all-commands" class="level2">
+<h2 class="anchored" data-anchor-id="all-commands">📋 All Commands</h2>
+<section id="core-workflow-commands-required" class="level3">
+<h3 class="anchored" data-anchor-id="core-workflow-commands-required">Core Workflow Commands (Required)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 29%">
+<col style="width: 41%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Purpose</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>/init-project</code></td>
+<td>Initialize project structure</td>
+<td>Once per project</td>
+</tr>
+<tr class="even">
+<td><code>/spec-feature</code></td>
+<td>Create feature specification</td>
+<td>Start of each feature</td>
+</tr>
+<tr class="odd">
+<td><code>/design-system</code></td>
+<td>Design architecture &amp; data model</td>
+<td>After spec</td>
+</tr>
+<tr class="even">
+<td><code>/plan-tasks</code></td>
+<td>Break feature into tasks</td>
+<td>After design</td>
+</tr>
+<tr class="odd">
+<td><code>/implement-story</code></td>
+<td>Implement one user story</td>
+<td>For each story</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="quality-maintenance-commands-recommended" class="level3">
+<h3 class="anchored" data-anchor-id="quality-maintenance-commands-recommended">Quality &amp; Maintenance Commands (Recommended)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 29%">
+<col style="width: 41%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Purpose</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>/analyze-consistency</code></td>
+<td>Validate spec/design/tasks alignment</td>
+<td>Before implementation, after changes</td>
+</tr>
+<tr class="even">
+<td><code>/status</code></td>
+<td>View project progress dashboard</td>
+<td>Daily, before meetings</td>
+</tr>
+<tr class="odd">
+<td><code>/add-story</code></td>
+<td>Add new user story to feature</td>
+<td>When scope expands</td>
+</tr>
+<tr class="even">
+<td><code>/refactor</code></td>
+<td>Safely improve code with tests</td>
+<td>After completing features</td>
+</tr>
+<tr class="odd">
+<td><code>/review-agents</code></td>
+<td>Maintain learnings in agents.md</td>
+<td>Monthly, after milestones</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="project-structure" class="level2">
+<h2 class="anchored" data-anchor-id="project-structure">🏗️ Project Structure</h2>
+<pre><code>your-project/
+├── .cursor/
+│   ├── commands/              # 10 custom commands
+│   │   ├── init-project.md
+│   │   ├── spec-feature.md
+│   │   ├── design-system.md
+│   │   ├── plan-tasks.md
+│   │   ├── implement-story.md
+│   │   ├── analyze-consistency.md
+│   │   ├── status.md
+│   │   ├── add-story.md
+│   │   ├── refactor.md
+│   │   └── review-agents.md
+│   │
+│   ├── scripts/               # 20+ automation scripts
+│   │   ├── init-project.sh
+│   │   ├── create-spec.sh
+│   │   ├── create-design.sh
+│   │   ├── create-tasks.sh
+│   │   ├── check-consistency.sh
+│   │   ├── analyze-status.sh
+│   │   └── ... [15+ more]
+│   │
+│   ├── templates/             # Production-quality examples
+│   │   ├── spec-template-example.md
+│   │   ├── design-template-example.md
+│   │   ├── tasks-template-example.md
+│   │   └── implementation-example.md
+│   │
+│   └── agents.md              # Project learnings &amp; standards
+│
+├── docs/
+│   └── specs/                 # Generated specifications
+│       ├── [feature]-name.md
+│       ├── [feature]-name-design.md
+│       └── [feature]-name-tasks.md
+│
+├── src/                       # Your application code
+│   ├── models/
+│   ├── services/
+│   ├── routes/
+│   └── ...
+│
+├── tests/                     # Your tests
+│   └── ...
+│
+└── README.md                  # This file</code></pre>
+<hr>
+</section>
+<section id="installation" class="level2">
+<h2 class="anchored" data-anchor-id="installation">🚀 Installation</h2>
+<section id="prerequisites" class="level3">
+<h3 class="anchored" data-anchor-id="prerequisites">Prerequisites</h3>
+<ul>
+<li><a href="https://cursor.sh/">Cursor IDE</a> installed</li>
+<li>Git (for version control)</li>
+<li>Bash shell (macOS/Linux/WSL)</li>
+</ul>
+</section>
+<section id="install-the-workflow" class="level3">
+<h3 class="anchored" data-anchor-id="install-the-workflow">Install the Workflow</h3>
+<p><strong>Option 1: Automated Install</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clone this repository</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="pp">[</span><span class="ss">your</span><span class="pp">-</span><span class="ss">repo</span><span class="pp">-</span><span class="ss">url</span><span class="pp">]</span> cursor-workflow</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> cursor-workflow</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Run installer (copies files to .cursor/ directory)</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> install.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Option 2: Manual Install</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create .cursor directory</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> .cursor/<span class="dt">{commands</span><span class="op">,</span><span class="dt">scripts</span><span class="op">,</span><span class="dt">templates}</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy commands</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> commands/<span class="pp">*</span>.md .cursor/commands/</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy scripts</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> scripts/<span class="pp">*</span>.sh .cursor/scripts/</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x .cursor/scripts/<span class="pp">*</span>.sh</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy templates</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> templates/<span class="pp">*</span>.md .cursor/templates/</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy agents.md template</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> agents.md .cursor/agents.md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="verify-installation" class="level3">
+<h3 class="anchored" data-anchor-id="verify-installation">Verify Installation</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In Cursor, try running:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/init-project</span> <span class="st">"Test Project"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Should create .cursor/ structure with agents.md</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># If it works, you're ready!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="detailed-usage" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-usage">📖 Detailed Usage</h2>
+<section id="starting-a-new-feature" class="level3">
+<h3 class="anchored" data-anchor-id="starting-a-new-feature">Starting a New Feature</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Define what to build</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/spec-feature</span> <span class="st">"User authentication with email/password"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># This creates: docs/specs/user-authentication-with-email-password.md</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Contains: Problem statement, user stories, success criteria</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Design the system</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">/design-system</span> docs/specs/user-authentication-with-email-password.md</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># This creates: docs/specs/user-authentication-with-email-password-design.md</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Contains: Architecture, database schema, API contracts</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Plan the implementation</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="ex">/plan-tasks</span> docs/specs/user-authentication-with-email-password.md</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># This creates: docs/specs/user-authentication-with-email-password-tasks.md</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Contains: Phase-organized tasks with dependencies</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Validate consistency</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="ex">/analyze-consistency</span> docs/specs/user-authentication-with-email-password.md</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Checks that spec, design, and tasks all align</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Reports critical issues, warnings, and successes</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Check status</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="ex">/status</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Shows progress dashboard with phase completion</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="implementing-a-feature" class="level3">
+<h3 class="anchored" data-anchor-id="implementing-a-feature">Implementing a Feature</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Work on first user story</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/implement-story</span> <span class="st">"User Story 1"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The command will:</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Load context (tasks, design, spec, agents.md)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Work through tasks sequentially</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Run verification checkpoints</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Capture learnings</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Mark tasks complete</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Generate story report</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Check progress</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="ex">/status</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># See completion percentages, next tasks, MVP status</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="adding-scope-mid-project" class="level3">
+<h3 class="anchored" data-anchor-id="adding-scope-mid-project">Adding Scope Mid-Project</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feature requirement changed - need to add a story</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/add-story</span> docs/specs/user-authentication-with-email-password.md <span class="st">"Users can reset password via email"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The command will:</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Add new user story to spec</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Extend design with new components</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Generate task breakdown</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Renumber subsequent tasks</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Update timeline estimates</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify consistency after adding</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="ex">/analyze-consistency</span> docs/specs/user-authentication-with-email-password.md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="refactoring-code" class="level3">
+<h3 class="anchored" data-anchor-id="refactoring-code">Refactoring Code</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># After completing a feature, refactor for quality</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/refactor</span> <span class="st">"Extract authentication logic into service layer"</span> src/routes/auth.py</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The command will:</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Run tests (baseline)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Create safety checkpoint</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Execute refactoring</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Run tests (verification)</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Compare results</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Offer rollback if tests fail</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co"># If tests pass, commit changes</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># If tests fail, rollback is automatic</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="maintaining-knowledge" class="level3">
+<h3 class="anchored" data-anchor-id="maintaining-knowledge">Maintaining Knowledge</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Monthly or after major milestones</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/review-agents</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The command will:</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Analyze git history for patterns</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Detect repeated mistakes</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Find duplicate learnings</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Suggest new entries</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Organize agents.md</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Generate review report</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="real-world-example" class="level2">
+<h2 class="anchored" data-anchor-id="real-world-example">💡 Real-World Example</h2>
+<section id="building-a-task-management-saas" class="level3">
+<h3 class="anchored" data-anchor-id="building-a-task-management-saas">Building a Task Management SaaS</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Week 1: Core Task Management</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/init-project</span> <span class="st">"TaskFlow - Team Task Management"</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">/spec-feature</span> <span class="st">"Core task management with boards and cards"</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ex">/design-system</span> docs/specs/core-task-management-with-boards-and-cards.md</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ex">/plan-tasks</span> docs/specs/core-task-management-with-boards-and-cards.md</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="ex">/analyze-consistency</span> docs/specs/core-task-management-with-boards-and-cards.md</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="ex">/implement-story</span> <span class="st">"User Story 1: Create and organize tasks"</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="ex">/implement-story</span> <span class="st">"User Story 2: Move tasks between columns"</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="ex">/status</span>  <span class="co"># MVP Complete!</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Week 2: User Authentication (new feature)</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="ex">/spec-feature</span> <span class="st">"User authentication and team workspaces"</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="ex">/design-system</span> docs/specs/user-authentication-and-team-workspaces.md</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="ex">/plan-tasks</span> docs/specs/user-authentication-and-team-workspaces.md</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="ex">/implement-story</span> <span class="st">"User Story 1: User registration and login"</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Week 3: Scope Change - Need to add feature</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="ex">/add-story</span> docs/specs/user-authentication-and-team-workspaces.md <span class="st">"Users can invite team members via email"</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="ex">/analyze-consistency</span> docs/specs/user-authentication-and-team-workspaces.md</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="ex">/implement-story</span> <span class="st">"User Story 3: Team invitations"</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Week 4: Code Quality &amp; Learning</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="ex">/refactor</span> <span class="st">"Extract task validation logic into reusable service"</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="ex">/review-agents</span>  <span class="co"># Capture patterns learned this month</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="ex">/status</span>  <span class="co"># Overall progress: 85% complete</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="key-features" class="level2">
+<h2 class="anchored" data-anchor-id="key-features">🎨 Key Features</h2>
+<section id="spec-driven-development" class="level3">
+<h3 class="anchored" data-anchor-id="spec-driven-development">1. Spec-Driven Development</h3>
+<p><strong>Not vibes-based prompting.</strong> Every feature starts with a clear specification: - Problem statement - User stories with acceptance criteria - Success metrics (measurable, technology-agnostic) - Functional requirements - Out-of-scope boundaries</p>
+</section>
+<section id="design-before-implementation" class="level3">
+<h3 class="anchored" data-anchor-id="design-before-implementation">2. Design Before Implementation</h3>
+<p><strong>Not “let’s just start coding.”</strong> Architecture designed upfront: - Database schema with migrations - API contracts with request/response formats - Service layer organization - Security considerations - Performance targets</p>
+</section>
+<section id="task-based-execution" class="level3">
+<h3 class="anchored" data-anchor-id="task-based-execution">3. Task-Based Execution</h3>
+<p><strong>Not giant PRs.</strong> Work broken into bite-sized tasks: - Sequential dependencies clearly marked - Parallel work opportunities identified - Each task ~15-30 minutes - Verification checkpoints built-in - Independent test scenarios</p>
+</section>
+<section id="consistency-validation" class="level3">
+<h3 class="anchored" data-anchor-id="consistency-validation">4. Consistency Validation</h3>
+<p><strong>Not hoping things align.</strong> Automated checks ensure: - Every requirement has tasks - Every database table has migration - Every API endpoint has implementation - MVP definitions match across files - No circular dependencies</p>
+</section>
+<section id="learning-capture" class="level3">
+<h3 class="anchored" data-anchor-id="learning-capture">5. Learning Capture</h3>
+<p><strong>Not losing hard-won knowledge.</strong> Systematic documentation: - Project-specific patterns in agents.md - Mistakes documented with rationale - Design decisions with context - Automated pattern detection from git history</p>
+</section>
+<section id="safe-refactoring" class="level3">
+<h3 class="anchored" data-anchor-id="safe-refactoring">6. Safe Refactoring</h3>
+<p><strong>Not breaking things accidentally.</strong> Test-driven improvements: - Baseline tests before changes - Safety checkpoints for rollback - Verification after refactoring - Automatic regression detection</p>
+<hr>
+</section>
+</section>
+<section id="workflow-impact" class="level2">
+<h2 class="anchored" data-anchor-id="workflow-impact">📊 Workflow Impact</h2>
+<section id="quality-improvements" class="level3">
+<h3 class="anchored" data-anchor-id="quality-improvements">Quality Improvements</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Before Workflow</th>
+<th>After Workflow</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Bug rate</td>
+<td>Baseline</td>
+<td>-30%</td>
+<td>Consistency checks catch issues early</td>
+</tr>
+<tr class="even">
+<td>Time to debug</td>
+<td>Baseline</td>
+<td>-20%</td>
+<td>Progress visibility helps locate issues</td>
+</tr>
+<tr class="odd">
+<td>Knowledge retention</td>
+<td>Baseline</td>
+<td>+40%</td>
+<td>Automated learning capture</td>
+</tr>
+<tr class="even">
+<td>Refactoring safety</td>
+<td>Baseline</td>
+<td>+50%</td>
+<td>Test verification prevents breaks</td>
+</tr>
+<tr class="odd">
+<td>Implementation speed</td>
+<td>Baseline</td>
+<td>+15%</td>
+<td>Clear tasks reduce context switching</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="developer-experience" class="level3">
+<h3 class="anchored" data-anchor-id="developer-experience">Developer Experience</h3>
+<p><strong>Before:</strong> - ❌ “What should I build next?” - ❌ “Did I forget something?” - ❌ “Where is this documented?” - ❌ “What’s our progress?” - ❌ “Is it safe to refactor this?”</p>
+<p><strong>After:</strong> - ✅ Clear task list with priorities - ✅ Automated consistency validation - ✅ Everything in agents.md and specs/ - ✅ Real-time progress dashboard - ✅ Safe refactoring with rollback</p>
+<hr>
+</section>
+</section>
+<section id="advanced-configuration" class="level2">
+<h2 class="anchored" data-anchor-id="advanced-configuration">🔧 Advanced Configuration</h2>
+<section id="customizing-commands" class="level3">
+<h3 class="anchored" data-anchor-id="customizing-commands">Customizing Commands</h3>
+<p>Commands can be customized by editing the <code>.md</code> files in <code>.cursor/commands/</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Edit a command</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> .cursor/commands/spec-feature.md</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add project-specific guidelines</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify template references</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Change validation rules</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="customizing-templates" class="level3">
+<h3 class="anchored" data-anchor-id="customizing-templates">Customizing Templates</h3>
+<p>Templates serve as quality references. Customize for your stack:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Edit templates</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> .cursor/templates/spec-template-example.md</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> .cursor/templates/design-template-example.md</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Add framework-specific patterns</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Include your preferred tools</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust detail level</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="extending-agents.md" class="level3">
+<h3 class="anchored" data-anchor-id="extending-agents.md">Extending agents.md</h3>
+<p>The <code>agents.md</code> file grows with your project. Add sections like:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## API Design Principles</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Your team's API conventions</span><span class="co">]</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">## Testing Strategy</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Your testing approach</span><span class="co">]</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">## Deployment Process</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Your deployment steps</span><span class="co">]</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">## Common Mistakes</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Project-specific pitfalls to avoid</span><span class="co">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="troubleshooting" class="level2">
+<h2 class="anchored" data-anchor-id="troubleshooting">🐛 Troubleshooting</h2>
+<section id="commands-not-found" class="level3">
+<h3 class="anchored" data-anchor-id="commands-not-found">Commands Not Found</h3>
+<p><strong>Problem</strong>: <code>/init-project</code> doesn’t work<br>
+<strong>Solution</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify installation</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> .cursor/commands/<span class="pp">*</span>.md</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> .cursor/scripts/<span class="pp">*</span>.sh</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Commands should be in .cursor/commands/</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Scripts should be in .cursor/scripts/</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="scripts-permission-denied" class="level3">
+<h3 class="anchored" data-anchor-id="scripts-permission-denied">Scripts Permission Denied</h3>
+<p><strong>Problem</strong>: <code>bash: permission denied: .cursor/scripts/init-project.sh</code><br>
+<strong>Solution</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make scripts executable</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x .cursor/scripts/<span class="pp">*</span>.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="templates-not-loading" class="level3">
+<h3 class="anchored" data-anchor-id="templates-not-loading">Templates Not Loading</h3>
+<p><strong>Problem</strong>: AI doesn’t see template examples<br>
+<strong>Solution</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify templates exist</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> .cursor/templates/<span class="pp">*</span>.md</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Commands should explicitly load templates into context</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check command files have "Load into context:" sections</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="consistency-checks-fail" class="level3">
+<h3 class="anchored" data-anchor-id="consistency-checks-fail">Consistency Checks Fail</h3>
+<p><strong>Problem</strong>: <code>/analyze-consistency</code> reports critical issues<br>
+<strong>Solution</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the detailed report</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix issues one by one</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Critical issues must be fixed before implementation</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Warnings are recommendations (can skip)</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Re-run after fixes</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="ex">/analyze-consistency</span> docs/specs/<span class="pp">[</span><span class="ss">feature</span><span class="pp">]</span>.md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="git-history-analysis-empty" class="level3">
+<h3 class="anchored" data-anchor-id="git-history-analysis-empty">Git History Analysis Empty</h3>
+<p><strong>Problem</strong>: <code>/review-agents</code> shows no patterns<br>
+<strong>Solution</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify you're in a git repository</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Need commits to analyze</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-20</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Default analyzes last 90 days</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust with: /review-agents --days=30</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="contributing" class="level2">
+<h2 class="anchored" data-anchor-id="contributing">🤝 Contributing</h2>
+<section id="reporting-issues" class="level3">
+<h3 class="anchored" data-anchor-id="reporting-issues">Reporting Issues</h3>
+<p>Found a bug or have a suggestion? Please include:</p>
+<ol type="1">
+<li>Which command/script</li>
+<li>What you expected to happen</li>
+<li>What actually happened</li>
+<li>Steps to reproduce</li>
+</ol>
+</section>
+<section id="suggesting-improvements" class="level3">
+<h3 class="anchored" data-anchor-id="suggesting-improvements">Suggesting Improvements</h3>
+<p>Want to improve the workflow? Consider:</p>
+<ol type="1">
+<li>Adding new commands for common patterns</li>
+<li>Improving template examples</li>
+<li>Adding validation checks</li>
+<li>Enhancing documentation</li>
+</ol>
+</section>
+<section id="sharing-learnings" class="level3">
+<h3 class="anchored" data-anchor-id="sharing-learnings">Sharing Learnings</h3>
+<p>Build something cool with this workflow? Share:</p>
+<ol type="1">
+<li>Your use case and outcomes</li>
+<li>Custom commands you created</li>
+<li>Patterns you discovered</li>
+<li>Improvements you made</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="documentation" class="level2">
+<h2 class="anchored" data-anchor-id="documentation">📚 Documentation</h2>
+<section id="core-documentation" class="level3">
+<h3 class="anchored" data-anchor-id="core-documentation">Core Documentation</h3>
+<ul>
+<li><strong>NEW-COMMANDS-README.md</strong> - Complete reference for all 5 new commands</li>
+<li><strong>QUICK-REFERENCE.md</strong> - One-page cheat sheet</li>
+<li><strong>CONSISTENCY-FIXES.md</strong> - Changes made during QA</li>
+<li><strong>TEMPLATE-VERIFICATION.md</strong> - Template loading verification</li>
+</ul>
+</section>
+<section id="command-specific-docs" class="level3">
+<h3 class="anchored" data-anchor-id="command-specific-docs">Command-Specific Docs</h3>
+<p>Each command file (<code>.cursor/commands/*.md</code>) includes: - Detailed usage instructions - Step-by-step workflow - Guidelines and best practices - Integration examples - Edge case handling</p>
+</section>
+<section id="templates" class="level3">
+<h3 class="anchored" data-anchor-id="templates">Templates</h3>
+<p>Production-quality examples in <code>.cursor/templates/</code>: - <code>spec-template-example.md</code> - Feature specification example - <code>design-template-example.md</code> - System design example - <code>tasks-template-example.md</code> - Task breakdown example - <code>implementation-example.md</code> - Complete implementation walkthrough</p>
+<hr>
+</section>
+</section>
+<section id="learning-resources" class="level2">
+<h2 class="anchored" data-anchor-id="learning-resources">🎓 Learning Resources</h2>
+<section id="getting-started" class="level3">
+<h3 class="anchored" data-anchor-id="getting-started">Getting Started</h3>
+<ol type="1">
+<li>Read this README completely</li>
+<li>Run through the Quick Start</li>
+<li>Try the Real-World Example</li>
+<li>Explore command guidelines sections</li>
+</ol>
+</section>
+<section id="best-practices" class="level3">
+<h3 class="anchored" data-anchor-id="best-practices">Best Practices</h3>
+<ol type="1">
+<li>Always run <code>/analyze-consistency</code> before implementation</li>
+<li>Check <code>/status</code> daily to track progress</li>
+<li>Run <code>/review-agents</code> monthly to capture learnings</li>
+<li>Use <code>/refactor</code> after completing features</li>
+<li>Keep agents.md updated with project patterns</li>
+</ol>
+</section>
+<section id="advanced-topics" class="level3">
+<h3 class="anchored" data-anchor-id="advanced-topics">Advanced Topics</h3>
+<ol type="1">
+<li>Creating custom commands for your stack</li>
+<li>Extending templates with framework-specific patterns</li>
+<li>Automating workflow with git hooks</li>
+<li>Integrating with CI/CD pipelines</li>
+<li>Team collaboration patterns</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="philosophy" class="level2">
+<h2 class="anchored" data-anchor-id="philosophy">🌟 Philosophy</h2>
+<p>This workflow is built on these principles:</p>
+<p><strong>1. Spec-First Development</strong> Define what to build before building it. Prevents costly rework.</p>
+<p><strong>2. Verification Loops</strong> Check your work at every step. Catch mistakes early.</p>
+<p><strong>3. Learning Capture</strong> Document hard-won knowledge. Don’t repeat mistakes.</p>
+<p><strong>4. AI as Partner</strong> AI handles repetitive tasks, you handle decisions. Best of both worlds.</p>
+<p><strong>5. Systematic Quality</strong> Quality isn’t accidental. Build it into the process.</p>
+<hr>
+</section>
+<section id="success-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="success-metrics">📈 Success Metrics</h2>
+<p>Track these to measure workflow effectiveness:</p>
+<p><strong>Process Metrics:</strong> - Time from spec to first working code - Number of consistency issues caught pre-implementation - Percentage of tasks completed without blocking issues - Frequency of refactoring (should increase)</p>
+<p><strong>Quality Metrics:</strong> - Bug rate per feature - Test coverage percentage - Documentation completeness - Knowledge captured in agents.md</p>
+<p><strong>Team Metrics:</strong> - Onboarding time for new developers - Code review cycle time - Feature delivery predictability - Developer satisfaction</p>
+<hr>
+</section>
+<section id="roadmap" class="level2">
+<h2 class="anchored" data-anchor-id="roadmap">🗺️ Roadmap</h2>
+<section id="current-version-1.0" class="level3">
+<h3 class="anchored" data-anchor-id="current-version-1.0">Current Version: 1.0</h3>
+<ul>
+<li>✅ 10 core commands</li>
+<li>✅ 20+ automation scripts</li>
+<li>✅ 4 production templates</li>
+<li>✅ Complete documentation</li>
+</ul>
+</section>
+<section id="planned-improvements" class="level3">
+<h3 class="anchored" data-anchor-id="planned-improvements">Planned Improvements</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">VS Code extension for workflow visualization</label></li>
+<li><label><input type="checkbox">Integration with popular frameworks (Next.js, Django, etc.)</label></li>
+<li><label><input type="checkbox">Team collaboration features</label></li>
+<li><label><input type="checkbox">Automated test generation</label></li>
+<li><label><input type="checkbox">CI/CD integration templates</label></li>
+<li><label><input type="checkbox">Progress analytics dashboard</label></li>
+<li><label><input type="checkbox">Multi-project portfolio management</label></li>
+</ul>
+</section>
+<section id="community-requests" class="level3">
+<h3 class="anchored" data-anchor-id="community-requests">Community Requests</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Template library for common SaaS patterns</label></li>
+<li><label><input type="checkbox">Video tutorials and walkthroughs</label></li>
+<li><label><input type="checkbox">Integration with project management tools</label></li>
+<li><label><input type="checkbox">Mobile-friendly status dashboard</label></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="license" class="level2">
+<h2 class="anchored" data-anchor-id="license">📄 License</h2>
+<p>[Choose your license - MIT, Apache 2.0, etc.]</p>
+<hr>
+</section>
+<section id="acknowledgments" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgments">🙏 Acknowledgments</h2>
+<p>Built for developers who want systematic, high-quality AI-assisted development.</p>
+<p>Inspired by: - GitHub’s Spec Kit methodology - Test-Driven Development (TDD) - Domain-Driven Design (DDD) - The best practices of engineering teams building real products</p>
+<hr>
+</section>
+<section id="support" class="level2">
+<h2 class="anchored" data-anchor-id="support">📞 Support</h2>
+<ul>
+<li><strong>Documentation</strong>: See docs in <code>.cursor/commands/*.md</code></li>
+<li><strong>Issues</strong>: [GitHub Issues if applicable]</li>
+<li><strong>Discussions</strong>: [GitHub Discussions if applicable]</li>
+<li><strong>Email</strong>: [Your contact if applicable]</li>
+</ul>
+<hr>
+</section>
+<section id="quick-command-reference" class="level2">
+<h2 class="anchored" data-anchor-id="quick-command-reference">⚡ Quick Command Reference</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Core Workflow (Linear)</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/init-project</span> <span class="st">"Project Name"</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="ex">/spec-feature</span> <span class="st">"Feature description"</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="ex">/design-system</span> docs/specs/<span class="pp">[</span><span class="ss">feature</span><span class="pp">]</span>.md</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="ex">/plan-tasks</span> docs/specs/<span class="pp">[</span><span class="ss">feature</span><span class="pp">]</span>.md</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="ex">/implement-story</span> <span class="st">"User Story 1"</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Quality Commands (As Needed)</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="ex">/analyze-consistency</span> docs/specs/<span class="pp">[</span><span class="ss">feature</span><span class="pp">]</span>.md   <span class="co"># Before implementation</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="ex">/status</span>                                         <span class="co"># Anytime</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="ex">/add-story</span> docs/specs/<span class="pp">[</span><span class="ss">feature</span><span class="pp">]</span>.md <span class="st">"Story"</span>     <span class="co"># When scope grows</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="ex">/refactor</span> <span class="st">"Description"</span> <span class="pp">[</span><span class="ss">target</span><span class="pp">]</span>                <span class="co"># After features</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="ex">/review-agents</span>                                  <span class="co"># Monthly</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+<p><strong>Ready to build better software with AI?</strong> Start with <code>/init-project</code> and follow the workflow!</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,5 +1,7 @@
 # IMPLEMENTATION EXAMPLE - User Story 1: User Registration and Login
 
+**Template Location**: `.cursor/templates/implementation-example.md`
+
 This document shows a complete implementation walkthrough for User Story 1, demonstrating the entire process from start to finish.
 
 ---

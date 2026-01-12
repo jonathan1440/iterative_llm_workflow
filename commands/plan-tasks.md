@@ -34,15 +34,19 @@ If prerequisites fail, instruct user to complete spec and design first.
 
 **CRITICAL**: This command REQUIRES Plan Mode for best results.
 
-Instruct user:
+**What is Plan Mode?**
+Plan Mode is Cursor's planning interface (distinct from Composer Mode). It allows Claude to think through complex plans before committing to an approach, resulting in higher-quality task breakdowns.
 
+**How to access:**
 ```
 Press Shift+Tab+Tab to enter Plan Mode
-
-This is essential - Plan Mode creates significantly better task breakdowns
-than standard chat mode because it can think through the entire plan
-before committing to an approach.
 ```
+
+**Why Plan Mode specifically?**
+- Plan Mode creates significantly better task breakdowns than standard chat
+- Allows AI to think through entire plan before generating tasks
+- Better at handling complex dependencies and parallel work
+- Optimized for strategic planning vs. implementation
 
 ### Step 2: Load Context into Plan Mode
 
@@ -54,6 +58,7 @@ Load into context:
 - Design: docs/specs/[feature-name]-design.md
 - Research: docs/specs/[feature-name]-research.md (if exists)
 - Standards: .cursor/agents.md
+- Tasks template example: .cursor/templates/tasks-template-example.md (for reference on expected organization/detail)
 ```
 
 ### Step 3: Generate Task Plan Outline
@@ -65,6 +70,7 @@ Based on:
 - Spec with user stories (P1/P2/P3)
 - Design with architecture and database schema
 - Project standards from agents.md
+- Template example from .cursor/templates/tasks-template-example.md
 
 Create a task breakdown that:
 
@@ -127,7 +133,16 @@ After outline approved, generate detailed task breakdown:
 bash .cursor/scripts/create-tasks.sh "docs/specs/[feature-name].md"
 ```
 
-This creates `docs/specs/[feature-name]-tasks.md` with template structure.
+The script will:
+- Create `docs/specs/[feature-name]-tasks.md` with template structure
+- Output the file path for the AI to work with
+
+**IMPORTANT**: The created file contains placeholder sections. Use `.cursor/templates/tasks-template-example.md` as your reference for:
+- Expected task organization by phase
+- Task format and labeling conventions
+- Independent test scenario structure
+- MVP definition clarity
+- Dependency graph examples
 
 ### Step 5: Populate Tasks with Strict Format
 

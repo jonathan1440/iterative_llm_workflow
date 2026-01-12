@@ -25,9 +25,16 @@ mkdir -p .cursor/scripts
 echo -e "${GREEN}📁 Creating docs/specs/ directory...${NC}"
 mkdir -p docs/specs
 
-# Create agents.md template
-echo -e "${GREEN}📝 Creating .cursor/agents.md template...${NC}"
-cat > .cursor/agents.md << 'EOF'
+# Create agents.md from template
+echo -e "${GREEN}📝 Creating .cursor/agents.md from template...${NC}"
+
+# Check if template exists
+TEMPLATE_PATH="templates/agents-example.md"
+if [ ! -f "$TEMPLATE_PATH" ]; then
+    echo -e "${YELLOW}⚠️  Template not found at $TEMPLATE_PATH${NC}"
+    echo -e "${YELLOW}   Creating basic agents.md instead...${NC}"
+    # Fallback to basic template if example doesn't exist
+    cat > .cursor/agents.md << 'EOF'
 # Project Context
 
 - **Purpose**: [What problem does this solve?]
@@ -65,11 +72,25 @@ cat > .cursor/agents.md << 'EOF'
 <!-- - **Added**: YYYY-MM-DD -->
 
 # Last Updated
-
 EOF
-
-# Add current date
-echo "$(date +%Y-%m-%d)" >> .cursor/agents.md
+    echo "$(date +%Y-%m-%d)" >> .cursor/agents.md
+else
+    # Copy template and update date
+    cp "$TEMPLATE_PATH" .cursor/agents.md
+    
+    # Update the Last Updated date in the file
+    CURRENT_DATE=$(date +%Y-%m-%d)
+    # Use sed to replace the date line (works on both macOS and Linux)
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS sed
+        sed -i '' "s/\*\*Last Updated\*\*:.*/\*\*Last Updated\*\*: $CURRENT_DATE/" .cursor/agents.md
+    else
+        # Linux sed
+        sed -i "s/\*\*Last Updated\*\*:.*/\*\*Last Updated\*\*: $CURRENT_DATE/" .cursor/agents.md
+    fi
+    
+    echo -e "${GREEN}✅ Created .cursor/agents.md from $TEMPLATE_PATH${NC}"
+fi
 
 # Move this script to .cursor/scripts/
 echo -e "${GREEN}📦 Installing initialization script...${NC}"

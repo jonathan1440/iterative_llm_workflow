@@ -24,15 +24,22 @@ bash .cursor/scripts/init-project.sh "$ARGUMENTS"
 
 **Script Actions:**
 - Creates `.cursor/` directory structure
-- Generates `agents.md` with constitution template
+- Generates `agents.md` from template at `templates/agents-example.md`
 - Sets up `docs/specs/` for specifications
 - Creates `.cursor/commands/` for custom commands
 - Initializes git repository if needed
 - Creates appropriate ignore files
 
+The script will:
+- Copy `templates/agents-example.md` to `.cursor/agents.md` if the template exists
+- Update the "Last Updated" date automatically
+- Fall back to a basic template if `templates/agents-example.md` is not found
+
 ### 2. Gather Project Context
 
 After the script completes, help the user fill in the `agents.md` template by asking:
+
+**Note**: The `agents.md` file is created from `templates/agents-example.md`, which provides a comprehensive structure with sections for project overview, code standards, architecture principles, implementation best practices, database conventions, API design, testing, security, performance, common mistakes, deployment, and third-party integrations. Use this template as a reference for the expected structure and detail level.
 
 **Project Context:**
 1. "What is the main purpose of this project?" → Update `Purpose`
@@ -79,31 +86,27 @@ Ask: "Which architecture principles are most important for this project?"
 
 ### 5. Update agents.md
 
-Write the collected information to `.cursor/agents.md`, replacing all placeholders:
+Write the collected information to `.cursor/agents.md`, replacing placeholders in the template:
 
-```markdown
-# Project Context
-- **Purpose**: [Filled from user answers]
-- **Users**: [Filled from user answers]
-- **Core Constraints**: [Filled from user answers]
+**Reference**: The template at `templates/agents-example.md` shows the full structure. Update these key sections:
 
-# Code Standards (Non-Negotiable)
-1. **Testing**: [Filled from user answers]
-2. **Security**: [Filled from user answers]
-3. **Formatting**: [Filled from user answers]
-4. **Error Handling**: [Filled from user answers]
+1. **Project Overview**:
+   - Purpose: [Filled from user answers]
+   - Target Users: [Filled from user answers]
+   - Architecture Overview: [Filled from user answers]
 
-# Architecture Principles
-1. **[Principle Name]**: [Rule] - [Rationale]
-2. **[Principle Name]**: [Rule] - [Rationale]
+2. **Code Standards**:
+   - Update language-specific standards based on tech stack
+   - Update formatting tools
+   - Update testing requirements
 
-# Common Mistakes
-<!-- This section will be populated as the project develops -->
-<!-- Add mistakes here when you learn from errors -->
+3. **Architecture Principles**:
+   - Add 2-3 principles based on project type
+   - Each with clear rationale
 
-# Last Updated
-[Today's date]
-```
+4. **Other sections**: Keep template structure but customize content as needed
+
+The template provides comprehensive examples for all sections. Customize based on project needs while maintaining the structure.
 
 ### 6. Validate Setup
 

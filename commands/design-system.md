@@ -91,7 +91,7 @@ Press Cmd+I (Mac) or Ctrl+I (Windows/Linux) to open Composer Mode
 - Spec file: `docs/specs/[feature-name].md`
 - Research file: `docs/specs/[feature-name]-research.md` (if exists)
 - Project standards: `.cursor/agents.md`
-- Design template example: `.cursor/templates/design-template-example.md`
+- Design template example: `.cursor/templates/design-template-example.md` (for reference on expected quality/detail)
 
 ### Step 3: Generate System Design
 
@@ -173,12 +173,16 @@ bash .cursor/scripts/create-design.sh "docs/specs/[feature-name].md"
 ```
 
 The script will:
-- Create `docs/specs/[feature-name]-design.md` using the template at `.cursor/templates/design-template-example.md` as a reference
+- Create `docs/specs/[feature-name]-design.md` with template structure
 - Output the file path for the AI to work with
 
-**Design Document Structure:**
+**IMPORTANT**: The created file contains placeholder sections. Use `.cursor/templates/design-template-example.md` as your reference for:
+- Expected level of detail in each section
+- How to structure diagrams (Mermaid syntax)
+- Code examples and SQL schemas
+- Documentation style and completeness
 
-Reference `.cursor/templates/design-template-example.md` for a complete example of the expected structure and detail level.
+**Design Document Structure:**
 
 #### 1. Architecture Overview
 

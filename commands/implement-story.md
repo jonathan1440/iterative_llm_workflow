@@ -100,6 +100,7 @@ Load into Composer context:
 - Design: docs/specs/[feature-name]-design.md
 - Spec: docs/specs/[feature-name].md
 - Standards: .cursor/agents.md
+- Implementation example: .cursor/templates/implementation-example.md (for reference on completion quality)
 - Existing code: src/ (if any files exist)
 ```
 
@@ -417,6 +418,25 @@ Display completion summary:
 ```
 
 ## Guidelines
+
+### Implementation Reference
+
+For a complete walkthrough of implementing a user story from start to finish, see:
+`.cursor/templates/implementation-example.md`
+
+This shows:
+- Complete 13-task implementation of User Story 1
+- Verification checkpoints at each milestone
+- Real code examples for models, services, and API
+- Learning capture process
+- Independent test scenario execution
+- Final story report with metrics
+
+Use this as a reference for:
+- Expected level of completeness
+- How to structure code examples
+- When to run verification checkpoints
+- What makes a good final report
 
 ### Task Implementation Approach
 

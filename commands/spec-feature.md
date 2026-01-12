@@ -27,6 +27,13 @@ The script will:
 - Create `docs/specs/[feature-name].md` from template at `.cursor/templates/spec-template-example.md`
 - Output the file path for the AI to work with
 
+**IMPORTANT**: The created file contains placeholder sections. Use `.cursor/templates/spec-template-example.md` as your reference for:
+- Expected specificity and detail level
+- How to write concrete user stories
+- Example data models
+- Quality of problem statements
+- What makes success criteria measurable
+
 ### Step 2: Generate Initial Specification
 
 Based on the user's feature description (`$ARGUMENTS`), fill out the specification template with concrete details.
@@ -38,10 +45,14 @@ Based on the user's feature description (`$ARGUMENTS`), fill out the specificati
    - ✅ "Sarah, a property manager overseeing 47 rental units"
    - ❌ "A property manager"
 3. **Document Assumptions**: Record reasonable defaults in context
-4. **Limit Clarifications**: Maximum 5 [NEEDS CLARIFICATION] markers total
-5. **Prioritize Clarifications**: 
-   - Scope > Security/Privacy > User Experience > Technical details
-   - Only ask if: (a) significantly impacts feature scope, (b) multiple reasonable interpretations with different implications, (c) no reasonable default exists
+4. **High-Quality Clarifications**: Only ask questions that meet ALL three criteria:
+   - (a) High impact - significantly affects architecture, security, cost, or UX
+   - (b) Genuine ambiguity - multiple reasonable interpretations with different implications
+   - (c) No safe default - cannot make reasonable assumption from context
+5. **Prioritize by Impact**: 
+   - Critical: Scope boundaries, Security/Privacy, Cost implications
+   - Important: User Experience, Data model ambiguities
+   - Low priority: Technical preferences with standard answers
 
 **Specification Sections to Complete:**
 
@@ -156,15 +167,26 @@ Scan for ambiguities in these categories (prioritized):
    - Scalability limits undefined
    - Observability requirements unclear
 
-**Clarification Rules:**
+**Clarification Strategy:**
 
-- **Maximum 10 questions across entire session** (hard limit)
+**No hard limit on questions** - ask as many as needed, BUT each question must meet a high bar.
+
+**Ask ONLY if ALL three conditions met:**
+1. **High Impact**: Answer significantly affects architecture, security, cost, or UX
+2. **Genuine Ambiguity**: Multiple reasonable interpretations with different implications
+3. **No Safe Default**: Cannot make a reasonable assumption from context
+
+**Question Format:**
 - **Present ONE question at a time** (sequential, not all at once)
 - Each question must be answerable with:
   - Multiple choice (2-5 options), OR
   - Short phrase answer (≤5 words)
-- Only ask if answer materially impacts architecture, testing, or user experience
-- Stop when: (a) 5 questions asked, (b) user signals "done", (c) no critical ambiguities remain
+- Stop when: (a) user signals "done", (b) no critical ambiguities remain
+
+**This means:**
+- Clear spec → 0 questions
+- Ambiguous on critical issues → Ask every necessary question (could be 15+)
+- Each question must be genuinely important
 
 **Question Format:**
 
