@@ -31,8 +31,10 @@ A complete workflow system for Cursor IDE that transforms AI-assisted developmen
 git clone [your-repo-url]
 cd cursor-workflow
 
-# 2. Install (copies files to .cursor/ directory)
-bash install.sh
+# 2. Install to your project
+bash install.sh /path/to/your/project
+# Or if you're in your project directory:
+bash install.sh .
 
 # 3. Start a new project
 /init-project "My SaaS App"
@@ -222,17 +224,50 @@ your-project/
 
 ### Install the Workflow
 
-**Option 1: Automated Install**
+**Option 1: Install to Your Project (Recommended)**
+
+You can install the workflow to any project directory without cloning the repo into it:
+
+```bash
+# Download or clone the workflow repository
+git clone [your-repo-url] cursor-workflow
+cd cursor-workflow
+
+# Install to your project directory
+bash install.sh /path/to/your/project
+
+# Or install to current directory if you're already in your project
+bash install.sh .
+```
+
+**Examples:**
+```bash
+# Install to a specific project
+bash install.sh ~/projects/my-saas-app
+
+# Install to current directory (if run from your project root)
+cd ~/projects/my-saas-app
+bash /path/to/cursor-workflow/install.sh .
+
+# Install from workflow repo to another project
+cd cursor-workflow
+bash install.sh ../my-other-project
+```
+
+**Option 2: Install from Workflow Repo (Traditional)**
+
+If you're already in the workflow repository directory:
+
 ```bash
 # Clone this repository
 git clone [your-repo-url] cursor-workflow
 cd cursor-workflow
 
-# Run installer (copies files to .cursor/ directory)
+# Install to current directory (creates .cursor/ here)
 bash install.sh
 ```
 
-**Option 2: Manual Install**
+**Option 3: Manual Install**
 ```bash
 # Create .cursor directory
 mkdir -p .cursor/{commands,scripts,templates}

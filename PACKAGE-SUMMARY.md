@@ -281,10 +281,14 @@ Not partial solutions. Every step from init to deployment covered.
 git clone [your-repo-url] cursor-workflow
 cd cursor-workflow
 
-# 2. Run installer
-bash install.sh
+# 2. Run installer to your project
+bash install.sh /path/to/your/project
+
+# Or if you're in your project directory:
+bash install.sh .
 
 # 3. Verify
+cd /path/to/your/project
 /init-project "Test Project"
 ```
 

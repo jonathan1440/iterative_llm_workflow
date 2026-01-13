@@ -60,7 +60,7 @@ cursor-workflow/
 
 ## 📁 Installed Structure
 
-**After running `install.sh`, your project will have:**
+**After running `install.sh [target-directory]`, your project will have:**
 
 ```
 your-project/
