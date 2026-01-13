@@ -24,10 +24,11 @@ fi
 
 # Create .cursor directory structure
 echo "📁 Creating .cursor directory structure..."
-mkdir -p .cursor/{commands,scripts,templates}
+mkdir -p .cursor/{commands,scripts,templates,agent-docs}
 echo "   ✓ Created .cursor/commands/"
 echo "   ✓ Created .cursor/scripts/"
 echo "   ✓ Created .cursor/templates/"
+echo "   ✓ Created .cursor/agent-docs/"
 echo ""
 
 # Copy commands
@@ -64,6 +65,20 @@ else
     echo "   ⚠️  No template files found in templates/"
 fi
 echo ""
+
+# Copy agent-docs if it exists
+if [ -d "agent-docs" ]; then
+    echo "📚 Installing agent-docs..."
+    mkdir -p .cursor/agent-docs
+    AGENT_DOCS_COUNT=$(ls agent-docs/*.md 2>/dev/null | wc -l)
+    if [ "$AGENT_DOCS_COUNT" -gt 0 ]; then
+        cp agent-docs/*.md .cursor/agent-docs/
+        echo "   ✓ Installed $AGENT_DOCS_COUNT agent-docs files"
+    else
+        echo "   ⚠️  No agent-docs files found in agent-docs/"
+    fi
+    echo ""
+fi
 
 # Copy agents.md if it exists
 if [ -f "agents.md" ]; then
@@ -109,9 +124,14 @@ if [ ! -d ".cursor/templates" ]; then
     VERIFY_OK=false
 fi
 
+if [ ! -d ".cursor/agent-docs" ]; then
+    echo "   ❌ .cursor/agent-docs/ not found"
+    VERIFY_OK=false
+fi
+
 INSTALLED_COMMANDS=$(ls .cursor/commands/*.md 2>/dev/null | wc -l)
-if [ "$INSTALLED_COMMANDS" -lt 10 ]; then
-    echo "   ⚠️  Expected 10 commands, found $INSTALLED_COMMANDS"
+if [ "$INSTALLED_COMMANDS" -lt 11 ]; then
+    echo "   ⚠️  Expected 11 commands, found $INSTALLED_COMMANDS"
     VERIFY_OK=false
 fi
 

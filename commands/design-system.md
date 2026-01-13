@@ -91,6 +91,7 @@ Press Cmd+I (Mac) or Ctrl+I (Windows/Linux) to open Composer Mode
 - Spec file: `docs/specs/[feature-name].md`
 - Research file: `docs/specs/[feature-name]-research.md` (if exists)
 - Project standards: `.cursor/agents.md`
+- Architecture patterns: `.cursor/agent-docs/architecture.md` (if exists)
 - Design template example: `.cursor/templates/design-template-example.md` (for reference on expected quality/detail)
 
 ### Step 3: Generate System Design

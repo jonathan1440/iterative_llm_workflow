@@ -98,6 +98,196 @@ else
     echo -e "${GREEN}✅ Created .cursor/agents.md from $TEMPLATE_PATH${NC}"
 fi
 
+# Create agent-docs directory structure
+echo -e "${GREEN}📁 Creating .cursor/agent-docs/ directory...${NC}"
+mkdir -p .cursor/agent-docs
+
+# Copy agent-docs templates if they exist
+AGENT_DOCS_SOURCE=""
+if [ -d "agent-docs" ]; then
+    AGENT_DOCS_SOURCE="agent-docs"
+elif [ -d ".cursor/agent-docs" ] && [ "$(ls -A .cursor/agent-docs/*.md 2>/dev/null)" ]; then
+    # Already has files, skip
+    AGENT_DOCS_SOURCE=""
+fi
+
+if [ -n "$AGENT_DOCS_SOURCE" ]; then
+    echo -e "${GREEN}📝 Copying agent-docs templates...${NC}"
+    for file in "$AGENT_DOCS_SOURCE"/*.md; do
+        if [ -f "$file" ]; then
+            filename=$(basename "$file")
+            cp "$file" ".cursor/agent-docs/$filename"
+            echo -e "  ✅ Copied $filename"
+        fi
+    done
+else
+    # Create basic agent-docs files from templates if they don't exist
+    if [ ! -f ".cursor/agent-docs/api.md" ]; then
+        echo -e "${GREEN}📝 Creating .cursor/agent-docs/api.md template...${NC}"
+        cat > .cursor/agent-docs/api.md << 'EOF'
+# API Patterns
+
+> Read this before making backend changes.
+
+## Authentication
+
+[Describe auth mechanism: JWT / session / API keys]
+
+Protected routes use `authMiddleware`. The authenticated user is available at `req.user`.
+
+## Rate Limiting
+
+- Public endpoints: [X] requests/minute
+- Authenticated: [Y] requests/minute
+- Configured in `src/middleware/rateLimit.ts`
+
+## External Services
+
+### [Service Name, e.g., Stripe]
+- Wrapper: `src/services/stripe.ts`
+- **Always** verify webhooks before trusting payment status
+- Test mode in dev, live mode in prod (controlled by env vars)
+
+## Background Jobs
+
+- Queue: [Redis / SQS / etc]
+- Workers in `src/workers/`
+- Enqueue via `src/services/queue.ts`
+
+## Error Codes
+
+| Code | HTTP Status | When to use |
+|------|-------------|-------------|
+| `VALIDATION_ERROR` | 400 | Invalid input |
+| `UNAUTHORIZED` | 401 | Missing/invalid auth |
+| `FORBIDDEN` | 403 | Valid auth but not permitted |
+| `NOT_FOUND` | 404 | Resource doesn't exist |
+| `CONFLICT` | 409 | Duplicate or state conflict |
+| `RATE_LIMITED` | 429 | Too many requests |
+
+**Last Updated**: $(date +%Y-%m-%d)
+EOF
+    fi
+
+    if [ ! -f ".cursor/agent-docs/architecture.md" ]; then
+        echo -e "${GREEN}📝 Creating .cursor/agent-docs/architecture.md template...${NC}"
+        cat > .cursor/agent-docs/architecture.md << 'EOF'
+# Architecture
+
+> Read this before implementing new features or refactoring.
+
+## High-Level Design
+
+[Describe the overall system architecture in 3-5 sentences. What are the main components and how do they interact?]
+
+## Key Patterns
+
+### Service Layer
+All business logic lives in `src/services/`. Routes should be thin (< 15 lines) and delegate to services.
+
+### Error Handling
+Use the custom exception hierarchy in `src/errors/`:
+- `ValidationError` (400)
+- `NotFoundError` (404)
+- `AuthenticationError` (401)
+
+## File References
+
+- Entry point: `src/index.ts:1`
+- Service base class: `src/services/base.ts:10`
+- Error types: `src/errors/index.ts:1`
+- Database connection: `src/db/connection.ts:1`
+
+**Last Updated**: $(date +%Y-%m-%d)
+EOF
+    fi
+
+    if [ ! -f ".cursor/agent-docs/database.md" ]; then
+        echo -e "${GREEN}📝 Creating .cursor/agent-docs/database.md template...${NC}"
+        cat > .cursor/agent-docs/database.md << 'EOF'
+# Database
+
+> Read this before schema changes or complex queries.
+
+## Stack
+
+- **Database:** [PostgreSQL / MySQL / SQLite]
+- **ORM/Query Builder:** [Prisma / Drizzle / SQLAlchemy / raw SQL]
+- **Migrations:** [Tool used]
+
+## Schema Conventions
+
+- Table names: plural, snake_case (`user_accounts`)
+- Columns: snake_case (`created_at`)
+- Primary keys: `id` (UUID or auto-increment)
+- Foreign keys: `[table]_id` (`user_id`)
+- Timestamps: `created_at`, `updated_at` on all tables
+
+## Migration Rules
+
+**Safe (backward compatible):**
+- Adding nullable columns
+- Adding new tables
+- Adding indexes
+
+**Requires coordination:**
+- Adding non-nullable columns (add nullable first, backfill, then add constraint)
+- Renaming columns (deploy code reading both names first)
+- Dropping columns (remove from code first, wait, then drop)
+
+## Query Patterns
+
+Use the repository pattern. All database access through `src/repositories/`.
+
+**Last Updated**: $(date +%Y-%m-%d)
+EOF
+    fi
+
+    if [ ! -f ".cursor/agent-docs/testing.md" ]; then
+        echo -e "${GREEN}📝 Creating .cursor/agent-docs/testing.md template...${NC}"
+        cat > .cursor/agent-docs/testing.md << 'EOF'
+# Testing
+
+> Read this before writing or modifying tests.
+
+## Test Framework
+
+- **Unit tests:** [Jest / Pytest / etc]
+- **Integration tests:** [Framework]
+- **E2E tests:** [Playwright / Cypress / etc]
+
+## Running Tests
+
+```bash
+# Single file (preferred for iteration)
+[npm test -- path/to/file.test.ts]
+
+# Full suite (before PR only)
+[npm test]
+```
+
+## Test Structure
+
+Tests live alongside source files or in `tests/` mirroring `src/` structure.
+
+## Writing Tests
+
+**Good test:**
+- Tests one thing
+- Uses descriptive names
+- Sets up and tears down properly
+- Doesn't depend on execution order
+
+**Avoid:**
+- Tests that depend on execution order
+- Hardcoded IDs or timestamps
+- Mocking everything (prefer integration tests where reasonable)
+
+**Last Updated**: $(date +%Y-%m-%d)
+EOF
+    fi
+fi
+
 # Move this script to .cursor/scripts/
 echo -e "${GREEN}📦 Installing initialization script...${NC}"
 cp "$0" .cursor/scripts/init-project.sh 2>/dev/null || true
@@ -391,10 +581,12 @@ echo -e "${BLUE}📁 Created directories:${NC}"
 echo "  - .cursor/"
 echo "  - .cursor/commands/"
 echo "  - .cursor/scripts/"
+echo "  - .cursor/agent-docs/"
 echo "  - docs/specs/"
 echo ""
 echo -e "${BLUE}📝 Created files:${NC}"
 echo "  - .cursor/agents.md (project constitution - EDIT THIS)"
+echo "  - .cursor/agent-docs/*.md (domain-specific patterns - EDIT AS NEEDED)"
 echo "  - .cursor/scripts/init-project.sh"
 echo "  - docs/specs/TEMPLATE.md (reference)"
 echo "  - .cursor/commands/EXAMPLE-command.md (reference)"
@@ -405,8 +597,9 @@ echo "  - .gitignore"
 echo ""
 echo -e "${YELLOW}🎯 Next steps:${NC}"
 echo "  1. Edit .cursor/agents.md with your project details"
-echo "  2. Review the standards and principles"
-echo "  3. Create your first feature spec"
+echo "  2. Review and customize .cursor/agent-docs/*.md files for your stack"
+echo "  3. Review the standards and principles"
+echo "  4. Create your first feature spec"
 echo ""
 echo -e "${BLUE}💡 Tip: agents.md will grow over time as you learn.${NC}"
 echo -e "${BLUE}   Update it whenever you discover mistakes or patterns.${NC}"

@@ -50,7 +50,12 @@ flowchart TD
     Start([Start New Project]) --> InitProject[//init-project/]
     InitProject --> SpecFeature[//spec-feature/]
     
-    SpecFeature --> Design[//design-system/]
+    SpecFeature --> UpdateDocs{Update agent-docs<br/>before designing?}
+    UpdateDocs -->|Yes - Recommended| UpdateAgentDocs[update-agent-docs]
+    UpdateDocs -->|Skip| Design
+    UpdateAgentDocs --> Design
+    
+    Design[//design-system/]
     Design --> PlanTasks[//plan-tasks/]
     
     PlanTasks --> CheckConsistency{Check consistency<br/>before starting?}
@@ -95,6 +100,7 @@ flowchart TD
     style Review fill:#d1ecf1
     style StatusCheck fill:#d1ecf1
     style Implement fill:#cfe2ff
+    style UpdateAgentDocs fill:#e7d4f8
 ```
 
 ### Workflow Phases
@@ -102,6 +108,7 @@ flowchart TD
 **Phase 1: Planning (Commands 1-4)**
 - `/init-project` - Set up project structure
 - `/spec-feature` - Define what to build
+- `/update-agent-docs` - (Optional) Update domain patterns with recent best practices
 - `/design-system` - Design the architecture
 - `/plan-tasks` - Break into actionable tasks
 
@@ -141,6 +148,7 @@ flowchart TD
 | `/add-story` | Add new user story to feature | When scope expands |
 | `/refactor` | Safely improve code with tests | After completing features |
 | `/review-agents` | Maintain learnings in agents.md | Monthly, after milestones |
+| `/update-agent-docs` | Update agent-docs with recent best practices | Quarterly, or when patterns change |
 
 ---
 
@@ -176,7 +184,13 @@ your-project/
 │   │   ├── tasks-template-example.md
 │   │   └── implementation-example.md
 │   │
-│   └── agents.md              # Project learnings & standards
+│   ├── agent-docs/            # Domain-specific patterns & best practices
+│   │   ├── api.md             # API design patterns
+│   │   ├── architecture.md   # Architecture patterns
+│   │   ├── database.md        # Database conventions
+│   │   └── testing.md         # Testing patterns
+│   │
+│   └── agents.md              # Project constitution & general standards
 │
 ├── docs/
 │   └── specs/                 # Generated specifications
@@ -505,6 +519,43 @@ code .cursor/templates/design-template-example.md
 # Adjust detail level
 ```
 
+### Understanding agents.md vs agent-docs/
+
+The workflow uses two complementary knowledge systems:
+
+**`.cursor/agents.md`** - Project Constitution
+- General project standards and principles
+- Non-negotiable rules (testing, security, formatting)
+- Project-specific learnings and mistakes
+- Architecture principles that apply broadly
+- Keep under 100 lines (high-level guidance)
+
+**`.cursor/agent-docs/`** - Domain-Specific Patterns
+- Detailed patterns for specific areas (API, database, testing, architecture)
+- Extended context loaded automatically by commands when relevant
+- Can be longer and more detailed
+- Updated with recent best practices via `/update-agent-docs`
+
+**How They Work Together:**
+
+1. **agents.md** provides the foundation: "All APIs must validate input"
+2. **agent-docs/api.md** provides specifics: "Use this validation library, here's the pattern, rate limits are X/Y"
+
+Commands automatically load both:
+- Always: `.cursor/agents.md` (general standards)
+- Conditionally: Relevant `.cursor/agent-docs/*.md` files based on task context
+
+**Example:**
+- `/implement-story` working on API endpoints loads:
+  - `.cursor/agents.md` (general standards)
+  - `.cursor/agent-docs/api.md` (API-specific patterns)
+  - `.cursor/agent-docs/testing.md` (if writing tests)
+
+**When to Use Each:**
+
+- **Add to agents.md**: Project-wide principles, mistakes learned, general standards
+- **Add to agent-docs/**: Specific implementation patterns, detailed conventions, stack-specific guidance
+
 ### Extending agents.md
 
 The `agents.md` file grows with your project. Add sections like:
@@ -522,6 +573,26 @@ The `agents.md` file grows with your project. Add sections like:
 ## Common Mistakes
 [Project-specific pitfalls to avoid]
 ```
+
+### Maintaining agent-docs/
+
+The `agent-docs/` files contain domain-specific patterns. Keep them updated:
+
+**Manual Updates:**
+- Edit `.cursor/agent-docs/*.md` files directly as you learn
+- Add project-specific patterns and conventions
+- Document stack-specific decisions
+
+**Automated Updates:**
+- Use `/update-agent-docs` to find recent best practices
+- Command searches for verified articles from last 3 months
+- Requires your approval before making changes
+- Only updates if new verified information is found
+
+**When to Update:**
+- After learning new patterns in a domain
+- When stack conventions change
+- Quarterly via `/update-agent-docs` for industry best practices
 
 ---
 
@@ -720,9 +791,10 @@ Track these to measure workflow effectiveness:
 ## 🗺️ Roadmap
 
 ### Current Version: 1.0
-- ✅ 10 core commands
+- ✅ 11 core commands (including update-agent-docs)
 - ✅ 20+ automation scripts
 - ✅ 4 production templates
+- ✅ agent-docs system for domain-specific patterns
 - ✅ Complete documentation
 
 ### Planned Improvements
@@ -785,6 +857,7 @@ Inspired by:
 /add-story docs/specs/[feature].md "Story"     # When scope grows
 /refactor "Description" [target]                # After features
 /review-agents                                  # Monthly
+/update-agent-docs                              # Quarterly, update patterns
 ```
 
 ---

@@ -100,6 +100,11 @@ Load into Composer context:
 - Design: docs/specs/[feature-name]-design.md
 - Spec: docs/specs/[feature-name].md
 - Standards: .cursor/agents.md
+- Domain-specific patterns (if exist):
+  - .cursor/agent-docs/api.md (for API/backend tasks)
+  - .cursor/agent-docs/database.md (for database/schema tasks)
+  - .cursor/agent-docs/testing.md (for test-related tasks)
+  - .cursor/agent-docs/architecture.md (for architectural decisions)
 - Implementation example: .cursor/templates/implementation-example.md (for reference on completion quality)
 - Existing code: src/ (if any files exist)
 ```

@@ -58,6 +58,7 @@ Load into context:
 - Design: docs/specs/[feature-name]-design.md
 - Research: docs/specs/[feature-name]-research.md (if exists)
 - Standards: .cursor/agents.md
+- Architecture patterns: .cursor/agent-docs/architecture.md (if exists)
 - Tasks template example: .cursor/templates/tasks-template-example.md (for reference on expected organization/detail)
 ```
 

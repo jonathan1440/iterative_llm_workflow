@@ -275,6 +275,24 @@ Display summary:
 - Scope clearly bounded: ✓
 
 🎯 Next Steps:
+
+**Recommended**: Update agent-docs with recent best practices before designing:
+```bash
+/update-agent-docs docs/specs/[feature-name].md
+```
+
+This will:
+- Search for recent best practices (last 3 months) matching your stack
+- Focus on domains relevant to this spec (API, database, etc.)
+- Present findings for your approval
+- Ensure design decisions use current patterns
+
+**When to skip**: If you updated agent-docs recently (< 1 month) or working on a quick feature.
+
+**Or proceed directly to design:**
+```bash
+/design-system docs/specs/[feature-name].md
+```
 1. Review the spec for accuracy
 2. Create system design with /design-system docs/specs/[feature-name].md
 3. Or refine spec further if needed
