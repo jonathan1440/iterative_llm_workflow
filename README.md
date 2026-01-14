@@ -290,7 +290,7 @@ cp agents.md .cursor/agents.md
 
 ```bash
 # In Cursor, try running:
-/init-project "Test Project"
+/init-project "My Project Name"
 
 # Should create .cursor/ structure with agents.md
 # If it works, you're ready!

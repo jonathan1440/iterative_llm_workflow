@@ -73,15 +73,23 @@ echo ""
 
 # Create .cursor directory structure in target
 echo "📁 Creating .cursor directory structure in target..."
-mkdir -p "$TARGET_DIR/.cursor/{commands,scripts,templates,agent-docs}"
+mkdir -p "$TARGET_DIR/.cursor/commands"
+mkdir -p "$TARGET_DIR/.cursor/scripts"
+mkdir -p "$TARGET_DIR/.cursor/templates"
+mkdir -p "$TARGET_DIR/.cursor/agent-docs"
 echo "   ✓ Created $TARGET_DIR/.cursor/commands/"
 echo "   ✓ Created $TARGET_DIR/.cursor/scripts/"
 echo "   ✓ Created $TARGET_DIR/.cursor/templates/"
 echo "   ✓ Created $TARGET_DIR/.cursor/agent-docs/"
 echo ""
 
-# Copy commands
+# Copy commands (overwrite if directory exists)
 echo "📋 Installing commands..."
+if [ -d "$TARGET_DIR/.cursor/commands" ]; then
+    rm -rf "$TARGET_DIR/.cursor/commands"
+    echo "   ⊘ Removed existing commands directory"
+fi
+mkdir -p "$TARGET_DIR/.cursor/commands"
 COMMAND_COUNT=$(ls "$SOURCE_DIR/commands"/*.md 2>/dev/null | wc -l)
 if [ "$COMMAND_COUNT" -gt 0 ]; then
     cp "$SOURCE_DIR/commands"/*.md "$TARGET_DIR/.cursor/commands/"
@@ -91,8 +99,13 @@ else
 fi
 echo ""
 
-# Copy scripts
+# Copy scripts (overwrite if directory exists)
 echo "🔧 Installing scripts..."
+if [ -d "$TARGET_DIR/.cursor/scripts" ]; then
+    rm -rf "$TARGET_DIR/.cursor/scripts"
+    echo "   ⊘ Removed existing scripts directory"
+fi
+mkdir -p "$TARGET_DIR/.cursor/scripts"
 SCRIPT_COUNT=$(ls "$SOURCE_DIR/scripts"/*.sh 2>/dev/null | wc -l)
 if [ "$SCRIPT_COUNT" -gt 0 ]; then
     cp "$SOURCE_DIR/scripts"/*.sh "$TARGET_DIR/.cursor/scripts/"
@@ -104,8 +117,13 @@ else
 fi
 echo ""
 
-# Copy templates
+# Copy templates (overwrite if directory exists)
 echo "📄 Installing templates..."
+if [ -d "$TARGET_DIR/.cursor/templates" ]; then
+    rm -rf "$TARGET_DIR/.cursor/templates"
+    echo "   ⊘ Removed existing templates directory"
+fi
+mkdir -p "$TARGET_DIR/.cursor/templates"
 TEMPLATE_COUNT=$(ls "$SOURCE_DIR/templates"/*.md 2>/dev/null | wc -l)
 if [ "$TEMPLATE_COUNT" -gt 0 ]; then
     cp "$SOURCE_DIR/templates"/*.md "$TARGET_DIR/.cursor/templates/"
@@ -115,32 +133,31 @@ else
 fi
 echo ""
 
-# Copy agent-docs if it exists
+# Copy agent-docs if it exists (preserve existing files)
 if [ -d "$SOURCE_DIR/agent-docs" ]; then
     echo "📚 Installing agent-docs..."
     mkdir -p "$TARGET_DIR/.cursor/agent-docs"
     AGENT_DOCS_COUNT=$(ls "$SOURCE_DIR/agent-docs"/*.md 2>/dev/null | wc -l)
     if [ "$AGENT_DOCS_COUNT" -gt 0 ]; then
-        cp "$SOURCE_DIR/agent-docs"/*.md "$TARGET_DIR/.cursor/agent-docs/"
-        echo "   ✓ Installed $AGENT_DOCS_COUNT agent-docs files"
+        # Only copy files that don't already exist in target
+        for file in "$SOURCE_DIR/agent-docs"/*.md; do
+            filename=$(basename "$file")
+            if [ ! -f "$TARGET_DIR/.cursor/agent-docs/$filename" ]; then
+                cp "$file" "$TARGET_DIR/.cursor/agent-docs/"
+            fi
+        done
+        INSTALLED_COUNT=$(ls "$TARGET_DIR/.cursor/agent-docs"/*.md 2>/dev/null | wc -l)
+        echo "   ✓ Preserved existing agent-docs (total: $INSTALLED_COUNT files)"
     else
         echo "   ⚠️  No agent-docs files found in $SOURCE_DIR/agent-docs/"
     fi
     echo ""
 fi
 
-# Copy agents.md template if it exists
+# Copy agents.md template if it exists (preserve existing file)
 if [ -f "$SOURCE_DIR/templates/agents-example.md" ]; then
     if [ -f "$TARGET_DIR/.cursor/agents.md" ]; then
-        echo "⚠️  agents.md already exists in target"
-        read -p "   Overwrite? [y/N] " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            cp "$SOURCE_DIR/templates/agents-example.md" "$TARGET_DIR/.cursor/agents.md"
-            echo "   ✓ Overwrote $TARGET_DIR/.cursor/agents.md"
-        else
-            echo "   ⊘ Kept existing $TARGET_DIR/.cursor/agents.md"
-        fi
+        echo "   ⊘ Preserved existing agents.md"
     else
         cp "$SOURCE_DIR/templates/agents-example.md" "$TARGET_DIR/.cursor/agents.md"
         echo "   ✓ Installed agents.md template"
@@ -218,9 +235,6 @@ if [ "$VERIFY_OK" = true ]; then
     echo "   • README.md - Complete workflow guide"
     echo "   • QUICK-REFERENCE.md - Command cheat sheet"
     echo "   • NEW-COMMANDS-README.md - Detailed command docs"
-    echo ""
-    echo "💡 Test your installation:"
-    echo "   /init-project \"Test Project\""
     echo ""
 else
     echo ""

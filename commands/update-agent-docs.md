@@ -1,5 +1,5 @@
 ---
-description: Review and update agent-docs files with recent best practices from verified sources. Optionally provide spec file to focus on relevant domains. Requires user approval before changes.
+description: Review and update agent-docs files with recent best practices from verified sources. Optionally provide spec file to focus on relevant domains. Changes are applied directly and shown in Cursor's diff viewer for review.
 ---
 
 ## User Input
@@ -16,7 +16,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-This command reviews agent-docs files against recent best practices from verified sources. It searches for articles published in the last 3 months by developers with demonstrated track records, presents findings for user approval, and only updates if new information is found.
+This command reviews agent-docs files against recent best practices from verified sources. It searches for articles published in the last 3 months by developers with demonstrated track records, applies updates directly, and shows changes in Cursor's diff viewer for review. Only updates if new information is found.
 
 ### Step 0: Prerequisites
 
@@ -256,118 +256,39 @@ For each qualifying article, extract:
 - Background jobs (current content still accurate)
 ```
 
-### Step 4: Present Findings for Approval
+### Step 4: Apply Updates Directly
 
-Display proposed changes:
-
-```markdown
-📝 Proposed Updates for agent-docs/
-
-## api.md Updates
-
-### Add: Tiered Rate Limiting
-**Source**: "API Design Patterns in Production" by Jane Smith (Stripe, 2026-01-08)
-**Evidence**: Reduced support tickets by 40% in production
-**Change**: Add section on implementing tiered rate limits
-
-**Proposed addition:**
-```markdown
-### Tiered Rate Limiting
-- Free tier: 100 requests/hour
-- Paid tier: 1000 requests/hour
-- Enterprise: Custom limits
-- Include X-RateLimit-Remaining header in all responses
-```
-
-### Update: Error Response Format
-**Source**: "Production API Error Handling" by John Engineer (GitHub, 2026-01-10)
-**Evidence**: Debug time reduced by 60% with request IDs
-**Change**: Update error response format to include request_id
-
-**Proposed change:**
-```diff
-- {
--   "error": "ERROR_CODE",
--   "message": "User-friendly message"
-- }
-+ {
-+   "error": "ERROR_CODE",
-+   "message": "User-friendly message",
-+   "request_id": "uuid-for-tracing"
-+ }
-```
-
----
-
-## architecture.md Updates
-
-No new verified information found since last update (2025-12-15).
-
----
-
-## database.md Updates
-
-No new verified information found since last update (2026-01-05).
-
----
-
-## testing.md Updates
-
-File not found. Would you like to create it from recent best practices?
-
----
-
-**Summary:**
-- Files to update: 1 (api.md)
-- New sections: 1
-- Updated sections: 1
-- Files unchanged: 2
-- Files missing: 1 (testing.md)
-
-Approve these changes? [yes/no/review]
-```
-
-### Step 5: User Approval Workflow
-
-**If user approves:**
+Apply changes to agent-docs files. Cursor will show the diff for review:
 
 ```markdown
-✅ Approved. Updating agent-docs files...
+📝 Applying Updates to agent-docs/
 
-Updating .cursor/agent-docs/api.md:
+## Summary of Changes:
+
+**api.md:**
 - Adding tiered rate limiting section
-- Updating error response format
-- Preserving existing content
+- Updating error response format to include request_id
 - Adding source attribution
 
-Update complete ✓
+**architecture.md:**
+- No updates (no new verified information since 2025-12-15)
+
+**database.md:**
+- No updates (no new verified information since 2026-01-05)
+
+**testing.md:**
+- Creating file from recent best practices (3 verified articles)
+
+**Files being modified:**
+- .cursor/agent-docs/api.md
+- .cursor/agent-docs/testing.md (new file)
+
+Changes will be shown in Cursor's diff viewer for review.
 ```
 
-**If user requests review:**
+### Step 5: Apply Updates
 
-```markdown
-📋 Detailed Review Mode
-
-For each proposed change:
-1. Show full context (current content + proposed change)
-2. Show source article excerpt
-3. Show author credentials
-4. Allow selective approval (approve/reject per change)
-
-[Continue with detailed review]
-```
-
-**If user rejects:**
-
-```markdown
-❌ Updates rejected. No changes made.
-
-Current agent-docs files remain unchanged.
-```
-
-### Step 6: Apply Approved Updates
-
-Only if user approved:
+Apply changes directly to agent-docs files. Cursor will display the diff for review:
 
 1. **Backup current files:**
 ```bash
@@ -375,13 +296,14 @@ mkdir -p .cursor/agent-docs/.backup
 cp .cursor/agent-docs/*.md .cursor/agent-docs/.backup/ 2>/dev/null || true
 ```
 
-2. **Apply updates:**
+2. **Apply updates directly:**
 - Add new sections with clear source attribution
-- Update existing sections with diff-style changes
+- Update existing sections
 - Preserve all existing content not being updated
 - Add "Last updated" date at top of each file
+- Add source attribution section
 
-3. **Add source attribution:**
+3. **Source attribution format:**
 ```markdown
 ## Sources
 
@@ -390,7 +312,9 @@ cp .cursor/agent-docs/*.md .cursor/agent-docs/.backup/ 2>/dev/null || true
   - Evidence: [Results/metrics if available]
 ```
 
-### Step 7: Report Completion
+**Note**: All changes are applied directly. Cursor's diff viewer will show the modifications for review. You can accept, reject, or modify individual changes through Cursor's interface.
+
+### Step 6: Report Completion
 
 ```markdown
 ✅ Agent-Docs Update Complete
@@ -542,4 +466,4 @@ Current agent-docs files are up to date with recent best practices.
 
 Agent-docs directory: `.cursor/agent-docs/`
 
-**Important**: This command requires internet access for web searches. All changes require explicit user approval before being applied.
+**Important**: This command requires internet access for web searches. Changes are applied directly and shown in Cursor's diff viewer for review. You can accept, reject, or modify changes through Cursor's interface.
