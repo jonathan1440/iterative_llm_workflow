@@ -15,21 +15,38 @@ This is a reference template showing what a high-quality task breakdown looks li
 
 ## Task Format
 
-**Every task MUST follow this format:**
+**Every task MUST follow this detailed, self-contained format:**
 
 ```
 - [ ] [TaskID] [P?] [Story?] Description with file path
+
+  **File**: [exact file path]
+  
+  **Requirements** (from design):
+  - [Detailed requirement 1]
+  - [Detailed requirement 2]
+  
+  **Implementation Details**:
+  - [Specific implementation detail 1]
+  - [Specific implementation detail 2]
+  
+  **Error Handling**:
+  - [Error handling requirements]
+  
+  **Dependencies**: [Task IDs that must be complete first]
+  
+  **Acceptance**: [How to verify this task is complete]
 ```
 
-✅ **Good Examples:**
-- `- [ ] T001 Initialize project structure per plan`
-- `- [ ] T012 [P] [US1] Create User model in src/models/user.js`
-- `- [ ] T014 [US1] Implement UserService with bcrypt in src/services/user-service.js`
+✅ **Good Examples** (see T017, T019, T021 below for full examples):
+- Detailed, self-contained tasks with all context needed
+- Include file paths, fields, methods, error handling, dependencies
+- Clear acceptance criteria
 
-❌ **Bad Examples:**
-- `Create User model` (missing checkbox, ID, story label, file path)
-- `T001 [US1] Create model` (missing checkbox, file path)
-- `- [ ] [US1] Create User model` (missing TaskID, file path)
+❌ **Bad Examples** (too brief, not self-contained):
+- `- [ ] T017 [US1] Create User model` (missing details, file path, fields, methods)
+- `- [ ] T019 [US1] Implement UserService` (missing methods, error handling, dependencies)
+- Tasks that require loading design doc to understand (should extract details into task)
 
 ---
 
@@ -170,81 +187,400 @@ Success = All steps complete without errors
 
 ### Data Models (can be parallel)
 - [ ] T017 [P] [US1] Create User model in src/models/user.js
-  - Fields: id, email, password_hash, email_verified, status, failed_login_count, locked_until
-  - Methods: create(), findByEmail(), updateFailedLoginCount(), lockAccount()
+
+  **File**: src/models/user.js
+  
+  **Fields** (from design):
+  - id: UUID (primary key, auto-generated)
+  - email: string (unique, required, validated with regex pattern)
+  - password_hash: string (required, bcrypt hashed, never plain text)
+  - email_verified: boolean (default: false)
+  - status: enum('active', 'inactive') (default: 'active')
+  - failed_login_count: integer (default: 0)
+  - locked_until: timestamp (nullable, null means not locked)
+  
+  **Methods** (from design):
+  - create(userData): Create new user, hash password using bcrypt cost 10, return user object
+  - findByEmail(email): Find user by email, return user object or null
+  - updateFailedLoginCount(userId): Increment failed_login_count by 1
+  - lockAccount(userId, durationMinutes): Set locked_until to now + durationMinutes
+  
+  **Error Handling**:
+  - Use ValidationError from src/errors/validation-error.js for invalid input
+  - Use DatabaseError from src/errors/database-error.js for DB failures
+  - Never expose internal errors to callers (per agents.md)
+  
+  **Dependencies**: T008-T016 (Foundation tasks must be complete)
+  
+  **Acceptance**: User model can be imported, instantiated, and all methods work correctly
+
 - [ ] T018 [P] [US1] Create Session model in src/models/session.js
-  - Fields: id, user_id, token, created_at, expires_at, last_activity_at
-  - Methods: create(), findByToken(), updateActivity(), delete()
+
+  **File**: src/models/session.js
+  
+  **Fields** (from design):
+  - id: UUID (primary key, auto-generated)
+  - user_id: UUID (foreign key to users.id, required)
+  - token: string (64 random bytes as hex, unique, required)
+  - created_at: timestamp (default: now)
+  - expires_at: timestamp (required, 24 hours from creation)
+  - last_activity_at: timestamp (default: now, updated on use)
+  
+  **Methods** (from design):
+  - create(userId, token): Create session, return session object
+  - findByToken(token): Find session by token, return session object or null
+  - updateActivity(sessionId): Update last_activity_at to current timestamp
+  - delete(sessionId): Delete session by ID
+  
+  **Error Handling**:
+  - Use DatabaseError for DB failures
+  - Never expose internal errors to callers
+  
+  **Dependencies**: T008-T016 (Foundation tasks must be complete)
+  
+  **Acceptance**: Session model can be imported, all methods work correctly
 
 ### Business Logic
 - [ ] T019 [US1] Implement UserService in src/services/user-service.js
-  - hashPassword(password) using bcrypt cost 10
-  - validateEmail(email) using regex
-  - createUser(email, password) - hash password, insert user
-  - Error handling for duplicate email
+
+  **File**: src/services/user-service.js
+  
+  **Methods** (from design):
+  - hashPassword(password): Hash password using bcrypt cost 10, return hash string
+  - validateEmail(email): Validate email format with regex pattern, return boolean
+  - createUser(email, password): Validate email format, hash password, call User.create(), return user object
+  
+  **Error Handling**:
+  - ValidationError for invalid email format (400)
+  - ValidationError for weak password (per design: 8+ chars, letter + number)
+  - DatabaseError for duplicate email (409 conflict)
+  - Never expose internal errors to callers (per agents.md)
+  
+  **Dependencies**: T017 (User model must exist)
+  
+  **Acceptance**: All methods work correctly, error handling follows standards
+
 - [ ] T020 [US1] Implement AuthService in src/services/auth-service.js
-  - login(email, password) - verify credentials, track failures, create session
-  - handleFailedLogin(userId) - increment count, lock if needed
-  - generateSessionToken() - 64 random bytes as hex
-  - checkAccountLock(user) - verify not locked or lock expired
-  - Depends on: T019 (UserService must exist)
+
+  **File**: src/services/auth-service.js
+  
+  **Methods** (from design):
+  - login(email, password): Verify credentials using bcrypt, track failures, create session, return session token
+  - handleFailedLogin(userId): Increment failed_login_count, lock account if count >= 5 (15 minute lock)
+  - generateSessionToken(): Generate 64 random bytes as hex string
+  - checkAccountLock(user): Verify account not locked or lock expired, return boolean
+  
+  **Error Handling**:
+  - AuthError for invalid credentials (401) - don't reveal if email exists
+  - AuthError for locked account (423)
+  - Never expose internal errors to callers
+  
+  **Dependencies**: T017 (User model), T018 (Session model), T019 (UserService must exist)
+  
+  **Acceptance**: Login flow works, account lockout works after 5 failures, lock expires after 15 minutes
 
 ### API Layer
 - [ ] T021 [US1] Create POST /api/auth/register endpoint in src/routes/auth.js
-  - Validate email format, password requirements
-  - Call UserService.createUser()
-  - Create session on success
-  - Return 201 with user + session token
-  - Error handling: 400 validation, 409 duplicate email
+
+  **File**: src/routes/auth.js (create new file or add to existing)
+  
+  **Endpoint**: POST /api/auth/register
+  
+  **Request Body**: { email: string, password: string }
+  
+  **Validation**:
+  - Email format (per UserService.validateEmail)
+  - Password requirements (8+ chars, letter + number)
+  
+  **Logic**:
+  - Call UserService.createUser(email, password)
+  - Create session using Session.create(userId, token)
+  - Generate session token using AuthService.generateSessionToken()
+  - Return 201 Created with { user: {...}, token: "..." }
+  
+  **Error Handling**:
+  - 400 Bad Request for validation errors
+  - 409 Conflict for duplicate email
+  - Use standard error format from src/utils/response.js
+  
+  **Dependencies**: T019 (UserService), T018 (Session model), T020 (AuthService for token generation)
+  
+  **Acceptance**: Endpoint accepts valid requests, returns 201 with user and token
+
 - [ ] T022 [US1] Create POST /api/auth/login endpoint in src/routes/auth.js
-  - Validate request body
-  - Call AuthService.login()
-  - Track failed attempts
-  - Return 200 with session token
-  - Error handling: 401 invalid, 423 locked
-  - Depends on: T020 (AuthService must exist)
+
+  **File**: src/routes/auth.js
+  
+  **Endpoint**: POST /api/auth/login
+  
+  **Request Body**: { email: string, password: string }
+  
+  **Validation**:
+  - Request body must have email and password
+  
+  **Logic**:
+  - Call AuthService.login(email, password)
+  - Track failed attempts (handled by AuthService)
+  - Return 200 OK with { token: "..." }
+  
+  **Error Handling**:
+  - 401 Unauthorized for invalid credentials (don't reveal if email exists)
+  - 423 Locked for locked account
+  - Use standard error format from src/utils/response.js
+  
+  **Dependencies**: T020 (AuthService must exist)
+  
+  **Acceptance**: Endpoint accepts valid credentials, returns 200 with token; rejects invalid credentials with 401
+
 - [ ] T023 [US1] Create GET /api/auth/me endpoint in src/routes/auth.js
-  - Requires authentication middleware
-  - Return current user profile
-  - Error handling: 401 if invalid token
+
+  **File**: src/routes/auth.js
+  
+  **Endpoint**: GET /api/auth/me
+  
+  **Authentication**: Requires authentication middleware (req.user must exist)
+  
+  **Logic**:
+  - Return current user profile from req.user
+  - Return 200 OK with { user: {...} }
+  
+  **Error Handling**:
+  - 401 Unauthorized if invalid/missing token (handled by middleware)
+  - Use standard error format from src/utils/response.js
+  
+  **Dependencies**: T024 (Authentication middleware must exist)
+  
+  **Acceptance**: Endpoint returns user profile with valid token, rejects with 401 for invalid token
+
 - [ ] T024 [US1] Create authentication middleware in src/middleware/auth.js
-  - Extract token from Authorization header
-  - Validate session (check expiration, update activity)
-  - Attach user to request object
-  - Error handling: 401 if invalid/expired
+
+  **File**: src/middleware/auth.js
+  
+  **Functionality**:
+  - Extract token from Authorization header (format: "Bearer <token>")
+  - Validate session using Session.findByToken(token)
+  - Check expiration (expires_at > now)
+  - Update activity using Session.updateActivity(sessionId)
+  - Attach user to request object (req.user = user object)
+  
+  **Error Handling**:
+  - 401 Unauthorized for missing/invalid token
+  - 401 Unauthorized for expired session
+  - Use standard error format from src/utils/response.js
+  
+  **Dependencies**: T018 (Session model must exist)
+  
+  **Acceptance**: Middleware validates tokens, attaches user to request, rejects invalid tokens with 401
 
 ### Testing
 - [ ] T025 [P] [US1] Write unit tests for UserService in tests/unit/user-service.test.js
-  - Test hashPassword creates valid bcrypt hash
-  - Test validateEmail accepts valid, rejects invalid
-  - Test createUser inserts correctly
-  - Test createUser rejects weak passwords
-  - Test createUser rejects duplicate emails
-- [ ] T026 [P] [US1] Write unit tests for AuthService in tests/unit/auth-service.test.js
-  - Test login succeeds with valid credentials
-  - Test login fails with invalid password
-  - Test failed login count increments
-  - Test account locks after 5 failures
-  - Test locked account rejects login
-  - Test lock expires after 15 minutes
-- [ ] T027 [P] [US1] Write integration tests for auth endpoints in tests/integration/auth.test.js
-  - Test POST /auth/register happy path
-  - Test POST /auth/register with invalid email
-  - Test POST /auth/register with weak password
-  - Test POST /auth/register with duplicate email
-  - Test POST /auth/login happy path
-  - Test POST /auth/login with invalid credentials
-  - Test POST /auth/login account lockout
-  - Test GET /auth/me with valid token
-  - Test GET /auth/me with invalid token
 
-### Story Verification
-- [ ] T028 [US1] Perform independent test scenario (curl commands above)
-- [ ] T029 [US1] Update API documentation with new endpoints (OpenAPI spec)
+  **File**: tests/unit/user-service.test.js
+  
+  **Test Cases**:
+  - hashPassword creates valid bcrypt hash (can verify with bcrypt.compare)
+  - validateEmail accepts valid emails (test@example.com, user.name@domain.co.uk)
+  - validateEmail rejects invalid emails (no @, no domain, invalid format)
+  - createUser inserts user correctly (verify in test DB)
+  - createUser rejects weak passwords (< 8 chars, no letter, no number)
+  - createUser rejects duplicate emails (409 error)
+  
+  **Setup**: Mock database or use test database
+  
+  **Dependencies**: T019 (UserService implemented)
+  
+  **Acceptance**: All tests pass, coverage > 80% for UserService
+
+- [ ] T026 [P] [US1] Write unit tests for AuthService in tests/unit/auth-service.test.js
+
+  **File**: tests/unit/auth-service.test.js
+  
+  **Test Cases**:
+  - login succeeds with valid credentials (returns token)
+  - login fails with invalid password (returns AuthError)
+  - failed login count increments on failed login
+  - account locks after 5 failures (locked_until set)
+  - locked account rejects login (423 error)
+  - lock expires after 15 minutes (can login after expiration)
+  
+  **Setup**: Mock database or use test database
+  
+  **Dependencies**: T020 (AuthService implemented)
+  
+  **Acceptance**: All tests pass, coverage > 80% for AuthService
+
+- [ ] T027 [P] [US1] Write integration tests for auth endpoints in tests/integration/auth.test.js
+
+  **File**: tests/integration/auth.test.js
+  
+  **Test Cases**:
+  - POST /auth/register happy path (201, returns user and token)
+  - POST /auth/register with invalid email (400)
+  - POST /auth/register with weak password (400)
+  - POST /auth/register with duplicate email (409)
+  - POST /auth/login happy path (200, returns token)
+  - POST /auth/login with invalid credentials (401)
+  - POST /auth/login account lockout (423 after 5 failures)
+  - GET /auth/me with valid token (200, returns user)
+  - GET /auth/me with invalid token (401)
+  
+  **Setup**: Test server, test database
+  
+  **Dependencies**: T021, T022, T023, T024 (All endpoints and middleware)
+  
+  **Acceptance**: All integration tests pass
+
+### Verification Tasks
+
+- [ ] T028 [US1] Verify models milestone (T017, T018)
+
+  **Verification Type**: Milestone Checkpoint
+  
+  **Dependencies**: T017, T018 (all model tasks complete)
+  
+  **Checks**:
+  - Files exist: src/models/user.js, src/models/session.js
+  - Syntax valid (run linter: `npm run lint` - no errors)
+  - All required methods present (create, findByEmail, updateFailedLoginCount, lockAccount, etc.)
+  - Error classes imported correctly (ValidationError, DatabaseError from src/errors/)
+  - JSDoc comments complete for all public methods
+  - Can import models without errors
+  
+  **Manual Test**:
+  ```javascript
+  const User = require('./src/models/user');
+  const Session = require('./src/models/session');
+  // Should import without errors
+  ```
+  
+  **Acceptance**: All checks pass, models can be imported and used
+
+- [ ] T029 [US1] Verify services milestone (T019, T020)
+
+  **Verification Type**: Milestone Checkpoint
+  
+  **Dependencies**: T019, T020 (all service tasks complete), T028 (models verified)
+  
+  **Checks**:
+  - Services import models correctly (no circular dependencies)
+  - Error handling follows agents.md standard (never expose internal errors)
+  - Business logic matches design specifications
+  - All dependencies satisfied (models exist and work)
+  
+  **Manual Test**:
+  - Create temporary test file to invoke services in isolation
+  - Test UserService.createUser() with valid data
+  - Test AuthService.login() with valid credentials
+  - Verify error handling works (invalid input, duplicate email, etc.)
+  
+  **Acceptance**: All checks pass, services work correctly with models
+
+- [ ] T030 [US1] Verify API milestone (T021-T024)
+
+  **Verification Type**: Milestone Checkpoint
+  
+  **Dependencies**: T021-T024 (all API tasks complete), T029 (services verified)
+  
+  **Checks**:
+  - All endpoints exist (POST /auth/register, POST /auth/login, GET /auth/me)
+  - Middleware integrated correctly (auth middleware works)
+  - Request validation present (email format, password requirements)
+  - Error responses formatted correctly (use standard format from src/utils/response.js)
+  
+  **Manual Test**:
+  ```bash
+  # Start server
+  npm start
+  
+  # Test registration
+  curl -X POST http://localhost:3000/api/auth/register \
+    -H "Content-Type: application/json" \
+    -d '{"email":"test@example.com","password":"SecurePass123"}'
+  # Expected: 201 Created with user and token
+  
+  # Test login
+  curl -X POST http://localhost:3000/api/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{"email":"test@example.com","password":"SecurePass123"}'
+  # Expected: 200 OK with token
+  
+  # Test protected endpoint
+  curl -X GET http://localhost:3000/api/auth/me \
+    -H "Authorization: Bearer <token>"
+  # Expected: 200 OK with user profile
+  
+  # Test error cases
+  curl -X POST http://localhost:3000/api/auth/register \
+    -H "Content-Type: application/json" \
+    -d '{"email":"invalid","password":"weak"}'
+  # Expected: 400 Bad Request
+  ```
+  
+  **Acceptance**: All endpoints work, error handling correct, manual tests pass
+
+- [ ] T031 [US1] Verify tests milestone (T025-T027)
+
+  **Verification Type**: Milestone Checkpoint
+  
+  **Dependencies**: T025-T027 (all test tasks complete), T030 (API verified)
+  
+  **Checks**:
+  - All test files exist (tests/unit/user-service.test.js, etc.)
+  - Tests can run without errors
+  - Test coverage meets requirements (> 80% for new code)
+  - No linting errors
+  
+  **Automated Test**:
+  ```bash
+  npm test
+  ```
+  
+  **Expected Results**:
+  - All unit tests pass (UserService, AuthService)
+  - All integration tests pass (auth endpoints)
+  - Coverage > 80% for UserService, AuthService, models
+  - No linting errors (`npm run lint` passes)
+  
+  **Acceptance**: All tests pass, coverage meets requirements, no linting errors
+
+- [ ] T032 [US1] Verify story completion (independent test scenario)
+
+  **Verification Type**: Story-Level Verification
+  
+  **Dependencies**: All previous tasks complete (T017-T031)
+  
+  **Test Scenario**: Run independent test scenario from story definition above
+  
+  **Steps** (from story definition):
+  1. Start server: `npm start`
+  2. Register new user: `POST /api/auth/register` with valid email/password
+  3. Verify user in database: `SELECT email, status FROM users WHERE email='sarah@example.com'`
+  4. Login with credentials: `POST /api/auth/login`
+  5. Access protected resource: `GET /api/auth/me` with token
+  6. Test account lockout: Make 5 failed login attempts, verify 6th returns 423
+  
+  **Expected**: All steps pass, story works independently without US2 or US3
+  
+  **Acceptance**: Independent test scenario passes, story is complete and verified
+
+- [ ] T033 [US1] Update API documentation with new endpoints (OpenAPI spec)
+
+  **File**: docs/api/openapi.yaml (or existing API docs)
+  
+  **Requirements**:
+  - Document POST /api/auth/register endpoint
+  - Document POST /api/auth/login endpoint
+  - Document GET /api/auth/me endpoint
+  - Include request/response schemas
+  - Include error responses (400, 401, 409, 423)
+  
+  **Dependencies**: T032 (story verified)
+  
+  **Acceptance**: API documentation updated, all endpoints documented
 
 **Completion Criteria**:
-- All tasks T017-T029 marked [X]
-- Independent test scenario passes
+- All tasks T017-T033 marked [X] (including verification tasks T028-T032)
+- Independent test scenario passes (T032)
 - All 7 acceptance criteria met
 - Code reviewed
 - All 21 test cases passing
@@ -302,55 +638,206 @@ Success = All steps work correctly
 **Tasks**:
 
 ### Data Model
-- [ ] T030 [US2] Create PasswordReset model in src/models/password-reset.js
-  - Fields: id, user_id, token, created_at, expires_at, used_at
-  - Methods: create(), findByToken(), markUsed(), cleanupExpired()
+- [ ] T034 [US2] Create PasswordReset model in src/models/password-reset.js
+
+  **File**: src/models/password-reset.js
+  
+  **Fields** (from design):
+  - id: UUID (primary key, auto-generated)
+  - user_id: UUID (foreign key to users.id, required)
+  - token: string (64 random bytes as hex, unique, required)
+  - created_at: timestamp (default: now)
+  - expires_at: timestamp (required, 1 hour from creation)
+  - used_at: timestamp (nullable, set when token is used)
+  
+  **Methods** (from design):
+  - create(userId, token, expiresAt): Create reset request, return password reset object
+  - findByToken(token): Find reset request by token, return object or null
+  - markUsed(resetId): Set used_at to current timestamp
+  - cleanupExpired(): Delete expired tokens (for scheduled job)
+  
+  **Error Handling**:
+  - Use DatabaseError for DB failures
+  - Never expose internal errors to callers
+  
+  **Dependencies**: T008-T016 (Foundation tasks), T017-T033 (US1 complete)
+  
+  **Acceptance**: Model can be imported, all methods work correctly
 
 ### Services
-- [ ] T031 [US2] Implement PasswordResetService in src/services/password-reset-service.js
-  - generateResetToken() - 64 random bytes
-  - createResetRequest(userId) - create token, send email
-  - validateResetToken(token) - check exists, not used, not expired
-  - resetPassword(token, newPassword) - validate, update user, mark token used
-- [ ] T032 [US2] Integrate SendGrid email service in src/services/email-service.js
-  - sendPasswordResetEmail(email, resetLink)
-  - Use template with company branding
-  - Handle SendGrid API errors gracefully
+- [ ] T035 [US2] Implement PasswordResetService in src/services/password-reset-service.js
+
+  **File**: src/services/password-reset-service.js
+  
+  **Methods** (from design):
+  - generateResetToken(): Generate 64 random bytes as hex string
+  - createResetRequest(userId): Create token, set expiration (1 hour), call PasswordReset.create(), send email, return token
+  - validateResetToken(token): Check token exists, not used (used_at is null), not expired (expires_at > now), return reset object or null
+  - resetPassword(token, newPassword): Validate token, hash new password, update user.password_hash, mark token used, return success
+  
+  **Error Handling**:
+  - ValidationError for expired/invalid token (400)
+  - ValidationError for weak password (400)
+  - DatabaseError for DB failures
+  
+  **Dependencies**: T034 (PasswordReset model), T019 (UserService for password hashing)
+  
+  **Acceptance**: All methods work, password reset flow works end-to-end
+
+- [ ] T036 [US2] Integrate SendGrid email service in src/services/email-service.js
+
+  **File**: src/services/email-service.js
+  
+  **Methods**:
+  - sendPasswordResetEmail(email, resetLink): Send email using SendGrid API with template
+  
+  **Email Template**:
+  - Include company branding
+  - Clear reset link
+  - Expiration notice (1 hour)
+  
+  **Error Handling**:
+  - Handle SendGrid API errors gracefully (log, don't fail user request)
+  - Never expose SendGrid errors to users
+  
+  **Dependencies**: T035 (PasswordResetService)
+  
+  **Acceptance**: Emails send successfully, errors handled gracefully
 
 ### API Layer
-- [ ] T033 [US2] Create POST /api/auth/forgot-password endpoint in src/routes/auth.js
-  - Validate email format
-  - Call PasswordResetService.createResetRequest()
-  - Always return 200 (don't reveal if email exists)
+- [ ] T037 [US2] Create POST /api/auth/forgot-password endpoint in src/routes/auth.js
+
+  **File**: src/routes/auth.js
+  
+  **Endpoint**: POST /api/auth/forgot-password
+  
+  **Request Body**: { email: string }
+  
+  **Validation**:
+  - Email format (per UserService.validateEmail)
+  
+  **Logic**:
+  - Find user by email (if exists)
+  - Call PasswordResetService.createResetRequest(userId)
+  - Always return 200 OK (don't reveal if email exists - security)
   - Rate limit: 3 requests per email per hour
-- [ ] T034 [US2] Create POST /api/auth/reset-password endpoint in src/routes/auth.js
-  - Validate token and new password
-  - Call PasswordResetService.resetPassword()
-  - Return 200 on success
-  - Error handling: 400 expired/invalid, 400 weak password
+  
+  **Error Handling**:
+  - Always return 200 (security: don't reveal email existence)
+  - Rate limit returns 429 Too Many Requests
+  
+  **Dependencies**: T035 (PasswordResetService), T036 (EmailService)
+  
+  **Acceptance**: Endpoint accepts requests, sends email if user exists, rate limiting works
+
+- [ ] T038 [US2] Create POST /api/auth/reset-password endpoint in src/routes/auth.js
+
+  **File**: src/routes/auth.js
+  
+  **Endpoint**: POST /api/auth/reset-password
+  
+  **Request Body**: { token: string, password: string }
+  
+  **Validation**:
+  - Token format (64 hex chars)
+  - Password requirements (8+ chars, letter + number)
+  
+  **Logic**:
+  - Call PasswordResetService.resetPassword(token, password)
+  - Return 200 OK on success
+  
+  **Error Handling**:
+  - 400 Bad Request for expired/invalid token
+  - 400 Bad Request for weak password
+  - Use standard error format from src/utils/response.js
+  
+  **Dependencies**: T035 (PasswordResetService)
+  
+  **Acceptance**: Endpoint accepts valid token and password, updates password, rejects invalid tokens
 
 ### Testing
-- [ ] T035 [P] [US2] Write unit tests for PasswordResetService
-  - Test token generation (64 chars, unique)
-  - Test token validation (valid, expired, used, not found)
-  - Test password reset updates user correctly
-  - Test old password invalidated
-- [ ] T036 [P] [US2] Write integration tests for password reset flow
-  - Test forgot password endpoint
-  - Test reset password with valid token
-  - Test reset password with expired token
-  - Test reset password with used token
-  - Test old password no longer works
-  - Test new password works
-  - Test rate limiting
+- [ ] T039 [P] [US2] Write unit tests for PasswordResetService in tests/unit/password-reset-service.test.js
 
-### Story Verification
-- [ ] T037 [US2] Perform independent test scenario
-- [ ] T038 [US2] Update API documentation
+  **File**: tests/unit/password-reset-service.test.js
+  
+  **Test Cases**:
+  - generateResetToken creates 64 char hex string
+  - generateResetToken creates unique tokens
+  - validateResetToken accepts valid, unused, unexpired token
+  - validateResetToken rejects expired token
+  - validateResetToken rejects used token
+  - validateResetToken rejects non-existent token
+  - resetPassword updates user password correctly
+  - resetPassword marks token as used
+  - Old password invalidated after reset
+  
+  **Dependencies**: T035 (PasswordResetService implemented)
+  
+  **Acceptance**: All tests pass, coverage > 80%
+
+- [ ] T040 [P] [US2] Write integration tests for password reset flow in tests/integration/password-reset.test.js
+
+  **File**: tests/integration/password-reset.test.js
+  
+  **Test Cases**:
+  - POST /auth/forgot-password sends email (if user exists)
+  - POST /auth/forgot-password returns 200 even if user doesn't exist
+  - POST /auth/reset-password with valid token (200, password updated)
+  - POST /auth/reset-password with expired token (400)
+  - POST /auth/reset-password with used token (400)
+  - POST /auth/reset-password with invalid token (400)
+  - Old password no longer works after reset
+  - New password works after reset
+  - Rate limiting on forgot-password (429 after 3 requests)
+  
+  **Dependencies**: T037, T038 (All endpoints)
+  
+  **Acceptance**: All integration tests pass
+
+### Verification Tasks
+- [ ] T041 [US2] Verify password reset milestone (T034-T038)
+
+  **Verification Type**: Milestone Checkpoint
+  
+  **Dependencies**: T034-T038 (all password reset tasks complete)
+  
+  **Checks**:
+  - All files exist (model, services, endpoints)
+  - Endpoints work correctly
+  - Email sending works (or mocked)
+  - Rate limiting works
+  
+  **Manual Test**: Run independent test scenario from story definition
+  
+  **Acceptance**: All checks pass, password reset flow works end-to-end
+
+- [ ] T042 [US2] Verify story completion (independent test scenario)
+
+  **Verification Type**: Story-Level Verification
+  
+  **Dependencies**: All previous tasks complete (T034-T041)
+  
+  **Test Scenario**: Run independent test scenario from story definition above
+  
+  **Acceptance**: Independent test scenario passes, story is complete and verified
+
+- [ ] T043 [US2] Update API documentation with new endpoints (OpenAPI spec)
+
+  **File**: docs/api/openapi.yaml
+  
+  **Requirements**:
+  - Document POST /api/auth/forgot-password
+  - Document POST /api/auth/reset-password
+  - Include request/response schemas
+  - Include error responses (400, 429)
+  
+  **Dependencies**: T042 (story verified)
+  
+  **Acceptance**: API documentation updated
 
 **Completion Criteria**:
-- All tasks T030-T038 marked [X]
-- Independent test passes
+- All tasks T034-T043 marked [X] (including verification tasks T041-T042)
+- Independent test passes (T042)
 - All acceptance criteria met
 - Email delivery tested (at least in staging)
 
@@ -410,69 +897,250 @@ Success = 2FA flow works end-to-end
 **Tasks**:
 
 ### Database Updates
-- [ ] T039 [US3] Add 2FA fields to users table migration
-  - two_factor_enabled: boolean
-  - two_factor_secret: encrypted string
-  - backup_codes: encrypted json array
-  - Run migration: ALTER TABLE users ADD COLUMN...
+- [ ] T044 [US3] Add 2FA fields to users table migration
+
+  **File**: migrations/002_add_2fa_fields.sql (or update existing migration)
+  
+  **Fields to Add**:
+  - two_factor_enabled: boolean (default: false)
+  - two_factor_secret: text (encrypted, nullable)
+  - backup_codes: text (encrypted JSON array, nullable)
+  
+  **Migration Command**: ALTER TABLE users ADD COLUMN two_factor_enabled BOOLEAN DEFAULT false;
+  
+  **Dependencies**: T008-T016 (Foundation tasks), T017-T033 (US1 complete)
+  
+  **Acceptance**: Migration runs successfully, fields added to users table
 
 ### Models
-- [ ] T040 [US3] Update User model with 2FA methods in src/models/user.js
-  - enable2FA(secret, backupCodes)
-  - disable2FA()
-  - verify2FACode(code)
-  - useBackupCode(code)
+- [ ] T045 [US3] Update User model with 2FA methods in src/models/user.js
+
+  **File**: src/models/user.js (update existing)
+  
+  **New Methods** (from design):
+  - enable2FA(secret, backupCodes): Set two_factor_enabled=true, store encrypted secret and backup codes
+  - disable2FA(): Set two_factor_enabled=false, clear secret and backup codes
+  - verify2FACode(code): Verify TOTP code matches secret (using TwoFactorService)
+  - useBackupCode(code): Verify backup code, remove from array if valid
+  
+  **Error Handling**:
+  - ValidationError for invalid code
+  - Never expose internal errors
+  
+  **Dependencies**: T044 (Migration complete), T017 (User model exists)
+  
+  **Acceptance**: Methods work correctly, 2FA can be enabled/disabled
 
 ### Services
-- [ ] T041 [US3] Implement TwoFactorService in src/services/two-factor-service.js
-  - generateSecret() - using speakeasy library
-  - generateQRCode(secret, email) - for authenticator apps
-  - generateBackupCodes(count=10) - random 8-digit codes
-  - verifyTOTP(secret, code) - time-based validation
-  - Depends on: T040
+- [ ] T046 [US3] Implement TwoFactorService in src/services/two-factor-service.js
+
+  **File**: src/services/two-factor-service.js
+  
+  **Methods** (from design):
+  - generateSecret(): Generate TOTP secret using speakeasy library, return secret string
+  - generateQRCode(secret, email): Generate QR code data URI for authenticator apps (Google Authenticator, Authy)
+  - generateBackupCodes(count=10): Generate 10 unique 8-digit backup codes, return array
+  - verifyTOTP(secret, code): Verify time-based code matches secret (allow ±1 time window), return boolean
+  
+  **Error Handling**:
+  - ValidationError for invalid code format
+  - Never expose internal errors
+  
+  **Dependencies**: T045 (User model updated)
+  
+  **Acceptance**: All methods work, TOTP verification works with authenticator apps
 
 ### API Layer
-- [ ] T042 [US3] Create POST /api/auth/2fa/enable endpoint in src/routes/auth.js
-  - Requires authentication
-  - Generate secret and backup codes
-  - Return QR code data and backup codes
-  - Don't activate until verified
-- [ ] T043 [US3] Create POST /api/auth/2fa/verify endpoint in src/routes/auth.js
-  - Verify code matches secret
-  - Activate 2FA on user account
-  - Return success
-- [ ] T044 [US3] Update POST /api/auth/login to check 2FA status in src/routes/auth.js
-  - If 2FA enabled, return partial session
+- [ ] T047 [US3] Create POST /api/auth/2fa/enable endpoint in src/routes/auth.js
+
+  **File**: src/routes/auth.js
+  
+  **Endpoint**: POST /api/auth/2fa/enable
+  
+  **Authentication**: Requires authentication middleware (req.user must exist)
+  
+  **Logic**:
+  - Generate secret using TwoFactorService.generateSecret()
+  - Generate backup codes using TwoFactorService.generateBackupCodes(10)
+  - Generate QR code using TwoFactorService.generateQRCode(secret, email)
+  - Return 200 OK with { qrCode: "...", backupCodes: [...] }
+  - Don't activate 2FA until verified (separate endpoint)
+  
+  **Error Handling**:
+  - 401 if not authenticated
+  - Use standard error format
+  
+  **Dependencies**: T046 (TwoFactorService), T024 (Auth middleware)
+  
+  **Acceptance**: Endpoint returns QR code and backup codes, 2FA not active until verified
+
+- [ ] T048 [US3] Create POST /api/auth/2fa/verify endpoint in src/routes/auth.js
+
+  **File**: src/routes/auth.js
+  
+  **Endpoint**: POST /api/auth/2fa/verify
+  
+  **Authentication**: Requires authentication middleware
+  
+  **Request Body**: { code: string }
+  
+  **Logic**:
+  - Verify code matches secret (using TwoFactorService.verifyTOTP())
+  - If valid, call User.enable2FA(secret, backupCodes)
+  - Return 200 OK on success
+  
+  **Error Handling**:
+  - 400 Bad Request for invalid code
+  - 401 if not authenticated
+  
+  **Dependencies**: T047 (Enable endpoint), T046 (TwoFactorService)
+  
+  **Acceptance**: Endpoint verifies code and activates 2FA
+
+- [ ] T049 [US3] Update POST /api/auth/login to check 2FA status in src/routes/auth.js
+
+  **File**: src/routes/auth.js (update existing login endpoint)
+  
+  **Logic**:
+  - After successful password verification, check if user has 2FA enabled
+  - If 2FA enabled, return partial session (marked as "2fa_pending")
   - Require 2FA validation before full access
-- [ ] T045 [US3] Create POST /api/auth/2fa/validate endpoint in src/routes/auth.js
-  - Validate 2FA code or backup code
-  - Upgrade to full session
+  
+  **Response Format**:
+  - Without 2FA: { token: "...", user: {...} }
+  - With 2FA: { token: "...", user: {...}, requires2FA: true }
+  
+  **Dependencies**: T022 (Login endpoint), T045 (User model with 2FA)
+  
+  **Acceptance**: Login returns partial session when 2FA enabled
+
+- [ ] T050 [US3] Create POST /api/auth/2fa/validate endpoint in src/routes/auth.js
+
+  **File**: src/routes/auth.js
+  
+  **Endpoint**: POST /api/auth/2fa/validate
+  
+  **Request Body**: { email: string, code: string }
+  
+  **Logic**:
+  - Find user by email
+  - Validate 2FA code (TOTP or backup code)
+  - If valid, upgrade partial session to full session
   - Consume backup code if used
-- [ ] T046 [US3] Create POST /api/auth/2fa/disable endpoint in src/routes/auth.js
-  - Requires password verification
-  - Remove 2FA from account
+  - Return 200 OK with full session token
+  
+  **Error Handling**:
+  - 400 Bad Request for invalid code
+  - 401 if user not found or no partial session
+  
+  **Dependencies**: T049 (Login with 2FA check), T046 (TwoFactorService)
+  
+  **Acceptance**: Endpoint validates code and upgrades to full session
+
+- [ ] T051 [US3] Create POST /api/auth/2fa/disable endpoint in src/routes/auth.js
+
+  **File**: src/routes/auth.js
+  
+  **Endpoint**: POST /api/auth/2fa/disable
+  
+  **Authentication**: Requires authentication middleware
+  
+  **Request Body**: { password: string }
+  
+  **Logic**:
+  - Verify password (for security)
+  - Call User.disable2FA()
+  - Return 200 OK on success
+  
+  **Error Handling**:
+  - 401 if password incorrect
+  - 401 if not authenticated
+  
+  **Dependencies**: T045 (User model), T024 (Auth middleware)
+  
+  **Acceptance**: Endpoint disables 2FA after password verification
 
 ### Testing
-- [ ] T047 [P] [US3] Write unit tests for TwoFactorService
-  - Test TOTP generation and validation
-  - Test backup code generation (unique, 10 codes)
-  - Test backup code consumption (can't reuse)
-  - Test time window validation
-- [ ] T048 [P] [US3] Write integration tests for 2FA flow
-  - Test enable 2FA flow
-  - Test login with 2FA
-  - Test 2FA code validation
-  - Test backup code usage
-  - Test disable 2FA
-  - Test partial session restrictions
+- [ ] T052 [P] [US3] Write unit tests for TwoFactorService in tests/unit/two-factor-service.test.js
 
-### Story Verification
-- [ ] T049 [US3] Perform independent test scenario
-- [ ] T050 [US3] Update API documentation
+  **File**: tests/unit/two-factor-service.test.js
+  
+  **Test Cases**:
+  - generateSecret creates valid TOTP secret
+  - generateQRCode creates valid QR code data URI
+  - generateBackupCodes creates 10 unique 8-digit codes
+  - verifyTOTP validates correct code
+  - verifyTOTP rejects incorrect code
+  - verifyTOTP allows ±1 time window
+  - Backup codes are unique
+  
+  **Dependencies**: T046 (TwoFactorService implemented)
+  
+  **Acceptance**: All tests pass, coverage > 80%
+
+- [ ] T053 [P] [US3] Write integration tests for 2FA flow in tests/integration/2fa.test.js
+
+  **File**: tests/integration/2fa.test.js
+  
+  **Test Cases**:
+  - POST /auth/2fa/enable returns QR code and backup codes
+  - POST /auth/2fa/verify activates 2FA with valid code
+  - POST /auth/2fa/verify rejects invalid code
+  - POST /auth/login with 2FA enabled returns partial session
+  - POST /auth/2fa/validate upgrades to full session with valid code
+  - POST /auth/2fa/validate works with backup code
+  - POST /auth/2fa/validate rejects invalid code
+  - POST /auth/2fa/disable requires password
+  - POST /auth/2fa/disable removes 2FA
+  - Partial session can't access protected resources
+  
+  **Dependencies**: T047-T051 (All 2FA endpoints)
+  
+  **Acceptance**: All integration tests pass
+
+### Verification Tasks
+- [ ] T054 [US3] Verify 2FA milestone (T044-T051)
+
+  **Verification Type**: Milestone Checkpoint
+  
+  **Dependencies**: T044-T051 (all 2FA tasks complete)
+  
+  **Checks**:
+  - All files exist (migration, model updates, services, endpoints)
+  - 2FA works with Google Authenticator / Authy
+  - Backup codes work as fallback
+  - Partial session restrictions work
+  
+  **Manual Test**: Test 2FA flow with authenticator app
+  
+  **Acceptance**: All checks pass, 2FA flow works end-to-end
+
+- [ ] T055 [US3] Verify story completion (independent test scenario)
+
+  **Verification Type**: Story-Level Verification
+  
+  **Dependencies**: All previous tasks complete (T044-T054)
+  
+  **Test Scenario**: Run independent test scenario from story definition above
+  
+  **Acceptance**: Independent test scenario passes, story is complete and verified
+
+- [ ] T056 [US3] Update API documentation with new endpoints (OpenAPI spec)
+
+  **File**: docs/api/openapi.yaml
+  
+  **Requirements**:
+  - Document all 2FA endpoints
+  - Include request/response schemas
+  - Include error responses
+  
+  **Dependencies**: T055 (story verified)
+  
+  **Acceptance**: API documentation updated
 
 **Completion Criteria**:
-- All tasks T039-T050 marked [X]
-- Independent test passes
+- All tasks T044-T056 marked [X] (including verification tasks T054-T055)
+- Independent test passes (T055)
 - 2FA works with Google Authenticator / Authy
 - Backup codes work as fallback
 
@@ -485,35 +1153,35 @@ Success = 2FA flow works end-to-end
 **Tasks**:
 
 ### Security Hardening
-- [ ] T051 [P] Add comprehensive input validation to all endpoints (email, password, token formats)
-- [ ] T052 [P] Implement rate limiting per design (5/min login, 3/hour registration)
-- [ ] T053 [P] Add security headers using helmet.js (CSP, HSTS, X-Frame-Options)
-- [ ] T054 [P] Add request ID tracking for all requests (UUID per request)
-- [ ] T055 [P] Sanitize error messages (never expose internal details to users)
+- [ ] T057 [P] Add comprehensive input validation to all endpoints (email, password, token formats)
+- [ ] T058 [P] Implement rate limiting per design (5/min login, 3/hour registration)
+- [ ] T059 [P] Add security headers using helmet.js (CSP, HSTS, X-Frame-Options)
+- [ ] T060 [P] Add request ID tracking for all requests (UUID per request)
+- [ ] T061 [P] Sanitize error messages (never expose internal details to users)
 
 ### Observability
-- [ ] T056 [P] Add structured logging to all services (request_id, user_id, duration)
-- [ ] T057 [P] Setup metrics collection (login rate, error rate, latency)
-- [ ] T058 [P] Create health check endpoint (database, redis, email service status)
-- [ ] T059 [P] Add performance monitoring (slow query alerts)
+- [ ] T062 [P] Add structured logging to all services (request_id, user_id, duration)
+- [ ] T063 [P] Setup metrics collection (login rate, error rate, latency)
+- [ ] T064 [P] Create health check endpoint (database, redis, email service status)
+- [ ] T065 [P] Add performance monitoring (slow query alerts)
 
 ### Documentation
-- [ ] T060 [P] Complete OpenAPI/Swagger documentation for all endpoints
-- [ ] T061 [P] Write deployment guide (environment setup, migrations, secrets)
-- [ ] T062 [P] Document error codes and meanings for API consumers
-- [ ] T063 [P] Create runbook for common operations (user lockouts, password resets)
+- [ ] T066 [P] Complete OpenAPI/Swagger documentation for all endpoints
+- [ ] T067 [P] Write deployment guide (environment setup, migrations, secrets)
+- [ ] T068 [P] Document error codes and meanings for API consumers
+- [ ] T069 [P] Create runbook for common operations (user lockouts, password resets)
 
 ### Testing & Quality
-- [ ] T064 Performance testing (100 concurrent logins, measure latency)
-- [ ] T065 Security audit of all endpoints (OWASP checklist)
-- [ ] T066 Load testing (1000 users, find breaking point)
-- [ ] T067 Final end-to-end test (register → login → use app → reset password → 2FA)
+- [ ] T070 Performance testing (100 concurrent logins, measure latency)
+- [ ] T071 Security audit of all endpoints (OWASP checklist)
+- [ ] T072 Load testing (1000 users, find breaking point)
+- [ ] T073 Final end-to-end test (register → login → use app → reset password → 2FA)
 
 ### Deployment Preparation
-- [ ] T068 [P] Create Docker configuration (Dockerfile, docker-compose.yml)
-- [ ] T069 [P] Setup CI/CD pipeline (test on PR, deploy on merge)
-- [ ] T070 [P] Configure production environment variables
-- [ ] T071 Database backup and restore procedures
+- [ ] T074 [P] Create Docker configuration (Dockerfile, docker-compose.yml)
+- [ ] T075 [P] Setup CI/CD pipeline (test on PR, deploy on merge)
+- [ ] T076 [P] Configure production environment variables
+- [ ] T077 Database backup and restore procedures
 
 **Completion Criteria**:
 - All security measures in place
@@ -531,9 +1199,9 @@ Success = 2FA flow works end-to-end
 graph TD
     Setup[Phase 1: Setup<br/>7 tasks]
     Foundation[Phase 2: Foundation<br/>9 tasks]
-    US1[Phase 3: User Story 1<br/>13 tasks<br/>MVP Core Auth]
+    US1[Phase 3: User Story 1<br/>17 tasks<br/>MVP Core Auth]
     US2[Phase 4: User Story 2<br/>9 tasks<br/>Password Reset]
-    US3[Phase 5: User Story 3<br/>12 tasks<br/>2FA Optional]
+    US3[Phase 5: User Story 3<br/>13 tasks<br/>2FA Optional]
     Polish[Phase 6: Polish<br/>21 tasks]
     
     Setup --> Foundation
@@ -557,17 +1225,25 @@ graph TD
 ```
 T017, T018 (Models - Parallel) 
   ↓
+T028 (Verify models milestone)
+  ↓
 T019 (UserService - depends on T017)
   ↓
 T020 (AuthService - depends on T019)
   ↓
-T021, T022, T023 (API endpoints - depend on T020)
+T029 (Verify services milestone)
   ↓
-T024 (Auth middleware - depends on T018)
+T021, T022, T023, T024 (API endpoints and middleware - depend on T020)
+  ↓
+T030 (Verify API milestone)
   ↓
 T025, T026, T027 (Tests - Parallel, depend on implementation)
   ↓
-T028, T029 (Verification - sequential)
+T031 (Verify tests milestone)
+  ↓
+T032 (Verify story completion)
+  ↓
+T033 (Update API documentation)
 ```
 
 **User Story 2 (P2)**:
@@ -614,13 +1290,13 @@ T037, T038 (Verification)
 
 ## Task Summary
 
-**Total Tasks**: 71
+**Total Tasks**: 77 (updated count with verification tasks)
 - Phase 1 (Setup): 7 tasks
 - Phase 2 (Foundation): 9 tasks
-- Phase 3 (US1 - MVP): 13 tasks
-- Phase 4 (US2): 9 tasks
-- Phase 5 (US3): 12 tasks
-- Phase 6 (Polish): 21 tasks
+- Phase 3 (US1 - MVP): 17 tasks (T017-T033, including 5 verification tasks)
+- Phase 4 (US2): 10 tasks (T034-T043, including 2 verification tasks)
+- Phase 5 (US3): 13 tasks (T044-T056, including 2 verification tasks)
+- Phase 6 (Polish): 21 tasks (T057-T077)
 
 **Parallel Tasks**: 26 tasks marked [P] (~37% parallelizable)
 
@@ -642,7 +1318,7 @@ T037, T038 (Verification)
 
 **Week 1: MVP**
 - Day 1: Setup + Foundation (T001-T016)
-- Days 2-3: User Story 1 (T017-T029)
+- Days 2-3: User Story 1 (T017-T033, including verification tasks)
 - Deploy MVP, gather feedback
 
 **Week 2: Additional Features** (if MVP validates)
@@ -681,4 +1357,4 @@ T037, T038 (Verification)
 
 **Status**: [X] Draft [ ] In Progress [ ] Complete
 
-**Progress**: 0/71 tasks complete (0%)
+**Progress**: 0/77 tasks complete (0%)

@@ -145,12 +145,31 @@ The script will:
 - MVP definition clarity
 - Dependency graph examples
 
-### Step 5: Populate Tasks with Strict Format
+### Step 5: Populate Tasks with Detailed, Self-Contained Format
 
-**CRITICAL TASK FORMAT** - Every task MUST follow this pattern:
+**CRITICAL**: Tasks must be self-contained and detailed enough to be implemented without loading other tasks. This enables `/do-task` to work effectively (one task at a time).
+
+**TASK FORMAT** - Every task MUST follow this pattern:
 
 ```
 - [ ] [TaskID] [P?] [Story?] Description with file path
+
+  **File**: [exact file path]
+  
+  **Requirements** (from design):
+  - [Detailed requirement 1]
+  - [Detailed requirement 2]
+  
+  **Implementation Details**:
+  - [Specific implementation detail 1]
+  - [Specific implementation detail 2]
+  
+  **Error Handling**:
+  - [Error handling requirements]
+  
+  **Dependencies**: [Task IDs that must be complete first]
+  
+  **Acceptance**: [How to verify this task is complete]
 ```
 
 **Format Rules:**
@@ -168,18 +187,68 @@ The script will:
    - User Story phases: MUST have story label
    - Polish phase: NO story label
 5. **Description**: Clear action with exact file path
+6. **Detailed Requirements**: Self-contained details extracted from design
+7. **Dependencies**: Explicitly listed (not inferred)
 
 **Examples:**
 
-✅ CORRECT:
+✅ CORRECT (Detailed, Self-Contained):
 ```
-- [ ] T001 Initialize project structure per implementation plan
-- [ ] T005 [P] Implement authentication middleware in src/middleware/auth.js
-- [ ] T012 [P] [US1] Create User model in src/models/user.js
-- [ ] T014 [US1] Implement UserService in src/services/user-service.js
+- [ ] T017 [P] [US1] Create User model in src/models/user.js
+
+  **File**: src/models/user.js
+  
+  **Fields** (from design):
+  - id: UUID (primary key, auto-generated)
+  - email: string (unique, required, validated with regex)
+  - password_hash: string (required, bcrypt hashed, never plain text)
+  - email_verified: boolean (default: false)
+  - status: enum('active', 'inactive') (default: 'active')
+  - failed_login_count: integer (default: 0)
+  - locked_until: timestamp (nullable, null means not locked)
+  
+  **Methods** (from design):
+  - create(userData): Create new user, hash password using bcrypt cost 10, return user object
+  - findByEmail(email): Find user by email, return user object or null
+  - updateFailedLoginCount(userId): Increment failed_login_count by 1
+  - lockAccount(userId, durationMinutes): Set locked_until to now + durationMinutes
+  
+  **Error Handling**:
+  - Use ValidationError from src/errors/validation-error.js for invalid input
+  - Use DatabaseError from src/errors/database-error.js for DB failures
+  - Never expose internal errors to callers (per agents.md)
+  
+  **Dependencies**: T008-T016 (Foundation tasks must be complete)
+  
+  **Acceptance**: User model can be imported, instantiated, and all methods work correctly
 ```
 
-❌ WRONG:
+✅ CORRECT (Simpler task, still detailed):
+```
+- [ ] T001 Initialize project structure per implementation plan
+
+  **Files**: Create directories: src/, tests/, config/
+  
+  **Requirements**:
+  - Create src/ directory with subdirectories: models/, services/, routes/, middleware/
+  - Create tests/ directory with subdirectories: unit/, integration/
+  - Create config/ directory for configuration files
+  - Create .gitignore with standard Node.js ignores
+  
+  **Dependencies**: None (first task)
+  
+  **Acceptance**: All directories exist, .gitignore created
+```
+
+❌ WRONG (Too brief, not self-contained):
+```
+- [ ] T017 [US1] Create User model in src/models/user.js
+  - Fields: id, email, password_hash...
+  - Methods: create(), findByEmail()...
+```
+Problem: Missing field types, method signatures, error handling, dependencies
+
+❌ WRONG (Missing required elements):
 ```
 - [ ] Create User model  (missing ID and Story label)
 T001 [US1] Create model  (missing checkbox)
@@ -242,23 +311,214 @@ How to verify this story works without other stories:
 - Expected outcome: [What user sees/system does]
 
 **Tasks**:
+
 - [ ] T011 [P] [US1] Create User model in src/models/user.js
+
+  **File**: src/models/user.js
+  
+  **Fields** (from design):
+  - id: UUID (primary key, auto-generated)
+  - email: string (unique, required, validated)
+  - password_hash: string (required, bcrypt hashed)
+  - email_verified: boolean (default: false)
+  - status: enum('active', 'inactive') (default: 'active')
+  - failed_login_count: integer (default: 0)
+  - locked_until: timestamp (nullable)
+  
+  **Methods** (from design):
+  - create(userData): Hash password, insert user, return user object
+  - findByEmail(email): Find user by email, return user or null
+  - updateFailedLoginCount(userId): Increment failed_login_count
+  - lockAccount(userId, durationMinutes): Set locked_until timestamp
+  
+  **Error Handling**: Use ValidationError, DatabaseError from src/errors/
+  
+  **Dependencies**: T008-T016 (Foundation tasks)
+  
+  **Acceptance**: Model can be imported, all methods work
+
 - [ ] T012 [P] [US1] Create Session model in src/models/session.js
+
+  **File**: src/models/session.js
+  
+  **Fields** (from design):
+  - id: UUID (primary key)
+  - user_id: UUID (foreign key to users.id)
+  - token: string (64 random bytes as hex, unique)
+  - created_at: timestamp (default: now)
+  - expires_at: timestamp (required, 24 hours from creation)
+  - last_activity_at: timestamp (default: now, updated on use)
+  
+  **Methods** (from design):
+  - create(userId, token): Create session, return session object
+  - findByToken(token): Find session by token, return session or null
+  - updateActivity(sessionId): Update last_activity_at to now
+  - delete(sessionId): Delete session by ID
+  
+  **Error Handling**: Use DatabaseError for DB failures
+  
+  **Dependencies**: T008-T016 (Foundation tasks)
+  
+  **Acceptance**: Model can be imported, all methods work
+
 - [ ] T013 [US1] Implement UserService in src/services/user-service.js
-  - Password hashing (bcrypt)
-  - Email validation
-  - User creation
+
+  **File**: src/services/user-service.js
+  
+  **Methods** (from design):
+  - hashPassword(password): Hash using bcrypt cost 10, return hash string
+  - validateEmail(email): Validate format with regex, return boolean
+  - createUser(email, password): Validate email, hash password, call User.create(), return user object
+  
+  **Error Handling**:
+  - ValidationError for invalid email format
+  - ValidationError for weak password (per design requirements)
+  - DatabaseError for duplicate email (409 conflict)
+  
+  **Dependencies**: T011 (User model must exist)
+  
+  **Acceptance**: All methods work, error handling correct
+
 - [ ] T014 [US1] Implement AuthService in src/services/auth-service.js
-  - Login logic
-  - Session creation
-  - Token generation
-- [ ] T015 [US1] Create POST /auth/register endpoint in src/routes/auth.js
-- [ ] T016 [US1] Create POST /auth/login endpoint in src/routes/auth.js
-- [ ] T017 [US1] Add authentication middleware in src/middleware/auth.js
-- [ ] T018 [P] [US1] Write unit tests for UserService
-- [ ] T019 [P] [US1] Write unit tests for AuthService
-- [ ] T020 [US1] Write integration tests for auth endpoints
+
+  **File**: src/services/auth-service.js
+  
+  **Methods** (from design):
+  - login(email, password): Verify credentials, track failures, create session, return session token
+  - handleFailedLogin(userId): Increment failed_login_count, lock if >= 5 failures
+  - generateSessionToken(): Generate 64 random bytes as hex string
+  - checkAccountLock(user): Verify not locked or lock expired, return boolean
+  
+  **Error Handling**:
+  - AuthError for invalid credentials (401)
+  - AuthError for locked account (423)
+  
+  **Dependencies**: T011 (User model), T012 (Session model), T013 (UserService)
+  
+  **Acceptance**: Login flow works, account lockout works after 5 failures
+
+- [ ] T015 [US1] Create POST /api/auth/register endpoint in src/routes/auth.js
+
+  **File**: src/routes/auth.js (create or add to existing)
+  
+  **Endpoint**: POST /api/auth/register
+  
+  **Request Body**: { email: string, password: string }
+  
+  **Validation**:
+  - Email format (per UserService.validateEmail)
+  - Password requirements (8+ chars, letter + number)
+  
+  **Logic**:
+  - Call UserService.createUser()
+  - Create session using Session.create()
+  - Return 201 with user object and session token
+  
+  **Error Handling**:
+  - 400 for validation errors
+  - 409 for duplicate email
+  
+  **Dependencies**: T013 (UserService), T012 (Session model)
+  
+  **Acceptance**: Endpoint accepts valid requests, returns 201 with token
+
+- [ ] T016 [US1] Create POST /api/auth/login endpoint in src/routes/auth.js
+
+  **File**: src/routes/auth.js
+  
+  **Endpoint**: POST /api/auth/login
+  
+  **Request Body**: { email: string, password: string }
+  
+  **Logic**:
+  - Call AuthService.login()
+  - Track failed attempts
+  - Return 200 with session token
+  
+  **Error Handling**:
+  - 401 for invalid credentials
+  - 423 for locked account
+  
+  **Dependencies**: T014 (AuthService)
+  
+  **Acceptance**: Endpoint accepts valid credentials, returns 200 with token
+
+- [ ] T017 [US1] Create authentication middleware in src/middleware/auth.js
+
+  **File**: src/middleware/auth.js
+  
+  **Functionality**:
+  - Extract token from Authorization header (Bearer <token>)
+  - Validate session using Session.findByToken()
+  - Check expiration (expires_at > now)
+  - Update activity using Session.updateActivity()
+  - Attach user to request object (req.user)
+  
+  **Error Handling**:
+  - 401 for missing/invalid token
+  - 401 for expired session
+  
+  **Dependencies**: T012 (Session model)
+  
+  **Acceptance**: Middleware validates tokens, attaches user to request
+
+- [ ] T018 [P] [US1] Write unit tests for UserService in tests/unit/user-service.test.js
+
+  **File**: tests/unit/user-service.test.js
+  
+  **Test Cases**:
+  - hashPassword creates valid bcrypt hash
+  - validateEmail accepts valid emails, rejects invalid
+  - createUser inserts user correctly
+  - createUser rejects weak passwords
+  - createUser rejects duplicate emails
+  
+  **Dependencies**: T013 (UserService implemented)
+  
+  **Acceptance**: All tests pass, coverage > 80%
+
+- [ ] T019 [P] [US1] Write unit tests for AuthService in tests/unit/auth-service.test.js
+
+  **File**: tests/unit/auth-service.test.js
+  
+  **Test Cases**:
+  - login succeeds with valid credentials
+  - login fails with invalid password
+  - failed login count increments
+  - account locks after 5 failures
+  - locked account rejects login
+  - lock expires after 15 minutes
+  
+  **Dependencies**: T014 (AuthService implemented)
+  
+  **Acceptance**: All tests pass, coverage > 80%
+
+- [ ] T020 [US1] Write integration tests for auth endpoints in tests/integration/auth.test.js
+
+  **File**: tests/integration/auth.test.js
+  
+  **Test Cases**:
+  - POST /auth/register happy path
+  - POST /auth/register with invalid email
+  - POST /auth/register with weak password
+  - POST /auth/register with duplicate email
+  - POST /auth/login happy path
+  - POST /auth/login with invalid credentials
+  - POST /auth/login account lockout
+  - GET /auth/me with valid token
+  - GET /auth/me with invalid token
+  
+  **Dependencies**: T015, T016, T017 (All endpoints and middleware)
+  
+  **Acceptance**: All integration tests pass
+
 - [ ] T021 [US1] Verify story completion (manual test scenario)
+
+  **Action**: Run independent test scenario from story definition
+  
+  **Dependencies**: All previous tasks complete
+  
+  **Acceptance**: All test scenario steps pass
 ```
 
 **Important**: Each story phase follows same structure:
@@ -374,6 +634,8 @@ bash .cursor/scripts/validate-tasks.sh "docs/specs/[feature-name]-tasks.md"
 - [ ] File paths included in task descriptions
 - [ ] Dependencies are logical (no circular dependencies)
 - [ ] MVP scope clearly defined
+- [ ] Verification tasks included at key milestones (models, services, API, tests, story)
+- [ ] Verification tasks have clear acceptance criteria
 
 If validation fails, fix issues and re-validate.
 
@@ -444,14 +706,18 @@ Display summary:
 
 🎯 Next Steps:
 1. Review task breakdown for accuracy
-2. Start implementation with /implement-story "User Story 1"
-3. Complete MVP before adding P2/P3 features
+2. Verify tasks are self-contained (can be understood without design doc)
+3. Start implementation with:
+   - `/do-task` (one task at a time, maximum focus)
+   - OR `/implement-story "User Story 1"` (full story context)
+4. Complete MVP before adding P2/P3 features
 
 💡 Implementation Tips:
 - Work story-by-story (don't jump between stories)
 - Each story should work independently
 - Test each story fully before moving to next
 - Update agents.md with learnings as you go
+- Tasks are now self-contained - perfect for `/do-task` workflow
 ```
 
 ## Guidelines
@@ -529,6 +795,53 @@ These are parallel because different files, no dependencies.
 ```
 These are NOT parallel - must be sequential.
 
+### Verification Tasks
+
+**CRITICAL**: Include explicit verification tasks at key milestones. These ensure quality and catch issues early.
+
+**Verification Task Placement**:
+
+1. **After Models** (after all model tasks in a story):
+   - Verify files exist, syntax valid, methods present
+   - Can import and use models
+   - Example: T021 [US1] Verify models milestone (T017, T018)
+
+2. **After Services** (after all service tasks):
+   - Verify services work with models
+   - Business logic matches design
+   - Error handling correct
+   - Example: T022 [US1] Verify services milestone (T019, T020)
+
+3. **After API** (after all API/endpoint tasks):
+   - Verify all endpoints exist and work
+   - Manual testing with curl/Postman
+   - Error responses correct
+   - Example: T023 [US1] Verify API milestone (T021-T024)
+
+4. **After Tests** (after all test tasks):
+   - Run automated test suite
+   - Verify coverage meets requirements
+   - No linting errors
+   - Example: T024 [US1] Verify tests milestone (T025-T027)
+
+5. **After Story** (after all tasks in story):
+   - Run independent test scenario
+   - Verify story works end-to-end
+   - Example: T025 [US1] Verify story completion
+
+**Verification Task Format**:
+- Include verification type (Milestone Checkpoint or Story-Level Verification)
+- List all dependencies (which tasks must be complete)
+- Specify checks to run (automated and manual)
+- Define acceptance criteria (what "pass" means)
+
+**Benefits**:
+- Makes verification mandatory (can't skip)
+- Shows up in progress tracking
+- Works well with `/do-task` (one task at a time)
+- Catches issues early (before moving to next milestone)
+- Provides clear checkpoints for review
+
 ### Task Granularity
 
 **Good Task Size**: 30-60 minutes of focused work
@@ -547,12 +860,22 @@ Combine: "Implement password hashing with bcrypt"
 ```
 Break down: Registration → Login → Session → Verification
 
-**Just Right**:
+**Just Right** (Detailed, Self-Contained):
 ```
 - [ ] T013 [US1] Implement UserService in src/services/user-service.js
-  - Password hashing (bcrypt)
-  - Email validation
-  - User creation with error handling
+
+  **File**: src/services/user-service.js
+  
+  **Methods**:
+  - hashPassword(password): Hash using bcrypt cost 10
+  - validateEmail(email): Validate format with regex
+  - createUser(email, password): Hash password, insert user, return user object
+  
+  **Error Handling**: ValidationError for invalid input, DatabaseError for DB failures
+  
+  **Dependencies**: T011 (User model)
+  
+  **Acceptance**: All methods work, error handling correct
 ```
 
 ### Testing Task Rules
@@ -599,8 +922,62 @@ Break down: Registration → Login → Session → Verification
 - "Handle errors" → Which errors? How?
 - "Add validation" → Which fields? What rules?
 
+❌ **Tasks not self-contained**
+- "Create User model" → What fields? What methods? What types?
+- "Implement service" → Which methods? What do they do?
+- Tasks that require loading design doc to understand
+
 ❌ **Missing MVP definition**
 - No clear line between must-have and nice-to-have
+
+### Task Self-Containment Requirements
+
+**CRITICAL**: For `/do-task` to work effectively, each task must be self-contained. This means:
+
+**DO Include:**
+- Exact file paths
+- All fields with types and constraints
+- All methods with signatures and behavior
+- Error handling requirements
+- Dependencies explicitly listed
+- Acceptance criteria for the task
+- Implementation approach (if non-obvious)
+
+**DON'T Rely On:**
+- "See design doc for details" (extract details into task)
+- "Similar to T011" (include full details)
+- "Standard pattern" (specify the pattern)
+- Implied dependencies (list them explicitly)
+
+**Example of Self-Contained Task:**
+
+✅ **Good**:
+```
+- [ ] T017 [US1] Create User model in src/models/user.js
+
+  **File**: src/models/user.js
+  
+  **Fields**:
+  - id: UUID (primary key, auto-generated)
+  - email: string (unique, required, validated with regex)
+  - password_hash: string (required, bcrypt hashed)
+  ...
+  
+  **Methods**:
+  - create(userData): Create new user, hash password, return user object
+  ...
+  
+  **Dependencies**: T008-T016
+  
+  **Acceptance**: Model can be imported, all methods work
+```
+
+❌ **Bad** (not self-contained):
+```
+- [ ] T017 [US1] Create User model in src/models/user.js
+  - See design doc for fields and methods
+  - Follow standard model pattern
+```
 
 ## Context
 
