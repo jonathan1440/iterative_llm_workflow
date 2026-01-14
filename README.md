@@ -53,7 +53,7 @@ flowchart TD
     InitProject --> SpecFeature[//spec-feature/]
     
     SpecFeature --> UpdateDocs{Update agent-docs<br/>before designing?}
-    UpdateDocs -->|Yes - Recommended| UpdateAgentDocs[update-agent-docs]
+    UpdateDocs -->|Yes - Recommended| UpdateAgentDocs[//update-agent-docs/]
     UpdateDocs -->|Skip| Design
     UpdateAgentDocs --> Design
     
