@@ -12,7 +12,11 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-This command performs cross-artifact validation to ensure spec, design, and tasks documents remain consistent. It catches common issues like requirements without tasks, database tables without migrations, and API endpoints without implementation plans.
+This command performs comprehensive validation including:
+1. **Format validation**: Ensures spec, design, and tasks follow proper template formats
+2. **Cross-artifact consistency**: Validates that documents remain consistent with each other
+
+It catches common issues like requirements without tasks, database tables without migrations, API endpoints without implementation plans, and format deviations from templates.
 
 ### Step 0: Prerequisites
 
@@ -30,9 +34,45 @@ The script will:
 
 If any files are missing, instruct user to create them first.
 
-### Step 1: Run Consistency Checks
+### Step 1: Run Format Validation
 
-Execute comprehensive validation:
+First, validate that each document follows the proper template format:
+
+```bash
+# Validate spec format
+bash .cursor/scripts/validate-spec.sh "docs/specs/[feature-name]/spec.md"
+
+# Validate tasks format
+bash .cursor/scripts/validate-tasks.sh "docs/specs/[feature-name]/tasks.md"
+```
+
+**Format validation checks:**
+
+#### Spec Format Validation
+- Required sections present (Problem Statement, User Stories, Success Criteria, Functional Requirements)
+- User stories follow "As a...I want...so that" format
+- Acceptance criteria defined for each user story
+- Success criteria contain measurable metrics
+- No implementation details in spec (technology choices belong in design)
+- No placeholder markers (TODO, TBD, etc.)
+- Out of Scope section present (recommended)
+
+#### Tasks Format Validation
+- All tasks have TaskID format: `[T001]`, `[T002]`, etc.
+- TaskIDs are sequential with no gaps
+- Tasks follow format: `- [ ] [TaskID] [P?] [Story?] [RESEARCH?] Description`
+- Required sections present (Phase 1: Setup, Phase 2: Foundation, MVP Definition, Dependencies)
+- User story tasks have file paths specified
+- Independent test scenarios defined for each user story
+- Acceptance criteria referenced from spec
+- MVP definition clearly scoped
+- Mermaid dependency diagram present (recommended)
+
+**Format validation results should be integrated into the overall analysis.**
+
+### Step 2: Run Consistency Checks
+
+Execute cross-artifact consistency validation:
 
 ```bash
 bash .cursor/scripts/check-consistency.sh "docs/specs/[feature-name]/spec.md"
@@ -70,14 +110,54 @@ The script performs these checks:
 - Independent test scenarios defined
 - Acceptance criteria testable
 
-### Step 2: Review Findings
+### Step 3: Review Findings
 
-Display categorized issues:
+Display categorized issues combining format validation and consistency checks:
 
 ```markdown
 ╔════════════════════════════════════════════════╗
-║     Consistency Analysis Results               ║
+║     Consistency & Format Analysis Results      ║
 ╚════════════════════════════════════════════════╝
+
+📋 FORMAT VALIDATION RESULTS
+
+🔴 Format Errors (2)
+Issues that prevent proper parsing or template compliance:
+
+1. Tasks Missing TaskIDs
+   - 3 tasks found without [T001] format
+   - Lines: 45, 67, 89
+   - Action: Add TaskIDs to all tasks
+
+2. Spec Missing Required Section
+   - Missing "Success Criteria" section
+   - Action: Add Success Criteria section to spec
+
+🟡 Format Warnings (3)
+Issues that may cause confusion but don't block parsing:
+
+1. TaskID Sequence Gap
+   - Expected T003, found T005
+   - Action: Renumber tasks sequentially
+
+2. Vague Success Criteria
+   - "Fast response time" lacks metric
+   - Action: Add specific metric (e.g., "< 200ms")
+
+3. Missing Mermaid Diagram
+   - Tasks file lacks dependency visualization
+   - Action: Add mermaid diagram (recommended)
+
+🟢 Format Good (8)
+Things that follow templates correctly:
+
+✓ All tasks have proper TaskID format
+✓ Spec has all required sections
+✓ User stories follow proper format
+✓ Tasks have file paths specified
+[... more format successes ...]
+
+═══════════════════════════════════════════════════
 
 🔴 CRITICAL ISSUES (3)
 Issues that will cause implementation failures:
@@ -124,13 +204,46 @@ Things that are consistent:
 [... more successes ...]
 
 ═══════════════════════════════════════════════════
-Summary: 3 critical, 5 warnings, 12 good
+Summary: 
+- Format: 2 errors, 3 warnings, 8 good
+- Consistency: 3 critical, 5 warnings, 12 good
 ═══════════════════════════════════════════════════
 
-Recommendation: Fix critical issues before implementation
+Recommendation: Fix format errors and critical consistency issues before implementation
 ```
 
-### Step 3: Fix Critical Issues
+### Step 4: Fix Format Issues
+
+Address format validation errors first (they may affect consistency checks):
+
+```markdown
+Fix Format Error #1: Tasks Missing TaskIDs
+
+**Problem**: 3 tasks don't have [T001] format identifiers
+
+**Current state**:
+- Line 45: `- [ ] Create user model`
+- Line 67: `- [ ] Add authentication endpoint`
+- Line 89: `- [ ] Write tests`
+
+**Impact**: Cannot track tasks, breaks dependency validation
+
+**Solution**:
+1. Assign sequential TaskIDs starting from next available number
+2. Update format to: `- [ ] [T045] Create user model`
+3. Update any dependencies that reference these tasks
+
+**Implementation**:
+- T045: Create user model
+- T046: Add authentication endpoint  
+- T047: Write tests
+
+Apply this fix? [yes/no/manual]
+```
+
+If user says "yes", update the tasks file with proper TaskIDs.
+
+### Step 5: Fix Critical Issues
 
 For each critical issue, provide actionable fix:
 
@@ -165,7 +278,7 @@ Apply this fix? [yes/no/manual]
 
 If user says "yes", update the relevant file(s).
 
-### Step 4: Fix Warnings
+### Step 6: Fix Warnings
 
 Address warning-level issues:
 
@@ -189,7 +302,7 @@ Update tasks.md to match spec.md (US1 only is true MVP)
 Apply this fix? [yes/no/skip]
 ```
 
-### Step 5: Update Agents.md (If Patterns Found)
+### Step 7: Update Agents.md (If Patterns Found)
 
 If consistency checks reveal common mistakes:
 
@@ -217,7 +330,7 @@ Found 3 instances where design specified components but tasks didn't include the
 Add this learning? [yes/no]
 ```
 
-### Step 6: Generate Consistency Report
+### Step 8: Generate Consistency Report
 
 Create detailed report file:
 
@@ -226,35 +339,43 @@ bash .cursor/scripts/generate-consistency-report.sh "docs/specs/[feature-name]/s
 ```
 
 This creates `docs/specs/[feature-name]/consistency-report.md` with:
-- All issues found (critical, warnings, good)
-- Recommended fixes
+- Format validation results (errors, warnings, good)
+- Consistency check results (critical, warnings, good)
+- Recommended fixes for both format and consistency issues
 - Diff snippets showing what to change
 - Rerun instructions
 
-### Step 7: Final Summary
+### Step 9: Final Summary
 
 ```markdown
-✅ Consistency Analysis Complete
+✅ Consistency & Format Analysis Complete
 
-📊 Results:
+📊 Format Validation Results:
+- Format Errors: 2 (must fix - blocks proper parsing)
+- Format Warnings: 3 (recommended to fix)
+- Format Good: 8 (follows templates correctly)
+
+📊 Consistency Check Results:
 - Critical Issues: 3 (must fix before implementation)
 - Warnings: 5 (recommended to fix)
 - Good: 12 (consistent and correct)
 
 📝 Actions Taken:
-- Fixed 2 critical issues automatically
+- Fixed 2 format errors automatically
+- Fixed 2 critical consistency issues automatically
 - Generated consistency report
 - Added 1 learning to agents.md
 
 📄 Report: docs/specs/[feature-name]/consistency-report.md
 
 🎯 Next Steps:
-1. Review remaining 1 critical issue
-2. Fix manually or with /add-story command
-3. Re-run /analyze-consistency to verify
-4. Proceed with implementation
+1. Review remaining format issues (if any)
+2. Review remaining 1 critical consistency issue
+3. Fix manually or with /add-story command
+4. Re-run /analyze-consistency to verify
+5. Proceed with implementation
 
-💡 Tip: Run this before starting implementation and after major design changes
+💡 Tip: Run this before starting implementation and after major design changes. Format validation ensures documents follow templates; consistency checks ensure they align with each other.
 ```
 
 ## Guidelines
@@ -292,6 +413,22 @@ This creates `docs/specs/[feature-name]/consistency-report.md` with:
 - After team members make changes
 - When something "feels off"
 
+### Common Format Issues
+
+**Format Errors (Must Fix)**:
+1. **Missing TaskIDs**: Tasks without [T001] format cannot be tracked
+2. **Missing Required Sections**: Spec or tasks missing mandatory sections
+3. **Invalid Task Format**: Tasks don't follow `- [ ] [TaskID] [P?] [Story?] Description`
+4. **TaskID Gaps**: Non-sequential TaskIDs break dependency tracking
+5. **Implementation Details in Spec**: Technology choices belong in design, not spec
+
+**Format Warnings (Should Fix)**:
+1. **Vague Metrics**: Success criteria lack specific measurements
+2. **Missing File Paths**: Tasks don't specify which files to modify
+3. **Missing Mermaid Diagram**: No visual dependency graph
+4. **Placeholder Markers**: TODO/TBD items should be resolved
+5. **User Story Format**: Stories don't follow "As a...I want...so that" pattern
+
 ### Common Consistency Issues
 
 **Critical (Must Fix)**:
@@ -315,16 +452,23 @@ This creates `docs/specs/[feature-name]/consistency-report.md` with:
 
 ### Auto-Fix Capabilities
 
-The command can automatically fix:
+**Format Fixes**:
+- ✅ Adding TaskIDs to tasks missing them
+- ✅ Fixing task numbering sequences
+- ✅ Updating task format to match template
+- ✅ Adding missing required section headers
+
+**Consistency Fixes**:
 - ✅ Adding missing task references
 - ✅ Updating MVP definitions
 - ✅ Syncing acceptance criteria
-- ✅ Fixing task numbering sequences
+- ✅ Fixing task dependency references
 
-The command cannot automatically fix:
+**Cannot Automatically Fix**:
 - ❌ Creating entirely new tasks (use /add-story)
 - ❌ Designing missing components (use /design-system)
 - ❌ Resolving architectural conflicts (manual review needed)
+- ❌ Rewriting vague requirements (manual clarification needed)
 
 ### Handling False Positives
 
@@ -347,3 +491,8 @@ Add `--skip-checks` flag to suppress specific checks on re-run.
 Feature specification path: $ARGUMENTS
 
 **Important**: This command reads only, never writes (except with explicit user approval). It's safe to run frequently.
+
+**Format vs Consistency**: 
+- Format validation ensures documents follow template structure (required sections, proper syntax, etc.)
+- Consistency validation ensures documents align with each other (requirements have tasks, design matches spec, etc.)
+- Both are important: format errors can prevent proper parsing, while consistency errors indicate missing or misaligned content
