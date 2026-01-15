@@ -36,7 +36,7 @@ If prerequisites fail, instruct user to complete prior work.
 Extract all tasks for the specified story:
 
 ```bash
-bash .cursor/scripts/get-story-tasks.sh "docs/specs/[feature-name]-tasks.md" "User Story 1"
+bash .cursor/scripts/get-story-tasks.sh "docs/specs/[feature-name]/tasks.md" "User Story 1"
 ```
 
 This outputs:
@@ -96,9 +96,9 @@ Once in Composer Mode, load these files:
 
 ```markdown
 Load into Composer context:
-- Tasks: docs/specs/[feature-name]-tasks.md
-- Design: docs/specs/[feature-name]-design.md
-- Spec: docs/specs/[feature-name].md
+- Tasks: docs/specs/[feature-name]/tasks.md
+- Design: docs/specs/[feature-name]/design.md
+- Spec: docs/specs/[feature-name]/spec.md
 - Standards: .cursor/agents.md
 - Domain-specific patterns (if exist):
   - .cursor/agent-docs/api.md (for API/backend tasks)
@@ -174,7 +174,7 @@ Follow agents.md standards for:
 After implementation:
 
 ```bash
-bash .cursor/scripts/mark-task-complete.sh "docs/specs/[feature-name]-tasks.md" "T017"
+bash .cursor/scripts/mark-task-complete.sh "docs/specs/[feature-name]/tasks.md" "T017"
 ```
 
 This updates the task from `- [ ]` to `- [X]` in the tasks file.
@@ -303,7 +303,7 @@ Update agents.md with approved additions.
 After all tasks complete, run the independent test scenario:
 
 ```bash
-bash .cursor/scripts/verify-story.sh "docs/specs/[feature-name]-tasks.md" "User Story 1"
+bash .cursor/scripts/verify-story.sh "docs/specs/[feature-name]/tasks.md" "User Story 1"
 ```
 
 This script:

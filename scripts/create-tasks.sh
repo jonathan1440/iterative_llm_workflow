@@ -27,9 +27,22 @@ if [ ! -f "$SPEC_PATH" ]; then
 fi
 
 # Generate tasks file path
-SPEC_DIR=$(dirname "$SPEC_PATH")
-SPEC_FILENAME=$(basename "$SPEC_PATH" .md)
-TASKS_PATH="${SPEC_DIR}/${SPEC_FILENAME}-tasks.md"
+# Handle both old format (feature-name.md) and new format (feature-name/spec.md)
+if [[ "$SPEC_PATH" == *"/spec.md" ]]; then
+    # New format: feature-name/spec.md -> feature-name/tasks.md
+    SPEC_DIR=$(dirname "$SPEC_PATH")
+    TASKS_PATH="${SPEC_DIR}/tasks.md"
+    mkdir -p "$SPEC_DIR"
+else
+    # Old format: feature-name.md -> create feature-name/ directory and use new format
+    SPEC_DIR=$(dirname "$SPEC_PATH")
+    SPEC_FILENAME=$(basename "$SPEC_PATH" .md)
+    FEATURE_DIR="${SPEC_DIR}/${SPEC_FILENAME}"
+    
+    # Create feature directory and use new format
+    mkdir -p "$FEATURE_DIR"
+    TASKS_PATH="${FEATURE_DIR}/tasks.md"
+fi
 
 # Get current date
 CURRENT_DATE=$(date +%Y-%m-%d)

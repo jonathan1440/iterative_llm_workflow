@@ -35,7 +35,7 @@ If any files are missing, instruct user to create them first.
 Execute comprehensive validation:
 
 ```bash
-bash .cursor/scripts/check-consistency.sh "docs/specs/[feature-name].md"
+bash .cursor/scripts/check-consistency.sh "docs/specs/[feature-name]/spec.md"
 ```
 
 The script performs these checks:
@@ -246,7 +246,7 @@ This creates `docs/specs/[feature-name]-consistency-report.md` with:
 - Generated consistency report
 - Added 1 learning to agents.md
 
-📄 Report: docs/specs/[feature-name]-consistency-report.md
+📄 Report: docs/specs/[feature-name]/consistency-report.md
 
 🎯 Next Steps:
 1. Review remaining 1 critical issue

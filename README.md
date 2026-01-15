@@ -222,9 +222,10 @@ your-project/
 │
 ├── docs/
 │   └── specs/                 # Generated specifications
-│       ├── [feature]-name.md
-│       ├── [feature]-name-design.md
-│       └── [feature]-name-tasks.md
+│       └── [feature-name]/    # Feature directory
+│           ├── spec.md        # Feature specification
+│           ├── design.md     # System design
+│           └── tasks.md      # Task breakdown
 │
 ├── src/                       # Your application code
 │   ├── models/
@@ -332,24 +333,24 @@ cp agents.md .cursor/agents.md
 # 1. Define what to build
 /spec-feature "User authentication with email/password"
 
-# This creates: docs/specs/user-authentication-with-email-password.md
+# This creates: docs/specs/user-authentication-with-email-password/spec.md
 # Contains: Problem statement, user stories, success criteria
 
 # 2. Design the system
-/design-system docs/specs/user-authentication-with-email-password.md
+/design-system docs/specs/user-authentication-with-email-password/spec.md
 
-# This creates: docs/specs/user-authentication-with-email-password-design.md
+# This creates: docs/specs/user-authentication-with-email-password/design.md
 # Contains: Architecture, database schema, API contracts
 
 # 3. Plan the implementation
-/plan-tasks docs/specs/user-authentication-with-email-password.md
+/plan-tasks docs/specs/user-authentication-with-email-password/spec.md
 
-# This creates: docs/specs/user-authentication-with-email-password-tasks.md
+# This creates: docs/specs/user-authentication-with-email-password/tasks.md
 # Contains: Phase-organized tasks with detailed, self-contained descriptions
 # Each task includes: file paths, requirements, error handling, dependencies, acceptance criteria
 
 # 4. Validate consistency
-/analyze-consistency docs/specs/user-authentication-with-email-password.md
+/analyze-consistency docs/specs/user-authentication-with-email-password/spec.md
 
 # Checks that spec, design, and tasks all align
 # Reports critical issues, warnings, and successes
@@ -443,7 +444,7 @@ cp agents.md .cursor/agents.md
 
 ```bash
 # Feature requirement changed - need to add a story
-/add-story docs/specs/user-authentication-with-email-password.md "Users can reset password via email"
+/add-story docs/specs/user-authentication-with-email-password/spec.md "Users can reset password via email"
 
 # The command will:
 # 1. Add new user story to spec
@@ -453,7 +454,7 @@ cp agents.md .cursor/agents.md
 # 5. Update timeline estimates
 
 # Verify consistency after adding
-/analyze-consistency docs/specs/user-authentication-with-email-password.md
+/analyze-consistency docs/specs/user-authentication-with-email-password/spec.md
 ```
 
 ### Refactoring Code
@@ -499,17 +500,21 @@ cp agents.md .cursor/agents.md
 # Week 1: Core Task Management
 /init-project "TaskFlow - Team Task Management"
 /spec-feature "Core task management with boards and cards"
-/design-system docs/specs/core-task-management-with-boards-and-cards.md
-/plan-tasks docs/specs/core-task-management-with-boards-and-cards.md
-/analyze-consistency docs/specs/core-task-management-with-boards-and-cards.md
+# Creates: docs/specs/core-task-management-with-boards-and-cards/spec.md
+/design-system docs/specs/core-task-management-with-boards-and-cards/spec.md
+# Creates: docs/specs/core-task-management-with-boards-and-cards/design.md
+/plan-tasks docs/specs/core-task-management-with-boards-and-cards/spec.md
+# Creates: docs/specs/core-task-management-with-boards-and-cards/tasks.md
+/analyze-consistency docs/specs/core-task-management-with-boards-and-cards/spec.md
 /do-task  # Work through tasks one at a time
 # Or: /implement-story "User Story 1: Create and organize tasks"
 /status  # MVP Complete!
 
 # Week 2: User Authentication (new feature)
 /spec-feature "User authentication and team workspaces"
-/design-system docs/specs/user-authentication-and-team-workspaces.md
-/plan-tasks docs/specs/user-authentication-and-team-workspaces.md
+# Creates: docs/specs/user-authentication-and-team-workspaces/spec.md
+/design-system docs/specs/user-authentication-and-team-workspaces/spec.md
+/plan-tasks docs/specs/user-authentication-and-team-workspaces/spec.md
 /do-task  # Start with first task, work through sequentially
 # Or: /implement-story "User Story 1: User registration and login"
 
@@ -519,8 +524,8 @@ cp agents.md .cursor/agents.md
 /do-task  # Continue with next task
 
 # Need to add entire new story
-/add-story docs/specs/user-authentication-and-team-workspaces.md "Users can invite team members via email"
-/analyze-consistency docs/specs/user-authentication-and-team-workspaces.md
+/add-story docs/specs/user-authentication-and-team-workspaces/spec.md "Users can invite team members via email"
+/analyze-consistency docs/specs/user-authentication-and-team-workspaces/spec.md
 /do-task  # Continue with next task
 # Or: /implement-story "User Story 3: Team invitations"
 
@@ -817,7 +822,7 @@ ls .cursor/templates/*.md
 # Warnings are recommendations (can skip)
 
 # Re-run after fixes
-/analyze-consistency docs/specs/[feature].md
+/analyze-consistency docs/specs/[feature]/spec.md
 ```
 
 ### Git History Analysis Empty
@@ -1034,15 +1039,18 @@ Inspired by:
 # Core Workflow (Linear)
 /init-project "Project Name"
 /spec-feature "Feature description"
-/design-system docs/specs/[feature].md
-/plan-tasks docs/specs/[feature].md
+# Creates: docs/specs/[feature-name]/spec.md
+/design-system docs/specs/[feature-name]/spec.md
+# Creates: docs/specs/[feature-name]/design.md
+/plan-tasks docs/specs/[feature-name]/spec.md
+# Creates: docs/specs/[feature-name]/tasks.md
 /do-task  # Or: /implement-story "User Story 1"
 
 # Quality Commands (As Needed)
-/analyze-consistency docs/specs/[feature].md   # Before implementation
+/analyze-consistency docs/specs/[feature]/spec.md   # Before implementation
 /status                                         # Anytime
 /add-task "Task description" ["User Story 1"]  # Add missing task
-/add-story docs/specs/[feature].md "Story"     # When scope grows
+/add-story docs/specs/[feature]/spec.md "Story"     # When scope grows
 /refactor "Description" [target]                # After features
 /review-agents                                  # Monthly
 /update-agent-docs                              # Quarterly, update patterns

@@ -11,9 +11,27 @@ if [ -z "$SPEC_PATH" ]; then
     exit 1
 fi
 
-# Extract feature name from spec path
-FEATURE_NAME=$(basename "$SPEC_PATH" .md)
+# Extract paths (handle both old and new formats)
 SPEC_DIR=$(dirname "$SPEC_PATH")
+if [[ "$SPEC_PATH" == *"/spec.md" ]]; then
+    # New format: feature-name/spec.md
+    FEATURE_NAME=$(basename "$SPEC_DIR")
+    DESIGN_PATH="${SPEC_DIR}/design.md"
+    TASKS_PATH="${SPEC_DIR}/tasks.md"
+else
+    # Old format: feature-name.md
+    FEATURE_NAME=$(basename "$SPEC_PATH" .md)
+    FEATURE_DIR="${SPEC_DIR}/${FEATURE_NAME}"
+    
+    # Prefer new format if directory exists, otherwise old format
+    if [ -d "$FEATURE_DIR" ]; then
+        DESIGN_PATH="${FEATURE_DIR}/design.md"
+        TASKS_PATH="${FEATURE_DIR}/tasks.md"
+    else
+        DESIGN_PATH="${SPEC_DIR}/${FEATURE_NAME}-design.md"
+        TASKS_PATH="${SPEC_DIR}/${FEATURE_NAME}-tasks.md"
+    fi
+fi
 
 # Check if spec exists
 if [ ! -f "$SPEC_PATH" ]; then
@@ -22,7 +40,6 @@ if [ ! -f "$SPEC_PATH" ]; then
 fi
 
 # Check for design file
-DESIGN_PATH="${SPEC_DIR}/${FEATURE_NAME}-design.md"
 if [ ! -f "$DESIGN_PATH" ]; then
     echo "ERROR: Design file not found: $DESIGN_PATH"
     echo "Run: /design-system $SPEC_PATH"
@@ -30,7 +47,6 @@ if [ ! -f "$DESIGN_PATH" ]; then
 fi
 
 # Check for tasks file
-TASKS_PATH="${SPEC_DIR}/${FEATURE_NAME}-tasks.md"
 if [ ! -f "$TASKS_PATH" ]; then
     echo "ERROR: Tasks file not found: $TASKS_PATH"
     echo "Run: /plan-tasks $SPEC_PATH"

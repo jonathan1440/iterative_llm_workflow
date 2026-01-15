@@ -40,9 +40,9 @@ Load current spec and add new story section:
 
 ```markdown
 **Load into context:**
-- Existing spec: docs/specs/[feature-name].md
-- Existing design: docs/specs/[feature-name]-design.md
-- Existing tasks: docs/specs/[feature-name]-tasks.md
+- Existing spec: docs/specs/[feature-name]/spec.md
+- Existing design: docs/specs/[feature-name]/design.md
+- Existing tasks: docs/specs/[feature-name]/tasks.md
 - Project standards: .cursor/agents.md
 - Architecture patterns: .cursor/agent-docs/architecture.md (if exists)
 
@@ -180,7 +180,7 @@ Create tasks for the new story:
 **Load into Plan Mode:**
 - New user story specification
 - Updated design
-- Existing tasks: docs/specs/[feature-name]-tasks.md
+- Existing tasks: docs/specs/[feature-name]/tasks.md
 
 Generate task breakdown following existing pattern:
 

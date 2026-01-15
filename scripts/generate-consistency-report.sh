@@ -25,12 +25,30 @@ if [ ! -f "$SPEC_PATH" ]; then
     exit 1
 fi
 
-# Extract feature name and paths
-FEATURE_NAME=$(basename "$SPEC_PATH" .md)
+# Extract feature name and paths (handle both old and new formats)
 SPEC_DIR=$(dirname "$SPEC_PATH")
-DESIGN_PATH="${SPEC_DIR}/${FEATURE_NAME}-design.md"
-TASKS_PATH="${SPEC_DIR}/${FEATURE_NAME}-tasks.md"
-REPORT_PATH="${SPEC_DIR}/${FEATURE_NAME}-consistency-report.md"
+if [[ "$SPEC_PATH" == *"/spec.md" ]]; then
+    # New format: feature-name/spec.md
+    FEATURE_NAME=$(basename "$SPEC_DIR")
+    DESIGN_PATH="${SPEC_DIR}/design.md"
+    TASKS_PATH="${SPEC_DIR}/tasks.md"
+    REPORT_PATH="${SPEC_DIR}/consistency-report.md"
+else
+    # Old format: feature-name.md
+    FEATURE_NAME=$(basename "$SPEC_PATH" .md)
+    FEATURE_DIR="${SPEC_DIR}/${FEATURE_NAME}"
+    
+    # Prefer new format if directory exists, otherwise old format
+    if [ -d "$FEATURE_DIR" ]; then
+        DESIGN_PATH="${FEATURE_DIR}/design.md"
+        TASKS_PATH="${FEATURE_DIR}/tasks.md"
+        REPORT_PATH="${FEATURE_DIR}/consistency-report.md"
+    else
+        DESIGN_PATH="${SPEC_DIR}/${FEATURE_NAME}-design.md"
+        TASKS_PATH="${SPEC_DIR}/${FEATURE_NAME}-tasks.md"
+        REPORT_PATH="${SPEC_DIR}/${FEATURE_NAME}-consistency-report.md"
+    fi
+fi
 
 # Get current date
 CURRENT_DATE=$(date +%Y-%m-%d)

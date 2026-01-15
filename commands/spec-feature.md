@@ -24,7 +24,8 @@ bash .cursor/scripts/create-spec.sh "$ARGUMENTS"
 
 The script will:
 - Generate a safe filename from the feature description
-- Create `docs/specs/[feature-name].md` from template at `.cursor/templates/spec-template-example.md`
+- Create feature directory: `docs/specs/[feature-name]/`
+- Create `docs/specs/[feature-name]/spec.md` from template at `.cursor/templates/spec-template-example.md`
 - Output the file path for the AI to work with
 
 **IMPORTANT**: The created file contains placeholder sections. Use `.cursor/templates/spec-template-example.md` as your reference for:

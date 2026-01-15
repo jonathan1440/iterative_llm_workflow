@@ -33,23 +33,32 @@ if [ ! -f "$TASKS_FILE" ]; then
     exit 1
 fi
 
-# Determine output file
+# Determine output file (handle both old and new formats)
 if [ -z "$OUTPUT_FILE" ]; then
-    FEATURE_NAME=$(basename "$TASKS_FILE" -tasks.md)
-    SPEC_DIR=$(dirname "$TASKS_FILE")
+    if [[ "$TASKS_FILE" == *"/tasks.md" ]]; then
+        # New format: feature-name/tasks.md -> feature-name/status.md
+        SPEC_DIR=$(dirname "$TASKS_FILE")
+        FEATURE_NAME=$(basename "$SPEC_DIR")
+        STATUS_BASE="${SPEC_DIR}/status"
+    else
+        # Old format: feature-name-tasks.md -> feature-name-status.md
+        SPEC_DIR=$(dirname "$TASKS_FILE")
+        FEATURE_NAME=$(basename "$TASKS_FILE" -tasks.md)
+        STATUS_BASE="${SPEC_DIR}/${FEATURE_NAME}-status"
+    fi
     
     case "$FORMAT" in
         1|markdown|md)
-            OUTPUT_FILE="${SPEC_DIR}/${FEATURE_NAME}-status.md"
+            OUTPUT_FILE="${STATUS_BASE}.md"
             ;;
         2|json)
-            OUTPUT_FILE="${SPEC_DIR}/${FEATURE_NAME}-status.json"
+            OUTPUT_FILE="${STATUS_BASE}.json"
             ;;
         3|csv)
-            OUTPUT_FILE="${SPEC_DIR}/${FEATURE_NAME}-status.csv"
+            OUTPUT_FILE="${STATUS_BASE}.csv"
             ;;
         4|text|txt)
-            OUTPUT_FILE="${SPEC_DIR}/${FEATURE_NAME}-status.txt"
+            OUTPUT_FILE="${STATUS_BASE}.txt"
             ;;
         *)
             echo -e "${RED}Error: Invalid format: $FORMAT${NC}"
@@ -64,8 +73,16 @@ echo ""
 # Get status data using analyze-status.sh
 STATUS_DATA=$(bash .cursor/scripts/analyze-status.sh "$TASKS_FILE" 2>/dev/null || echo "")
 
-# Extract feature name
-FEATURE_NAME=$(grep -m 1 "^# Feature:" "$(echo "$TASKS_FILE" | sed 's/-tasks\.md$/.md/')" 2>/dev/null | sed 's/^# Feature: //' || basename "$TASKS_FILE" -tasks.md)
+# Extract feature name (handle both old and new formats)
+if [[ "$TASKS_FILE" == *"/tasks.md" ]]; then
+    # New format: feature-name/tasks.md -> feature-name/spec.md
+    SPEC_FILE="$(dirname "$TASKS_FILE")/spec.md"
+    FEATURE_NAME=$(grep -m 1 "^# Feature:" "$SPEC_FILE" 2>/dev/null | sed 's/^# Feature: //' || basename "$(dirname "$TASKS_FILE")")
+else
+    # Old format: feature-name-tasks.md -> feature-name.md
+    SPEC_FILE="$(echo "$TASKS_FILE" | sed 's/-tasks\.md$/.md/')"
+    FEATURE_NAME=$(grep -m 1 "^# Feature:" "$SPEC_FILE" 2>/dev/null | sed 's/^# Feature: //' || basename "$TASKS_FILE" -tasks.md)
+fi
 
 # Count tasks
 TOTAL_TASKS=$(grep -c "^- \[.\] T[0-9]" "$TASKS_FILE" || echo "0")

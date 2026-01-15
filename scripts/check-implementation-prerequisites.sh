@@ -24,9 +24,9 @@ fi
 echo -e "${BLUE}🔍 Checking prerequisites for implementing: $STORY_NAME${NC}"
 echo ""
 
-# Find tasks file (look for *-tasks.md in current directory and docs/specs/)
+# Find tasks file (look for tasks.md in directories or *-tasks.md for backward compatibility)
 TASKS_FILE=""
-for path in docs/specs/*-tasks.md *-tasks.md; do
+for path in docs/specs/*/tasks.md docs/specs/*-tasks.md *-tasks.md; do
     if [ -f "$path" ]; then
         TASKS_FILE="$path"
         break

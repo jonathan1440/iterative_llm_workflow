@@ -84,11 +84,26 @@ else
     echo -e "${GREEN}✓ All required sections present${NC}"
 fi
 
-# Generate file paths
+# Generate file paths (handle both old and new formats)
 SPEC_DIR=$(dirname "$SPEC_PATH")
-SPEC_FILENAME=$(basename "$SPEC_PATH" .md)
-DESIGN_PATH="${SPEC_DIR}/${SPEC_FILENAME}-design.md"
-RESEARCH_PATH="${SPEC_DIR}/${SPEC_FILENAME}-research.md"
+if [[ "$SPEC_PATH" == *"/spec.md" ]]; then
+    # New format: feature-name/spec.md -> feature-name/design.md
+    DESIGN_PATH="${SPEC_DIR}/design.md"
+    RESEARCH_PATH="${SPEC_DIR}/research.md"
+else
+    # Old or new format check
+    SPEC_FILENAME=$(basename "$SPEC_PATH" .md)
+    FEATURE_DIR="${SPEC_DIR}/${SPEC_FILENAME}"
+    
+    # Prefer new format if directory exists, otherwise old format
+    if [ -d "$FEATURE_DIR" ]; then
+        DESIGN_PATH="${FEATURE_DIR}/design.md"
+        RESEARCH_PATH="${FEATURE_DIR}/research.md"
+    else
+        DESIGN_PATH="${SPEC_DIR}/${SPEC_FILENAME}-design.md"
+        RESEARCH_PATH="${SPEC_DIR}/${SPEC_FILENAME}-research.md"
+    fi
+fi
 
 echo ""
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"

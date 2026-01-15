@@ -54,12 +54,22 @@ Once in Plan Mode, load these files:
 
 ```markdown
 Load into context:
-- Spec: docs/specs/[feature-name].md
-- Design: docs/specs/[feature-name]-design.md
-- Research: docs/specs/[feature-name]-research.md (if exists)
+- Spec: docs/specs/[feature-name]/spec.md
+- Design: docs/specs/[feature-name]/design.md
+- Research: docs/specs/[feature-name]/research.md (if exists)
 - Standards: .cursor/agents.md
 - Architecture patterns: .cursor/agent-docs/architecture.md (if exists)
+- Database patterns: .cursor/agent-docs/database.md (if exists)
+- API patterns: .cursor/agent-docs/api.md (if exists)
+- Testing patterns: .cursor/agent-docs/testing.md (if exists)
+- Existing codebase: [Scan for similar implementations in src/]
 - Tasks template example: .cursor/templates/tasks-template-example.md (for reference on expected organization/detail)
+
+**Before creating tasks, verify available patterns:**
+- Check agents.md for project-specific conventions
+- Check agent-docs/ for domain-specific patterns (API, database, testing, architecture)
+- Scan codebase for similar implementations to reference
+- Review research.md for technical decisions already made
 ```
 
 ### Step 3: Generate Task Plan Outline
@@ -135,7 +145,8 @@ bash .cursor/scripts/create-tasks.sh "docs/specs/[feature-name].md"
 ```
 
 The script will:
-- Create `docs/specs/[feature-name]-tasks.md` with template structure
+- Create feature directory: `docs/specs/[feature-name]/`
+- Create `docs/specs/[feature-name]/tasks.md` with template structure
 - Output the file path for the AI to work with
 
 **IMPORTANT**: The created file contains placeholder sections. Use `.cursor/templates/tasks-template-example.md` as your reference for:
@@ -149,10 +160,32 @@ The script will:
 
 **CRITICAL**: Tasks must be self-contained and detailed enough to be implemented without loading other tasks. This enables `/do-task` to work effectively (one task at a time).
 
+**Before finalizing each task, verify:**
+
+1. **Check existing patterns**: 
+   - Does agents.md have patterns/conventions for this?
+   - Does agent-docs/ have domain-specific patterns (API, database, testing)?
+   - Are there similar implementations in the codebase to reference?
+
+2. **Check design completeness**:
+   - Does design doc provide enough detail for this task?
+   - Are all fields, methods, and requirements specified?
+   - Are error handling requirements clear?
+
+3. **Flag if research needed**:
+   - If task introduces new technology not in design/research → Add [RESEARCH] marker
+   - If requirements are ambiguous → Add [RESEARCH] marker with clarification needed
+   - If no existing patterns found → Add [RESEARCH] marker with what to research
+
+4. **Extract details into task**:
+   - Don't say "see design doc" - extract relevant details into task
+   - Don't say "follow standard pattern" - specify the pattern
+   - Include all context needed to implement without loading other files
+
 **TASK FORMAT** - Every task MUST follow this pattern:
 
 ```
-- [ ] [TaskID] [P?] [Story?] Description with file path
+- [ ] [TaskID] [P?] [Story?] [RESEARCH?] Description with file path
 
   **File**: [exact file path]
   
@@ -172,6 +205,21 @@ The script will:
   **Acceptance**: [How to verify this task is complete]
 ```
 
+**Optional [RESEARCH] Marker**: Use only if task needs additional investigation:
+- New technology not covered in design/research
+- Ambiguous requirements needing clarification
+- No existing patterns in agents.md or agent-docs/
+- Similar implementations not found in codebase
+
+If [RESEARCH] marker is used, add:
+```
+  **Research Needed**:
+  - Check agents.md for: [specific pattern or convention]
+  - Review codebase for: [similar implementation to reference]
+  - Verify in agent-docs/: [specific domain pattern]
+  - Clarify with design: [specific ambiguity]
+```
+
 **Format Rules:**
 
 1. **Checkbox**: Always start with `- [ ]`
@@ -186,9 +234,14 @@ The script will:
    - Foundation phase: NO story label
    - User Story phases: MUST have story label
    - Polish phase: NO story label
-5. **Description**: Clear action with exact file path
-6. **Detailed Requirements**: Self-contained details extracted from design
-7. **Dependencies**: Explicitly listed (not inferred)
+5. **[RESEARCH] Marker**: OPTIONAL, use only if task needs additional investigation
+   - New technology not in design/research
+   - Ambiguous requirements
+   - No existing patterns found
+   - Example: `[RESEARCH]`
+6. **Description**: Clear action with exact file path
+7. **Detailed Requirements**: Self-contained details extracted from design
+8. **Dependencies**: Explicitly listed (not inferred)
 
 **Examples:**
 
@@ -218,9 +271,41 @@ The script will:
   - Use DatabaseError from src/errors/database-error.js for DB failures
   - Never expose internal errors to callers (per agents.md)
   
+  **Patterns to Follow** (from agents.md/agent-docs/):
+  - Model structure: Follow pattern from src/models/product.js (if exists)
+  - Error handling: Per agent-docs/database.md conventions
+  - Field validation: Per agents.md code standards
+  
   **Dependencies**: T008-T016 (Foundation tasks must be complete)
   
   **Acceptance**: User model can be imported, instantiated, and all methods work correctly
+```
+
+✅ CORRECT (With Research Marker):
+```
+- [ ] T042 [US2] [RESEARCH] Integrate SendGrid email service in src/services/email-service.js
+
+  **File**: src/services/email-service.js
+  
+  **Research Needed**:
+  - Check agents.md for: Email service patterns or third-party integration conventions
+  - Review codebase for: Similar third-party service integrations (e.g., payment service)
+  - Verify in agent-docs/: API integration patterns
+  - Clarify with design: Email template structure and error handling strategy
+  
+  **Requirements** (from design):
+  - Send password reset emails via SendGrid API
+  - Include reset link with expiration notice
+  - Handle API errors gracefully (don't fail user request)
+  
+  **Implementation Details**:
+  - Use SendGrid Node.js SDK
+  - Template: Password reset email with company branding
+  - Error handling: Log SendGrid errors, return success to user (security)
+  
+  **Dependencies**: T035 (PasswordResetService)
+  
+  **Acceptance**: Emails send successfully, errors logged but don't expose to users
 ```
 
 ✅ CORRECT (Simpler task, still detailed):
@@ -255,6 +340,14 @@ T001 [US1] Create model  (missing checkbox)
 - [ ] [US1] Create User model  (missing Task ID)
 - [ ] T001 [US1] Create model  (missing file path)
 ```
+
+❌ WRONG (Research marker without research section):
+```
+- [ ] T042 [RESEARCH] Integrate SendGrid email service
+  - Use SendGrid API
+  - Send emails
+```
+Problem: [RESEARCH] marker used but no "Research Needed" section provided
 
 ### Step 6: Organize Tasks by Phase
 
@@ -622,11 +715,11 @@ graph TD
 Run validation script:
 
 ```bash
-bash .cursor/scripts/validate-tasks.sh "docs/specs/[feature-name]-tasks.md"
+bash .cursor/scripts/validate-tasks.sh "docs/specs/[feature-name]/tasks.md"
 ```
 
 **Validation checks:**
-- [ ] All tasks follow format: `- [ ] [TaskID] [P?] [Story?] Description`
+- [ ] All tasks follow format: `- [ ] [TaskID] [P?] [Story?] [RESEARCH?] Description`
 - [ ] Task IDs are sequential (T001, T002, T003...)
 - [ ] Every user story phase has [US1], [US2] labels on tasks
 - [ ] Setup and Foundation phases have NO story labels
@@ -636,6 +729,8 @@ bash .cursor/scripts/validate-tasks.sh "docs/specs/[feature-name]-tasks.md"
 - [ ] MVP scope clearly defined
 - [ ] Verification tasks included at key milestones (models, services, API, tests, story)
 - [ ] Verification tasks have clear acceptance criteria
+- [ ] Tasks with [RESEARCH] marker include "Research Needed" section
+- [ ] Tasks reference existing patterns from agents.md/agent-docs/ where applicable
 
 If validation fails, fix issues and re-validate.
 
@@ -663,6 +758,12 @@ Check task breakdown against project standards:
 - [ ] All database tables have creation tasks
 - [ ] All API endpoints have implementation tasks
 
+**Pattern Alignment**:
+- [ ] Tasks reference existing patterns from agents.md where applicable
+- [ ] Tasks reference domain patterns from agent-docs/ where applicable
+- [ ] Tasks note similar codebase implementations to reference
+- [ ] Research markers used appropriately (only when needed)
+
 **Feasibility**:
 - [ ] Task granularity appropriate (~30-60 min each)
 - [ ] No tasks require unspecified technology
@@ -676,7 +777,7 @@ Display summary:
 ```markdown
 ✅ Implementation plan created!
 
-📝 File: docs/specs/[feature-name]-tasks.md
+📝 File: docs/specs/[feature-name]/tasks.md
 
 📊 Task Summary:
 - Total Tasks: [count]
@@ -927,6 +1028,16 @@ Break down: Registration → Login → Session → Verification
 - "Implement service" → Which methods? What do they do?
 - Tasks that require loading design doc to understand
 
+❌ **Missing pattern references**
+- "Create model" → Which pattern from agents.md?
+- "Implement API endpoint" → Which conventions from agent-docs/api.md?
+- Not checking for similar implementations in codebase
+
+❌ **Inappropriate research markers**
+- Using [RESEARCH] for tasks with clear patterns in agents.md
+- Using [RESEARCH] without providing "Research Needed" section
+- Not using [RESEARCH] when task introduces new technology
+
 ❌ **Missing MVP definition**
 - No clear line between must-have and nice-to-have
 
@@ -948,6 +1059,13 @@ Break down: Registration → Login → Session → Verification
 - "Similar to T011" (include full details)
 - "Standard pattern" (specify the pattern)
 - Implied dependencies (list them explicitly)
+- "Follow existing pattern" (reference the specific pattern from agents.md/agent-docs/)
+
+**DO Reference:**
+- Specific patterns from agents.md: "Per agents.md model conventions..."
+- Domain patterns from agent-docs/: "Follow agent-docs/api.md endpoint structure..."
+- Similar codebase files: "Reference src/models/product.js for structure..."
+- Research decisions: "Per research.md decision on email service..."
 
 **Example of Self-Contained Task:**
 
@@ -967,6 +1085,11 @@ Break down: Registration → Login → Session → Verification
   - create(userData): Create new user, hash password, return user object
   ...
   
+  **Patterns to Follow**:
+  - Model structure: Reference src/models/product.js (similar pattern)
+  - Error handling: Per agent-docs/database.md conventions
+  - Field validation: Per agents.md code standards
+  
   **Dependencies**: T008-T016
   
   **Acceptance**: Model can be imported, all methods work
@@ -978,6 +1101,14 @@ Break down: Registration → Login → Session → Verification
   - See design doc for fields and methods
   - Follow standard model pattern
 ```
+
+❌ **Bad** (missing pattern references):
+```
+- [ ] T017 [US1] Create User model in src/models/user.js
+  - Fields: id, email, password_hash...
+  - Methods: create(), findByEmail()...
+```
+Problem: Doesn't reference existing patterns or similar implementations
 
 ## Context
 

@@ -61,7 +61,7 @@ Analyze tasks from tasks files:
 ```markdown
 ## Analyzing Completed Tasks
 
-Checking: docs/specs/*-tasks.md
+Checking: docs/specs/*/tasks.md and docs/specs/*-tasks.md (for backward compatibility)
 
 **Pattern: Missing Verification Steps**
 Found: 12 tasks completed without explicit verification checkpoints

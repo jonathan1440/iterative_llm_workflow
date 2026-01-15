@@ -170,9 +170,9 @@ At Risk:
 
 🔗 QUICK LINKS
 
-Tasks File:  docs/specs/user-auth-tasks.md
-Spec File:   docs/specs/user-auth.md
-Design File: docs/specs/user-auth-design.md
+Tasks File:  docs/specs/user-auth/tasks.md
+Spec File:   docs/specs/user-auth/spec.md
+Design File: docs/specs/user-auth/design.md
 
 Last Updated: 2026-01-13 14:23:00
 ```
@@ -347,7 +347,7 @@ bash .cursor/scripts/export-status.sh "[tasks-file]" "[format]" "[output-file]"
 **Before consistency check**:
 ```bash
 /status  # See which phase you're on
-/analyze-consistency docs/specs/feature.md  # Verify current phase
+/analyze-consistency docs/specs/feature/spec.md  # Verify current phase
 ```
 
 ### Customizing Status Display

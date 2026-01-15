@@ -25,10 +25,22 @@ if [ ! -f "$SPEC_PATH" ]; then
     exit 1
 fi
 
-# Generate research file path
-SPEC_DIR=$(dirname "$SPEC_PATH")
-SPEC_FILENAME=$(basename "$SPEC_PATH" .md)
-RESEARCH_PATH="${SPEC_DIR}/${SPEC_FILENAME}-research.md"
+# Generate research file path (handle both old and new formats)
+if [[ "$SPEC_PATH" == *"/spec.md" ]]; then
+    # New format: feature-name/spec.md -> feature-name/research.md
+    SPEC_DIR=$(dirname "$SPEC_PATH")
+    RESEARCH_PATH="${SPEC_DIR}/research.md"
+    mkdir -p "$SPEC_DIR"
+else
+    # Old format: feature-name.md -> create feature-name/ directory and use new format
+    SPEC_DIR=$(dirname "$SPEC_PATH")
+    SPEC_FILENAME=$(basename "$SPEC_PATH" .md)
+    FEATURE_DIR="${SPEC_DIR}/${SPEC_FILENAME}"
+    
+    # Create feature directory and use new format
+    mkdir -p "$FEATURE_DIR"
+    RESEARCH_PATH="${FEATURE_DIR}/research.md"
+fi
 
 # Get current date
 CURRENT_DATE=$(date +%Y-%m-%d)

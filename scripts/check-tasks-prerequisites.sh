@@ -34,10 +34,24 @@ if [ ! -f "$SPEC_PATH" ]; then
 fi
 echo -e "${GREEN}✓ Spec file exists: $SPEC_PATH${NC}"
 
-# Generate design file path
-SPEC_DIR=$(dirname "$SPEC_PATH")
-SPEC_FILENAME=$(basename "$SPEC_PATH" .md)
-DESIGN_PATH="${SPEC_DIR}/${SPEC_FILENAME}-design.md"
+# Generate design file path (handle both old and new formats)
+if [[ "$SPEC_PATH" == *"/spec.md" ]]; then
+    # New format: feature-name/spec.md -> feature-name/design.md
+    SPEC_DIR=$(dirname "$SPEC_PATH")
+    DESIGN_PATH="${SPEC_DIR}/design.md"
+else
+    # Old or new format check
+    SPEC_DIR=$(dirname "$SPEC_PATH")
+    SPEC_FILENAME=$(basename "$SPEC_PATH" .md)
+    FEATURE_DIR="${SPEC_DIR}/${SPEC_FILENAME}"
+    
+    # Prefer new format if directory exists, otherwise old format
+    if [ -d "$FEATURE_DIR" ]; then
+        DESIGN_PATH="${FEATURE_DIR}/design.md"
+    else
+        DESIGN_PATH="${SPEC_DIR}/${SPEC_FILENAME}-design.md"
+    fi
+fi
 
 # Check if design file exists
 if [ ! -f "$DESIGN_PATH" ]; then
@@ -97,9 +111,23 @@ else
     echo -e "${YELLOW}⚠️  No API contracts found in design${NC}"
 fi
 
-# Generate file paths
-TASKS_PATH="${SPEC_DIR}/${SPEC_FILENAME}-tasks.md"
-RESEARCH_PATH="${SPEC_DIR}/${SPEC_FILENAME}-research.md"
+# Generate tasks and research file paths (handle both old and new formats)
+if [[ "$SPEC_PATH" == *"/spec.md" ]]; then
+    # New format
+    TASKS_PATH="${SPEC_DIR}/tasks.md"
+    RESEARCH_PATH="${SPEC_DIR}/research.md"
+else
+    # Old or new format check
+    if [ -d "$FEATURE_DIR" ]; then
+        # New format
+        TASKS_PATH="${FEATURE_DIR}/tasks.md"
+        RESEARCH_PATH="${FEATURE_DIR}/research.md"
+    else
+        # Old format
+        TASKS_PATH="${SPEC_DIR}/${SPEC_FILENAME}-tasks.md"
+        RESEARCH_PATH="${SPEC_DIR}/${SPEC_FILENAME}-research.md"
+    fi
+fi
 
 echo ""
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"

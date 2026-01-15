@@ -107,7 +107,7 @@ Based on:
 - Standards: .cursor/agents.md
 - Template example: .cursor/templates/design-template-example.md
 
-Create a system design at docs/specs/[feature-name]-design.md with:
+Create a system design at docs/specs/[feature-name]/design.md with:
 
 1. Architecture Overview
 2. Database Schema
@@ -174,7 +174,8 @@ bash .cursor/scripts/create-design.sh "docs/specs/[feature-name].md"
 ```
 
 The script will:
-- Create `docs/specs/[feature-name]-design.md` with template structure
+- Create feature directory: `docs/specs/[feature-name]/` (if needed)
+- Create `docs/specs/[feature-name]/design.md` with template structure
 - Output the file path for the AI to work with
 
 **IMPORTANT**: The created file contains placeholder sections. Use `.cursor/templates/design-template-example.md` as your reference for:
@@ -636,7 +637,7 @@ Display summary:
 ✅ System design created!
 
 📝 Files:
-- Design: docs/specs/[feature-name]-design.md
+- Design: docs/specs/[feature-name]/design.md
 - Research: docs/specs/[feature-name]-research.md (if created)
 
 📊 Design Summary:

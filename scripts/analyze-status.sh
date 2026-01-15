@@ -10,8 +10,14 @@ if [ ! -f "$TASKS_FILE" ]; then
     exit 1
 fi
 
-# Extract feature name
-FEATURE_NAME=$(basename "$TASKS_FILE" -tasks.md)
+# Extract feature name (handle both old and new formats)
+if [[ "$TASKS_FILE" == *"/tasks.md" ]]; then
+    # New format: feature-name/tasks.md
+    FEATURE_NAME=$(basename "$(dirname "$TASKS_FILE")")
+else
+    # Old format: feature-name-tasks.md
+    FEATURE_NAME=$(basename "$TASKS_FILE" -tasks.md)
+fi
 
 echo "╔═══════════════════════════════════════════════════════╗"
 echo "║       PROJECT STATUS - ${FEATURE_NAME}                "

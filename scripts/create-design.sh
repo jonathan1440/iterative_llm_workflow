@@ -27,9 +27,22 @@ if [ ! -f "$SPEC_PATH" ]; then
 fi
 
 # Generate design file path
-SPEC_DIR=$(dirname "$SPEC_PATH")
-SPEC_FILENAME=$(basename "$SPEC_PATH" .md)
-DESIGN_PATH="${SPEC_DIR}/${SPEC_FILENAME}-design.md"
+# Handle both old format (feature-name.md) and new format (feature-name/spec.md)
+if [[ "$SPEC_PATH" == *"/spec.md" ]]; then
+    # New format: feature-name/spec.md -> feature-name/design.md
+    SPEC_DIR=$(dirname "$SPEC_PATH")
+    DESIGN_PATH="${SPEC_DIR}/design.md"
+    mkdir -p "$SPEC_DIR"
+else
+    # Old format: feature-name.md -> create feature-name/ directory and use new format
+    SPEC_DIR=$(dirname "$SPEC_PATH")
+    SPEC_FILENAME=$(basename "$SPEC_PATH" .md)
+    FEATURE_DIR="${SPEC_DIR}/${SPEC_FILENAME}"
+    
+    # Create feature directory and use new format
+    mkdir -p "$FEATURE_DIR"
+    DESIGN_PATH="${FEATURE_DIR}/design.md"
+fi
 
 # Get current date
 CURRENT_DATE=$(date +%Y-%m-%d)

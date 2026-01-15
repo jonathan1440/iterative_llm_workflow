@@ -28,8 +28,12 @@ SAFE_NAME=$(echo "$FEATURE_DESC" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9 
 # Ensure docs/specs directory exists
 mkdir -p docs/specs
 
-# Define spec file path
-SPEC_FILE="docs/specs/${SAFE_NAME}.md"
+# Create feature directory
+FEATURE_DIR="docs/specs/${SAFE_NAME}"
+mkdir -p "$FEATURE_DIR"
+
+# Define spec file path (spec.md in feature directory)
+SPEC_FILE="${FEATURE_DIR}/spec.md"
 
 # Check if file already exists
 if [ -f "$SPEC_FILE" ]; then

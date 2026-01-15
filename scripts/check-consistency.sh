@@ -5,11 +5,27 @@ set -e
 
 SPEC_PATH="$1"
 
-# Extract paths
-FEATURE_NAME=$(basename "$SPEC_PATH" .md)
+# Extract paths (handle both old and new formats)
 SPEC_DIR=$(dirname "$SPEC_PATH")
-DESIGN_PATH="${SPEC_DIR}/${FEATURE_NAME}-design.md"
-TASKS_PATH="${SPEC_DIR}/${FEATURE_NAME}-tasks.md"
+if [[ "$SPEC_PATH" == *"/spec.md" ]]; then
+    # New format: feature-name/spec.md
+    FEATURE_NAME=$(basename "$SPEC_DIR")
+    DESIGN_PATH="${SPEC_DIR}/design.md"
+    TASKS_PATH="${SPEC_DIR}/tasks.md"
+else
+    # Old format: feature-name.md
+    FEATURE_NAME=$(basename "$SPEC_PATH" .md)
+    FEATURE_DIR="${SPEC_DIR}/${FEATURE_NAME}"
+    
+    # Prefer new format if directory exists, otherwise old format
+    if [ -d "$FEATURE_DIR" ]; then
+        DESIGN_PATH="${FEATURE_DIR}/design.md"
+        TASKS_PATH="${FEATURE_DIR}/tasks.md"
+    else
+        DESIGN_PATH="${SPEC_DIR}/${FEATURE_NAME}-design.md"
+        TASKS_PATH="${SPEC_DIR}/${FEATURE_NAME}-tasks.md"
+    fi
+fi
 
 echo "╔════════════════════════════════════════════════╗"
 echo "║   Running Consistency Checks                   ║"

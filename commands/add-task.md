@@ -31,7 +31,7 @@ TASKS_FILE=$(bash .cursor/scripts/find-tasks-file.sh 2>/dev/null | grep -v "^ERR
 
 if [ -z "$TASKS_FILE" ] || [ ! -f "$TASKS_FILE" ]; then
     # Look for tasks file in common locations
-    for path in docs/specs/*-tasks.md *-tasks.md; do
+    for path in docs/specs/*/tasks.md docs/specs/*-tasks.md *-tasks.md; do
         if [ -f "$path" ]; then
             TASKS_FILE="$path"
             break
