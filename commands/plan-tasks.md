@@ -62,14 +62,16 @@ Load into context:
 - Database patterns: .cursor/agent-docs/database.md (if exists)
 - API patterns: .cursor/agent-docs/api.md (if exists)
 - Testing patterns: .cursor/agent-docs/testing.md (if exists)
+- Failure modes: .cursor/agent-docs/failure-modes.md (if exists, for avoiding common mistakes)
 - Existing codebase: [Scan for similar implementations in src/]
 - Tasks template example: .cursor/templates/tasks-template-example.md (for reference on expected organization/detail)
 
 **Before creating tasks, verify available patterns:**
 - Check agents.md for project-specific conventions
-- Check agent-docs/ for domain-specific patterns (API, database, testing, architecture)
+- Check agent-docs/ for domain-specific patterns (API, database, testing, architecture, failure modes)
 - Scan codebase for similar implementations to reference
 - Review research.md for technical decisions already made
+- Review failure-modes.md for common mistakes to avoid in task design
 ```
 
 ### Step 3: Generate Task Plan Outline

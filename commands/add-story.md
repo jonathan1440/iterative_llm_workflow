@@ -45,6 +45,7 @@ Load current spec and add new story section:
 - Existing tasks: docs/specs/[feature-name]/tasks.md
 - Project standards: .cursor/agents.md
 - Architecture patterns: .cursor/agent-docs/architecture.md (if exists)
+- Failure modes: .cursor/agent-docs/failure-modes.md (if exists, for avoiding common mistakes)
 
 Based on the new story description: "$STORY_DESCRIPTION"
 

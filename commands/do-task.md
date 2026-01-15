@@ -153,6 +153,7 @@ Load into Composer context:
   - .cursor/agent-docs/api.md (for API tasks)
   - .cursor/agent-docs/testing.md (for test tasks)
   - .cursor/agent-docs/architecture.md (for architectural decisions)
+  - .cursor/agent-docs/failure-modes.md (for avoiding common mistakes and edge cases)
 
 **EXISTING CODE** (if any files exist):
 - src/ (only files relevant to this task)

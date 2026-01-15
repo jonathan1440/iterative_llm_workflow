@@ -129,6 +129,7 @@ Generate refactoring plan using Composer Mode:
 - Project standards: .cursor/agents.md
 - Architecture patterns: .cursor/agent-docs/architecture.md (if exists)
 - Testing patterns: .cursor/agent-docs/testing.md (if exists)
+- Failure modes: .cursor/agent-docs/failure-modes.md (if exists, for avoiding mistakes during refactoring)
 
 Based on refactor goal: "$REFACTOR_DESCRIPTION"
 

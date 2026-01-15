@@ -68,6 +68,7 @@ When working on specific areas, read the relevant file first:
 | Testing | `agent-docs/testing.md` | Writing or fixing tests |
 | API patterns | `agent-docs/api.md` | Backend changes |
 | Database | `agent-docs/database.md` | Schema or query changes |
+| Failure modes | `agent-docs/failure-modes.md` | Before implementing features, when debugging issues |
 
 ## Known Gotchas
 

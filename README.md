@@ -710,10 +710,11 @@ The workflow uses two complementary knowledge systems:
 - Keep under 100 lines (high-level guidance)
 
 **`.cursor/agent-docs/`** - Domain-Specific Patterns
-- Detailed patterns for specific areas (API, database, testing, architecture)
+- Detailed patterns for specific areas (API, database, testing, architecture, failure modes)
 - Extended context loaded automatically by commands when relevant
 - Can be longer and more detailed
 - Updated with recent best practices via `/update-agent-docs`
+- Includes failure modes documentation to prevent common mistakes
 
 **How They Work Together:**
 
@@ -729,6 +730,7 @@ Commands automatically load both:
   - `.cursor/agents.md` (general standards)
   - `.cursor/agent-docs/api.md` (API-specific patterns)
   - `.cursor/agent-docs/testing.md` (if writing tests)
+  - `.cursor/agent-docs/failure-modes.md` (common mistakes to avoid)
 
 **When to Use Each:**
 

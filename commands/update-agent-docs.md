@@ -34,6 +34,7 @@ Check which agent-docs files exist:
 - `.cursor/agent-docs/architecture.md`
 - `.cursor/agent-docs/database.md`
 - `.cursor/agent-docs/testing.md`
+- `.cursor/agent-docs/failure-modes.md`
 ```
 
 **Load project context for project-specific searches:**

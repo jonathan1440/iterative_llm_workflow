@@ -105,6 +105,7 @@ Load into Composer context:
   - .cursor/agent-docs/database.md (for database/schema tasks)
   - .cursor/agent-docs/testing.md (for test-related tasks)
   - .cursor/agent-docs/architecture.md (for architectural decisions)
+  - .cursor/agent-docs/failure-modes.md (for avoiding common mistakes and edge cases)
 - Implementation example: .cursor/templates/implementation-example.md (for reference on completion quality)
 - Existing code: src/ (if any files exist)
 ```
