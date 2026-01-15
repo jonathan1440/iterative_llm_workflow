@@ -5,7 +5,7 @@
 **Turn AI coding from chaotic prompting into systematic, high-quality development.**
 
 [![Workflow Completeness](https://img.shields.io/badge/completeness-10%2F10-brightgreen)]()
-[![Commands](https://img.shields.io/badge/commands-11-blue)]()
+[![Commands](https://img.shields.io/badge/commands-12-blue)]()
 [![Scripts](https://img.shields.io/badge/scripts-20+-orange)]()
 [![Quality](https://img.shields.io/badge/quality-production--grade-success)]()
 
@@ -15,11 +15,12 @@
 
 A complete workflow system for Cursor IDE that transforms AI-assisted development from ad-hoc prompting into a structured, repeatable process. Includes:
 
-- **11 custom Cursor commands** covering the entire development lifecycle
+- **12 custom Cursor commands** covering the entire development lifecycle
 - **20+ bash scripts** for automation and validation
 - **4 comprehensive templates** with production-quality examples
 - **Complete documentation** with examples and best practices
 - **Two implementation approaches**: focused one-task-at-a-time or full story context
+- **Flexible task management**: add individual tasks or entire stories
 
 **Result**: 2-3x better output quality, 50% fewer bugs, systematic knowledge capture.
 
@@ -78,7 +79,10 @@ flowchart TD
     
     DoTask --> TaskComplete{Task complete?}
     TaskComplete -->|No| DoTask
-    TaskComplete -->|Yes| MoreTasks{More tasks in story?}
+    TaskComplete -->|Yes| MissingTask{Missing task<br/>discovered?}
+    MissingTask -->|Yes| AddTask[//add-task/]
+    MissingTask -->|No| MoreTasks{More tasks in story?}
+    AddTask --> MoreTasks
     MoreTasks -->|Yes| DoTask
     MoreTasks -->|No| TrackProgress
     
@@ -87,7 +91,9 @@ flowchart TD
     StoryComplete -->|Yes| TrackProgress[//status/]
     
     TrackProgress --> NeedScope{Need to add<br/>scope?}
-    NeedScope -->|Yes| AddStory[//add-story/]
+    NeedScope -->|Single task| AddTask[//add-task/]
+    NeedScope -->|New story| AddStory[//add-story/]
+    AddTask --> TrackProgress
     AddStory --> Analyze
     
     NeedScope -->|No| NeedRefactor{Need to refactor?}
@@ -112,6 +118,7 @@ flowchart TD
     style StatusCheck fill:#d1ecf1
     style DoTask fill:#cfe2ff
     style ImplementStory fill:#cfe2ff
+    style AddTask fill:#fff3cd
     style UpdateAgentDocs fill:#e7d4f8
 ```
 
@@ -132,8 +139,9 @@ flowchart TD
 - `/do-task` - Implement one task at a time (maximum focus)
 - `/implement-story` - Build one user story at a time (full context)
 
-**Phase 4: Iteration (Commands 9-11)**
+**Phase 4: Iteration (Commands 9-12)**
 - `/status` - Track progress
+- `/add-task` - Add a single missing task
 - `/add-story` - Expand scope safely
 - `/refactor` - Improve code quality
 - `/review-agents` - Capture learnings
@@ -153,6 +161,7 @@ flowchart TD
 | `/plan-tasks` | Break feature into detailed tasks | After design |
 | `/do-task` | Implement one task at a time | For focused execution |
 | `/implement-story` | Implement one user story | For full story context |
+| `/add-task` | Add a single task to tasks.md | When a task was missed or needs to be added |
 
 ### Quality & Maintenance Commands (Recommended)
 
@@ -160,6 +169,7 @@ flowchart TD
 |---------|---------|-------------|
 | `/analyze-consistency` | Validate spec/design/tasks alignment | Before implementation, after changes |
 | `/status` | View project progress dashboard | Daily, before meetings |
+| `/add-task` | Add a single task to tasks.md | When a task was missed or needs to be added |
 | `/add-story` | Add new user story to feature | When scope expands |
 | `/refactor` | Safely improve code with tests | After completing features |
 | `/review-agents` | Maintain learnings in agents.md | Monthly, after milestones |
@@ -172,13 +182,14 @@ flowchart TD
 ```
 your-project/
 ├── .cursor/
-│   ├── commands/              # 11 custom commands
+│   ├── commands/              # 12 custom commands
 │   │   ├── init-project.md
 │   │   ├── spec-feature.md
 │   │   ├── design-system.md
 │   │   ├── plan-tasks.md
 │   │   ├── do-task.md
 │   │   ├── implement-story.md
+│   │   ├── add-task.md
 │   │   ├── analyze-consistency.md
 │   │   ├── status.md
 │   │   ├── add-story.md
@@ -406,7 +417,29 @@ cp agents.md .cursor/agents.md
 # See completion percentages, next tasks, MVP status
 ```
 
-### Adding Scope Mid-Project
+### Adding Tasks Mid-Project
+
+**Option 1: Add a Single Task**
+
+```bash
+# Discovered a missing task during implementation
+/add-task "Create User model in src/models/user.js" "User Story 1"
+
+# Or specify where to insert
+/add-task "Add rate limiting middleware" "User Story 1" T024
+
+# The command will:
+# 1. Find tasks.md file
+# 2. Generate next task ID
+# 3. Create detailed, self-contained task
+# 4. Insert in appropriate location
+# 5. Optionally renumber subsequent tasks
+
+# Task follows same detailed format as /plan-tasks
+# Ready to implement with /do-task
+```
+
+**Option 2: Add a New Story**
 
 ```bash
 # Feature requirement changed - need to add a story
@@ -415,7 +448,7 @@ cp agents.md .cursor/agents.md
 # The command will:
 # 1. Add new user story to spec
 # 2. Extend design with new components
-# 3. Generate task breakdown
+# 3. Generate task breakdown for the story
 # 4. Renumber subsequent tasks
 # 5. Update timeline estimates
 
@@ -481,6 +514,11 @@ cp agents.md .cursor/agents.md
 # Or: /implement-story "User Story 1: User registration and login"
 
 # Week 3: Scope Change - Need to add feature
+# Discovered missing task during implementation
+/add-task "Add email validation to registration endpoint" "User Story 1"
+/do-task  # Continue with next task
+
+# Need to add entire new story
 /add-story docs/specs/user-authentication-and-team-workspaces.md "Users can invite team members via email"
 /analyze-consistency docs/specs/user-authentication-and-team-workspaces.md
 /do-task  # Continue with next task
@@ -574,6 +612,25 @@ cp agents.md .cursor/agents.md
 
 Both use the same tasks.md file, so you can switch approaches as needed.
 
+### 8. Flexible Task Management
+
+**Not locked into initial plan.** Add tasks as you discover them:
+
+**`/add-task` - Add Single Task:**
+- Add a missing task discovered during implementation
+- Maintains detailed, self-contained format
+- Automatically finds correct placement
+- Optionally renumbers subsequent tasks
+- Best for: Single missing tasks, breaking down large tasks, adding verification tasks
+
+**`/add-story` - Add Entire Story:**
+- Add a new user story with full spec/design/tasks
+- Maintains consistency across all artifacts
+- Automatically updates dependencies
+- Best for: New features, scope expansion, multiple related tasks
+
+Both maintain format consistency and work with `/do-task` and `/implement-story`.
+
 ---
 
 ## 📊 Workflow Impact
@@ -603,6 +660,7 @@ Both use the same tasks.md file, so you can switch approaches as needed.
 - ✅ Everything in agents.md and specs/
 - ✅ Real-time progress dashboard
 - ✅ Safe refactoring with rollback
+- ✅ Easy task management (add tasks or stories as needed)
 
 ---
 
@@ -850,10 +908,13 @@ Production-quality examples in `.cursor/templates/`:
 4. Choose implementation approach based on task complexity:
    - Use `/do-task` for well-defined, self-contained tasks
    - Use `/implement-story` for complex, interrelated tasks
-5. Check `/status` daily to track progress
-6. Run `/review-agents` monthly to capture learnings
-7. Use `/refactor` after completing features
-8. Keep agents.md updated with project patterns
+5. When you discover a missing task:
+   - Use `/add-task` for a single task
+   - Use `/add-story` for multiple related tasks or a new user story
+6. Check `/status` daily to track progress
+7. Run `/review-agents` monthly to capture learnings
+8. Use `/refactor` after completing features
+9. Keep agents.md updated with project patterns
 
 ### Advanced Topics
 1. Creating custom commands for your stack
@@ -913,13 +974,14 @@ Track these to measure workflow effectiveness:
 ## 🗺️ Roadmap
 
 ### Current Version: 1.0
-- ✅ 11 core commands (including do-task and update-agent-docs)
+- ✅ 12 core commands (including do-task, add-task, and update-agent-docs)
 - ✅ 20+ automation scripts
 - ✅ 4 production templates
 - ✅ agent-docs system for domain-specific patterns
 - ✅ Detailed, self-contained task format
 - ✅ Explicit verification tasks at milestones
 - ✅ Two implementation approaches (focused vs. full context)
+- ✅ Flexible task management (add individual tasks or entire stories)
 - ✅ Complete documentation
 
 ### Planned Improvements
@@ -979,6 +1041,7 @@ Inspired by:
 # Quality Commands (As Needed)
 /analyze-consistency docs/specs/[feature].md   # Before implementation
 /status                                         # Anytime
+/add-task "Task description" ["User Story 1"]  # Add missing task
 /add-story docs/specs/[feature].md "Story"     # When scope grows
 /refactor "Description" [target]                # After features
 /review-agents                                  # Monthly
