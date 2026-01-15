@@ -119,3 +119,9 @@ echo "  Total tasks now: $TOTAL_TASKS"
 echo ""
 echo -e "${YELLOW}Note: Review the file for any dependency references that may need updating${NC}"
 echo -e "${BLUE}Backup: $BACKUP_FILE${NC}"
+
+# Clean up old backup (keep only last 3)
+BACKUP_COUNT=$(ls -1 "${TASKS_FILE}.backup-"* 2>/dev/null | wc -l)
+if [ "$BACKUP_COUNT" -gt 3 ]; then
+    ls -1t "${TASKS_FILE}.backup-"* | tail -n +4 | xargs rm -f
+fi
