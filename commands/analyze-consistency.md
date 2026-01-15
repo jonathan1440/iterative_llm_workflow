@@ -222,10 +222,10 @@ Add this learning? [yes/no]
 Create detailed report file:
 
 ```bash
-bash .cursor/scripts/generate-consistency-report.sh "docs/specs/[feature-name].md"
+bash .cursor/scripts/generate-consistency-report.sh "docs/specs/[feature-name]/spec.md"
 ```
 
-This creates `docs/specs/[feature-name]-consistency-report.md` with:
+This creates `docs/specs/[feature-name]/consistency-report.md` with:
 - All issues found (critical, warnings, good)
 - Recommended fixes
 - Diff snippets showing what to change

@@ -7,7 +7,7 @@ SPEC_PATH="$1"
 
 if [ -z "$SPEC_PATH" ]; then
     echo "ERROR: No spec file provided"
-    echo "Usage: /analyze-consistency docs/specs/[feature-name].md"
+    echo "Usage: /analyze-consistency docs/specs/[feature-name]/spec.md"
     exit 1
 fi
 

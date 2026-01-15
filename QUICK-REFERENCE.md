@@ -9,7 +9,7 @@ One-page reference for the 5 new commands.
 **Validate consistency across spec, design, and tasks**
 
 ```bash
-/analyze-consistency docs/specs/[feature-name].md
+/analyze-consistency docs/specs/[feature-name]/spec.md
 ```
 
 **Checks**:
@@ -31,7 +31,7 @@ One-page reference for the 5 new commands.
 
 ```bash
 /status                                    # Auto-find tasks
-/status docs/specs/[feature-name].md      # Specific feature
+/status docs/specs/[feature-name]/spec.md      # Specific feature
 ```
 
 **Shows**:
@@ -72,7 +72,7 @@ One-page reference for the 5 new commands.
 **Add user story to existing feature**
 
 ```bash
-/add-story docs/specs/[feature-name].md "Story description"
+/add-story docs/specs/[feature-name]/spec.md "Story description"
 ```
 
 **Example**:

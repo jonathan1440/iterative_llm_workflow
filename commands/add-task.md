@@ -79,12 +79,12 @@ Load relevant files to understand where task fits:
 
 ```markdown
 Load into context:
-- Tasks file: docs/specs/[feature-name]-tasks.md
+- Tasks file: docs/specs/[feature-name]/tasks.md
   - Focus on: The phase/story where this task belongs
   - Look at: Similar tasks for format reference
-- Design: docs/specs/[feature-name]-design.md
+- Design: docs/specs/[feature-name]/design.md
   - Focus on: Relevant section for this task
-- Spec: docs/specs/[feature-name].md (if needed for context)
+- Spec: docs/specs/[feature-name]/spec.md (if needed for context)
 - Standards: .cursor/agents.md
 - Task template: .cursor/templates/tasks-template-example.md
   - Reference: Format for detailed, self-contained tasks

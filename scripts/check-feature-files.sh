@@ -8,7 +8,7 @@ STORY_DESC="$2"
 
 if [ -z "$SPEC_PATH" ] || [ -z "$STORY_DESC" ]; then
     echo "ERROR: Missing arguments"
-    echo "Usage: /add-story docs/specs/[feature-name].md \"Story description\""
+    echo "Usage: /add-story docs/specs/[feature-name]/spec.md \"Story description\""
     exit 1
 fi
 

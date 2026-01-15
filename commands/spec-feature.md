@@ -261,7 +261,7 @@ Display summary:
 ```markdown
 ✅ Feature specification created!
 
-📝 File: docs/specs/[feature-name].md
+📝 File: docs/specs/[feature-name]/spec.md
 
 📊 Summary:
 - User Stories: [count] (P1: [count], P2: [count], P3: [count])
@@ -279,7 +279,7 @@ Display summary:
 
 **Recommended**: Update agent-docs with recent best practices before designing:
 ```bash
-/update-agent-docs docs/specs/[feature-name].md
+/update-agent-docs docs/specs/[feature-name]/spec.md
 ```
 
 This will:
@@ -292,10 +292,10 @@ This will:
 
 **Or proceed directly to design:**
 ```bash
-/design-system docs/specs/[feature-name].md
+/design-system docs/specs/[feature-name]/spec.md
 ```
 1. Review the spec for accuracy
-2. Create system design with /design-system docs/specs/[feature-name].md
+2. Create system design with /design-system docs/specs/[feature-name]/spec.md
 3. Or refine spec further if needed
 
 💡 Tip: This spec is living documentation. Update it as requirements evolve.

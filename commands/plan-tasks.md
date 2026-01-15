@@ -141,7 +141,7 @@ Planning Questions:
 After outline approved, generate detailed task breakdown:
 
 ```bash
-bash .cursor/scripts/create-tasks.sh "docs/specs/[feature-name].md"
+bash .cursor/scripts/create-tasks.sh "docs/specs/[feature-name]/spec.md"
 ```
 
 The script will:

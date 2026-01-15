@@ -44,10 +44,10 @@ Before designing, identify and resolve technical unknowns from the spec.
 **For each unknown, create research task:**
 
 ```bash
-bash .cursor/scripts/create-research.sh "docs/specs/[feature-name].md"
+bash .cursor/scripts/create-research.sh "docs/specs/[feature-name]/spec.md"
 ```
 
-This creates `docs/specs/[feature-name]-research.md` if unknowns found.
+This creates `docs/specs/[feature-name]/research.md` if unknowns found.
 
 **Research Template for each unknown:**
 
@@ -88,8 +88,8 @@ Press Cmd+I (Mac) or Ctrl+I (Windows/Linux) to open Composer Mode
 ```
 
 **Load these files into Composer context:**
-- Spec file: `docs/specs/[feature-name].md`
-- Research file: `docs/specs/[feature-name]-research.md` (if exists)
+- Spec file: `docs/specs/[feature-name]/spec.md`
+- Research file: `docs/specs/[feature-name]/research.md` (if exists)
 - Project standards: `.cursor/agents.md`
 - Architecture patterns: `.cursor/agent-docs/architecture.md` (if exists)
 - Design template example: `.cursor/templates/design-template-example.md` (for reference on expected quality/detail)
@@ -102,8 +102,8 @@ Using Composer Mode, create comprehensive system design.
 
 ```markdown
 Based on:
-- Spec: docs/specs/[feature-name].md
-- Research: docs/specs/[feature-name]-research.md
+- Spec: docs/specs/[feature-name]/spec.md
+- Research: docs/specs/[feature-name]/research.md
 - Standards: .cursor/agents.md
 - Template example: .cursor/templates/design-template-example.md
 
@@ -170,7 +170,7 @@ Approve recommendation or discuss alternatives?
 Generate comprehensive design document:
 
 ```bash
-bash .cursor/scripts/create-design.sh "docs/specs/[feature-name].md"
+bash .cursor/scripts/create-design.sh "docs/specs/[feature-name]/spec.md"
 ```
 
 The script will:
@@ -638,7 +638,7 @@ Display summary:
 
 📝 Files:
 - Design: docs/specs/[feature-name]/design.md
-- Research: docs/specs/[feature-name]-research.md (if created)
+- Research: docs/specs/[feature-name]/research.md (if created)
 
 📊 Design Summary:
 - Components: [count]

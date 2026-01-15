@@ -10,7 +10,7 @@ $ARGUMENTS
 
 **Usage:**
 - `/update-agent-docs` - Update all agent-docs files
-- `/update-agent-docs docs/specs/[feature-name].md` - Update only domains relevant to the spec
+- `/update-agent-docs docs/specs/[feature-name]/spec.md` - Update only domains relevant to the spec
 
 You **MUST** consider the user input before proceeding (if not empty).
 
@@ -346,7 +346,7 @@ cp .cursor/agent-docs/*.md .cursor/agent-docs/.backup/ 2>/dev/null || true
 - Best practices inform design decisions
 - Design command loads agent-docs, so having current patterns helps
 - Spec tells you which domains are relevant (API, database, etc.)
-- **Usage**: `/update-agent-docs docs/specs/[feature-name].md`
+- **Usage**: `/update-agent-docs docs/specs/[feature-name]/spec.md`
 
 **Optional: After `/design-system`**
 - Only if you want to document patterns you actually used
@@ -373,7 +373,7 @@ cp .cursor/agent-docs/*.md .cursor/agent-docs/.backup/ 2>/dev/null || true
    - What's already documented
 
 **Optional but Recommended:**
-3. **Feature spec** (`docs/specs/[feature-name].md`) - Provides:
+3. **Feature spec** (`docs/specs/[feature-name]/spec.md`) - Provides:
    - Which domains are relevant (Data Model → database.md, API endpoints → api.md)
    - Feature requirements that might need new patterns
    - Scope boundaries (what to focus on)

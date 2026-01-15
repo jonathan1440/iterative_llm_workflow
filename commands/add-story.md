@@ -16,7 +16,7 @@ This command extends an existing feature specification with a new user story, au
 
 **Usage Pattern:**
 ```bash
-/add-story docs/specs/[feature-name].md "New story description"
+/add-story docs/specs/[feature-name]/spec.md "New story description"
 ```
 
 ### Step 0: Prerequisites
@@ -83,7 +83,7 @@ Load existing design and extend it:
 
 Based on:
 - New user story specification
-- Existing design: docs/specs/[feature-name]-design.md
+- Existing design: docs/specs/[feature-name]/design.md
 - Existing architecture
 
 Extend the design document with:
@@ -319,7 +319,7 @@ Adjust MVP scope? [yes/no/undecided]
 Automatically verify consistency:
 
 ```bash
-bash .cursor/scripts/check-consistency.sh "docs/specs/[feature-name].md"
+bash .cursor/scripts/check-consistency.sh "docs/specs/[feature-name]/spec.md"
 ```
 
 ```markdown

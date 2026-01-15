@@ -143,9 +143,9 @@ Load into Composer context:
   - Story goal: Users can create accounts and log in to access the system
 
 **REFERENCE DOCUMENTS** (for context, not for other tasks):
-- Design: docs/specs/[feature-name]-design.md
+- Design: docs/specs/[feature-name]/design.md
   - Focus on: User model schema and methods (ignore other models)
-- Spec: docs/specs/[feature-name].md
+- Spec: docs/specs/[feature-name]/spec.md
   - Focus on: User Story 1 acceptance criteria (ignore other stories)
 - Standards: .cursor/agents.md
 - Domain-specific patterns (if relevant to THIS task):
