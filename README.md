@@ -5,7 +5,7 @@
 **Turn AI coding from chaotic prompting into systematic, high-quality development.**
 
 [![Workflow Completeness](https://img.shields.io/badge/completeness-10%2F10-brightgreen)]()
-[![Commands](https://img.shields.io/badge/commands-10-blue)]()
+[![Commands](https://img.shields.io/badge/commands-11-blue)]()
 [![Scripts](https://img.shields.io/badge/scripts-20+-orange)]()
 [![Quality](https://img.shields.io/badge/quality-production--grade-success)]()
 
@@ -15,10 +15,11 @@
 
 A complete workflow system for Cursor IDE that transforms AI-assisted development from ad-hoc prompting into a structured, repeatable process. Includes:
 
-- **10 custom Cursor commands** covering the entire development lifecycle
+- **11 custom Cursor commands** covering the entire development lifecycle
 - **20+ bash scripts** for automation and validation
 - **4 comprehensive templates** with production-quality examples
 - **Complete documentation** with examples and best practices
+- **Two implementation approaches**: focused one-task-at-a-time or full story context
 
 **Result**: 2-3x better output quality, 50% fewer bugs, systematic knowledge capture.
 
@@ -52,7 +53,7 @@ flowchart TD
     Start([Start New Project]) --> InitProject[//init-project/]
     InitProject --> SpecFeature[//spec-feature/]
     
-    SpecFeature --> UpdateDocs{Update agent-docs<br/>before designing?}
+    SpecFeature --> UpdateDocs{Update agent-docs before designing?}
     UpdateDocs -->|Yes - Recommended| UpdateAgentDocs[//update-agent-docs/]
     UpdateDocs -->|Skip| Design
     UpdateAgentDocs --> Design
@@ -60,7 +61,7 @@ flowchart TD
     Design[//design-system/]
     Design --> PlanTasks[//plan-tasks/]
     
-    PlanTasks --> CheckConsistency{Check consistency<br/>before starting?}
+    PlanTasks --> CheckConsistency{Check consistency before starting?}
     CheckConsistency -->|Yes - Recommended| Analyze[//analyze-consistency/]
     CheckConsistency -->|Skip| StatusCheck
     Analyze --> FixIssues{Critical<br/>issues?}
@@ -71,23 +72,31 @@ flowchart TD
     StatusCheck[//status/]
     StatusCheck --> ReadyToImplement[Ready to implement]
     
-    ReadyToImplement --> Implement[//implement-story/]
-    Implement --> StoryComplete{Story<br/>complete?}
+    ReadyToImplement --> ChooseImpl{Choose implementation approach}
+    ChooseImpl -->|Focused| DoTask["/do-task - One task at a time"]
+    ChooseImpl -->|Full Context| ImplementStory["/implement-story - Full story context"]
     
-    StoryComplete -->|No| Implement
+    DoTask --> TaskComplete{Task complete?}
+    TaskComplete -->|No| DoTask
+    TaskComplete -->|Yes| MoreTasks{More tasks in story?}
+    MoreTasks -->|Yes| DoTask
+    MoreTasks -->|No| TrackProgress
+    
+    ImplementStory --> StoryComplete{Story complete?}
+    StoryComplete -->|No| ImplementStory
     StoryComplete -->|Yes| TrackProgress[//status/]
     
     TrackProgress --> NeedScope{Need to add<br/>scope?}
     NeedScope -->|Yes| AddStory[//add-story/]
     AddStory --> Analyze
     
-    NeedScope -->|No| NeedRefactor{Need to<br/>refactor?}
+    NeedScope -->|No| NeedRefactor{Need to refactor?}
     NeedRefactor -->|Yes| Refactor[//refactor/]
     Refactor --> TrackProgress
     
     NeedRefactor -->|No| FeatureComplete{Feature<br/>complete?}
     
-    FeatureComplete -->|No - More stories| Implement
+    FeatureComplete -->|No - More stories| ChooseImpl
     FeatureComplete -->|Yes| Review[//review-agents/]
     
     Review --> NextFeature{Build another<br/>feature?}
@@ -101,7 +110,8 @@ flowchart TD
     style Refactor fill:#f8d7da
     style Review fill:#d1ecf1
     style StatusCheck fill:#d1ecf1
-    style Implement fill:#cfe2ff
+    style DoTask fill:#cfe2ff
+    style ImplementStory fill:#cfe2ff
     style UpdateAgentDocs fill:#e7d4f8
 ```
 
@@ -118,14 +128,16 @@ flowchart TD
 - `/analyze-consistency` - Verify everything aligns
 - `/status` - See what's ahead
 
-**Phase 3: Implementation (Command 7)**
-- `/implement-story` - Build one user story at a time
+**Phase 3: Implementation (Commands 7-8)**
+- `/do-task` - Implement one task at a time (maximum focus)
+- `/implement-story` - Build one user story at a time (full context)
 
-**Phase 4: Iteration (Commands 8-10)**
+**Phase 4: Iteration (Commands 9-11)**
 - `/status` - Track progress
 - `/add-story` - Expand scope safely
 - `/refactor` - Improve code quality
 - `/review-agents` - Capture learnings
+- `/update-agent-docs` - Update domain patterns with best practices
 
 ---
 
@@ -138,8 +150,9 @@ flowchart TD
 | `/init-project` | Initialize project structure | Once per project |
 | `/spec-feature` | Create feature specification | Start of each feature |
 | `/design-system` | Design architecture & data model | After spec |
-| `/plan-tasks` | Break feature into tasks | After design |
-| `/implement-story` | Implement one user story | For each story |
+| `/plan-tasks` | Break feature into detailed tasks | After design |
+| `/do-task` | Implement one task at a time | For focused execution |
+| `/implement-story` | Implement one user story | For full story context |
 
 ### Quality & Maintenance Commands (Recommended)
 
@@ -159,17 +172,19 @@ flowchart TD
 ```
 your-project/
 ├── .cursor/
-│   ├── commands/              # 10 custom commands
+│   ├── commands/              # 11 custom commands
 │   │   ├── init-project.md
 │   │   ├── spec-feature.md
 │   │   ├── design-system.md
 │   │   ├── plan-tasks.md
+│   │   ├── do-task.md
 │   │   ├── implement-story.md
 │   │   ├── analyze-consistency.md
 │   │   ├── status.md
 │   │   ├── add-story.md
 │   │   ├── refactor.md
-│   │   └── review-agents.md
+│   │   ├── review-agents.md
+│   │   └── update-agent-docs.md
 │   │
 │   ├── scripts/               # 20+ automation scripts
 │   │   ├── init-project.sh
@@ -319,7 +334,8 @@ cp agents.md .cursor/agents.md
 /plan-tasks docs/specs/user-authentication-with-email-password.md
 
 # This creates: docs/specs/user-authentication-with-email-password-tasks.md
-# Contains: Phase-organized tasks with dependencies
+# Contains: Phase-organized tasks with detailed, self-contained descriptions
+# Each task includes: file paths, requirements, error handling, dependencies, acceptance criteria
 
 # 4. Validate consistency
 /analyze-consistency docs/specs/user-authentication-with-email-password.md
@@ -335,17 +351,54 @@ cp agents.md .cursor/agents.md
 
 ### Implementing a Feature
 
+**Option 1: Focused, One-Task-at-a-Time** (Recommended for well-defined tasks)
+
+```bash
+# Work on next incomplete task
+/do-task
+
+# Or work on specific task
+/do-task T017
+
+# The command will:
+# 1. Load ONLY the current task (maximum focus)
+# 2. Implement the task completely
+# 3. Verify task completion
+# 4. Mark task complete
+# 5. Automatically find next task
+
+# Benefits:
+# - AI sees only one task (no distraction)
+# - Forces better task definition
+# - Clear progress tracking
+# - Works with detailed, self-contained tasks
+```
+
+**Option 2: Full Story Context** (Recommended for complex, interrelated tasks)
+
 ```bash
 # Work on first user story
 /implement-story "User Story 1"
 
 # The command will:
-# 1. Load context (tasks, design, spec, agents.md)
+# 1. Load context (all tasks for story, design, spec, agents.md)
 # 2. Work through tasks sequentially
-# 3. Run verification checkpoints
+# 3. Run verification checkpoints at milestones
 # 4. Capture learnings
 # 5. Mark tasks complete
 # 6. Generate story report
+
+# Benefits:
+# - AI sees full story context
+# - Can optimize across related tasks
+# - Better for complex dependencies
+```
+
+**Both approaches:**
+- Use the same tasks.md file
+- Include verification tasks at milestones
+- Track progress the same way
+- Choose based on your preference and task complexity
 
 # Check progress
 /status
@@ -416,20 +469,22 @@ cp agents.md .cursor/agents.md
 /design-system docs/specs/core-task-management-with-boards-and-cards.md
 /plan-tasks docs/specs/core-task-management-with-boards-and-cards.md
 /analyze-consistency docs/specs/core-task-management-with-boards-and-cards.md
-/implement-story "User Story 1: Create and organize tasks"
-/implement-story "User Story 2: Move tasks between columns"
+/do-task  # Work through tasks one at a time
+# Or: /implement-story "User Story 1: Create and organize tasks"
 /status  # MVP Complete!
 
 # Week 2: User Authentication (new feature)
 /spec-feature "User authentication and team workspaces"
 /design-system docs/specs/user-authentication-and-team-workspaces.md
 /plan-tasks docs/specs/user-authentication-and-team-workspaces.md
-/implement-story "User Story 1: User registration and login"
+/do-task  # Start with first task, work through sequentially
+# Or: /implement-story "User Story 1: User registration and login"
 
 # Week 3: Scope Change - Need to add feature
 /add-story docs/specs/user-authentication-and-team-workspaces.md "Users can invite team members via email"
 /analyze-consistency docs/specs/user-authentication-and-team-workspaces.md
-/implement-story "User Story 3: Team invitations"
+/do-task  # Continue with next task
+# Or: /implement-story "User Story 3: Team invitations"
 
 # Week 4: Code Quality & Learning
 /refactor "Extract task validation logic into reusable service"
@@ -461,12 +516,18 @@ cp agents.md .cursor/agents.md
 
 ### 3. Task-Based Execution
 
-**Not giant PRs.** Work broken into bite-sized tasks:
+**Not giant PRs.** Work broken into detailed, self-contained tasks:
+- Each task includes all context needed (file paths, requirements, error handling, dependencies)
+- Tasks are self-contained (can be implemented without loading other tasks)
 - Sequential dependencies clearly marked
 - Parallel work opportunities identified
 - Each task ~15-30 minutes
-- Verification checkpoints built-in
+- **Explicit verification tasks** at key milestones (models, services, API, tests, story)
 - Independent test scenarios
+
+**Two implementation approaches:**
+- `/do-task`: One task at a time, maximum focus (works best with detailed tasks)
+- `/implement-story`: Full story context, guided workflow (works with any task format)
 
 ### 4. Consistency Validation
 
@@ -492,6 +553,26 @@ cp agents.md .cursor/agents.md
 - Safety checkpoints for rollback
 - Verification after refactoring
 - Automatic regression detection
+
+### 7. Flexible Implementation Approaches
+
+**Not one-size-fits-all.** Choose the approach that fits your needs:
+
+**`/do-task` - Focused, One-Task-at-a-Time:**
+- AI sees only one task (maximum focus, no distraction)
+- Works best with detailed, self-contained tasks
+- Forces better task definition upfront
+- Clear progress: one task complete = one checkpoint
+- Best for: Well-defined tasks, repetitive work, when you want maximum focus
+
+**`/implement-story` - Full Story Context:**
+- AI sees all tasks for the story (can optimize across tasks)
+- Guided workflow with story-level verification
+- Better for complex, interrelated tasks
+- Can reference other tasks for consistency
+- Best for: Complex features, when tasks need cross-referencing, exploratory work
+
+Both use the same tasks.md file, so you can switch approaches as needed.
 
 ---
 
@@ -749,7 +830,7 @@ Each command file (`.cursor/commands/*.md`) includes:
 Production-quality examples in `.cursor/templates/`:
 - `spec-template-example.md` - Feature specification example
 - `design-template-example.md` - System design example
-- `tasks-template-example.md` - Task breakdown example
+- `tasks-template-example.md` - Task breakdown example with detailed, self-contained tasks and verification checkpoints
 - `implementation-example.md` - Complete implementation walkthrough
 
 ---
@@ -764,10 +845,15 @@ Production-quality examples in `.cursor/templates/`:
 
 ### Best Practices
 1. Always run `/analyze-consistency` before implementation
-2. Check `/status` daily to track progress
-3. Run `/review-agents` monthly to capture learnings
-4. Use `/refactor` after completing features
-5. Keep agents.md updated with project patterns
+2. Create detailed, self-contained tasks in `/plan-tasks` (enables `/do-task`)
+3. Include verification tasks at milestones (models, services, API, tests, story)
+4. Choose implementation approach based on task complexity:
+   - Use `/do-task` for well-defined, self-contained tasks
+   - Use `/implement-story` for complex, interrelated tasks
+5. Check `/status` daily to track progress
+6. Run `/review-agents` monthly to capture learnings
+7. Use `/refactor` after completing features
+8. Keep agents.md updated with project patterns
 
 ### Advanced Topics
 1. Creating custom commands for your stack
@@ -786,7 +872,7 @@ This workflow is built on these principles:
 Define what to build before building it. Prevents costly rework.
 
 **2. Verification Loops**
-Check your work at every step. Catch mistakes early.
+Explicit verification tasks at key milestones ensure quality. Catch mistakes early, before they compound.
 
 **3. Learning Capture**
 Document hard-won knowledge. Don't repeat mistakes.
@@ -795,7 +881,7 @@ Document hard-won knowledge. Don't repeat mistakes.
 AI handles repetitive tasks, you handle decisions. Best of both worlds.
 
 **5. Systematic Quality**
-Quality isn't accidental. Build it into the process.
+Quality isn't accidental. Build it into the process through detailed tasks, explicit verification, and focused execution.
 
 ---
 
@@ -807,6 +893,7 @@ Track these to measure workflow effectiveness:
 - Time from spec to first working code
 - Number of consistency issues caught pre-implementation
 - Percentage of tasks completed without blocking issues
+- Verification task pass rate (should be 100%)
 - Frequency of refactoring (should increase)
 
 **Quality Metrics:**
@@ -826,10 +913,13 @@ Track these to measure workflow effectiveness:
 ## 🗺️ Roadmap
 
 ### Current Version: 1.0
-- ✅ 11 core commands (including update-agent-docs)
+- ✅ 11 core commands (including do-task and update-agent-docs)
 - ✅ 20+ automation scripts
 - ✅ 4 production templates
 - ✅ agent-docs system for domain-specific patterns
+- ✅ Detailed, self-contained task format
+- ✅ Explicit verification tasks at milestones
+- ✅ Two implementation approaches (focused vs. full context)
 - ✅ Complete documentation
 
 ### Planned Improvements
@@ -884,7 +974,7 @@ Inspired by:
 /spec-feature "Feature description"
 /design-system docs/specs/[feature].md
 /plan-tasks docs/specs/[feature].md
-/implement-story "User Story 1"
+/do-task  # Or: /implement-story "User Story 1"
 
 # Quality Commands (As Needed)
 /analyze-consistency docs/specs/[feature].md   # Before implementation
