@@ -418,7 +418,7 @@ This creates `docs/specs/[feature-name]/consistency-report.md` with:
 **Format Errors (Must Fix)**:
 1. **Missing TaskIDs**: Tasks without [T001] format cannot be tracked
 2. **Missing Required Sections**: Spec or tasks missing mandatory sections
-3. **Invalid Task Format**: Tasks don't follow `- [ ] [TaskID] [P?] [Story?] Description`
+3. **Invalid Task Format**: Tasks don't follow format defined in `.cursor/templates/task-format.md` (expected: `- [ ] [TaskID] [P?] [Story?] [RESEARCH?] Description with file path` and required sections)
 4. **TaskID Gaps**: Non-sequential TaskIDs break dependency tracking
 5. **Implementation Details in Spec**: Technology choices belong in design, not spec
 

@@ -78,23 +78,12 @@ cat > "$TASKS_PATH" << 'EOF'
 
 ## Task Format
 
-**Every task MUST follow this format:**
+**Every task MUST follow the format defined in `.cursor/templates/task-format.md`.**
 
-```
-- [ ] [TaskID] [P?] [Story?] Description with file path
-```
-
-**Format Components:**
-- `- [ ]` - Checkbox (always required)
-- `[TaskID]` - T001, T002, T003... (sequential)
-- `[P]` - Parallel marker (ONLY if different files, no dependencies)
-- `[Story]` - [US1], [US2], [US3] (REQUIRED for user story tasks)
-- Description - Clear action with specific file path
-
-**Examples:**
-- ✅ `- [ ] T001 Initialize project structure per plan`
-- ✅ `- [ ] T012 [P] [US1] Create User model in src/models/user.js`
-- ✅ `- [ ] T014 [US1] Implement UserService in src/services/user-service.js`
+**Quick Reference:**
+- Format: `- [ ] [TaskID] [P?] [Story?] [RESEARCH?] Description with file path`
+- Required sections: File, Requirements, Implementation Details, Error Handling, Dependencies, Acceptance, Test Requirements
+- See `.cursor/templates/task-format.md` for complete format specification, rules, examples, and test requirements
 
 ---
 

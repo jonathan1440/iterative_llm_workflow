@@ -86,13 +86,22 @@ Load into context:
   - Focus on: Relevant section for this task
 - Spec: docs/specs/[feature-name]/spec.md (if needed for context)
 - Standards: .cursor/agents.md
+- Task format: .cursor/templates/task-format.md (canonical task format specification)
 - Task template: .cursor/templates/tasks-template-example.md
   - Reference: Format for detailed, self-contained tasks
 ```
 
 ### Step 3: Create Detailed Task
 
-**CRITICAL**: Task must be detailed and self-contained, following the format from `/plan-tasks`.
+**CRITICAL**: Task must be detailed and self-contained, following the format defined in `.cursor/templates/task-format.md`.
+
+**Reference the template for**:
+- Complete task format template
+- Format rules (checkbox, Task ID, markers, etc.)
+- Test Requirements format (with examples for application code, bash scripts, API endpoints)
+- Verification task format
+- Task self-containment requirements
+- Examples (good and bad patterns)
 
 Generate the task following this format:
 
@@ -124,22 +133,36 @@ Generate the task following this format:
   **Dependencies**: T008-T016 (Foundation tasks must be complete)
   
   **Acceptance**: User model can be imported, instantiated, and all methods work correctly
+  
+  **Test Requirements**:
+  
+  **Automated Tests**:
+  ```bash
+  npm run lint src/models/user.js
+  npm test -- tests/unit/user.test.js
+  ```
+  Expected: No lint errors, all tests pass
+  
+  **Manual Tests**:
+  - [ ] Import: `const User = require('./src/models/user')` succeeds
+  - [ ] Call create: `User.create({email: "test@example.com", password: "Pass123"})` returns user object
+  
+  **Positive Test Cases**:
+  - [ ] create with valid data returns user object
+  - [ ] findByEmail finds existing user
+  
+  **Negative Test Cases**:
+  - [ ] create with invalid email throws ValidationError
+  - [ ] create with duplicate email throws DatabaseError (409)
+```
 ```
 
-**Task Format Requirements:**
-
-1. **Checkbox**: `- [ ]`
-2. **Task ID**: Use the next available ID (from script output)
-3. **[P] Marker**: Only if task is parallelizable (different files, no dependencies)
-4. **[Story] Label**: Include if task belongs to a user story (e.g., [US1])
-5. **Description**: Clear action with exact file path
-6. **Detailed Sections**:
-   - **File**: Exact file path
-   - **Requirements**: All details from design (fields, methods, etc.)
-   - **Implementation Details**: Specific approach
-   - **Error Handling**: Error types and handling
-   - **Dependencies**: Explicit task IDs that must be complete first
-   - **Acceptance**: How to verify task is complete
+**Task Format Requirements**: See `.cursor/templates/task-format.md` for complete format requirements including:
+- Format rules (checkbox, Task ID, markers, etc.)
+- Required sections (File, Requirements, Implementation Details, Error Handling, Dependencies, Acceptance, Test Requirements)
+- Test Requirements format with examples for Bash Scripts, Application Code, and API Endpoints
+- Task self-containment requirements
+- Examples and common mistakes
 
 ### Step 4: Determine Placement
 
@@ -234,6 +257,9 @@ bash .cursor/scripts/validate-tasks.sh "$TASKS_FILE"
 **Check specifically:**
 - Task ID is sequential (or acceptable gap)
 - Task has required format elements
+- **Task includes "Test Requirements" section**
+- **Test Requirements include positive and negative test cases**
+- **Acceptance criteria are testable**
 - Dependencies are valid (referenced tasks exist)
 - File path is included
 - Story label matches phase (if applicable)
@@ -279,21 +305,7 @@ bash .cursor/scripts/validate-tasks.sh "$TASKS_FILE"
 
 ### Task Detail Requirements
 
-Because tasks are used with `/do-task`, each task must be self-contained:
-
-**DO Include:**
-- Exact file path
-- All fields with types and constraints
-- All methods with signatures
-- Error handling requirements
-- Explicit dependencies
-- Clear acceptance criteria
-
-**DON'T:**
-- Reference "see design doc" (extract details into task)
-- Use vague descriptions
-- Skip dependencies
-- Omit file paths
+Because tasks are used with `/do-task`, each task must be self-contained. See `.cursor/templates/task-format.md` for complete task self-containment requirements including DO/DON'T guidelines and examples.
 
 ### Placement Logic
 
@@ -310,51 +322,18 @@ Because tasks are used with `/do-task`, each task must be self-contained:
 
 ### Parallel Task Marking
 
-Mark task `[P]` only if:
-- It modifies different files than other incomplete tasks
-- It has no dependencies on incomplete tasks
-- It can safely run simultaneously with other `[P]` tasks
-
-**Example:**
-```
-- [ ] T017 [P] [US1] Create User model in src/models/user.js
-- [ ] T018 [P] [US1] Create Session model in src/models/session.js
-```
-Both are `[P]` because different files, no dependencies.
+See `.cursor/templates/task-format.md` for parallel task marking rules and examples.
 
 ### Dependencies
 
-Always list explicit dependencies:
-
-**Good:**
-```
-**Dependencies**: T008-T016 (Foundation tasks), T017 (User model)
-```
-
-**Bad:**
-```
-**Dependencies**: Previous tasks (vague)
-```
+Always list explicit dependencies. See `.cursor/templates/task-format.md` for dependency guidelines and examples.
 
 ### Verification Tasks
 
-If adding a verification task, follow the verification task format:
-
-```markdown
-- [ ] T028 [US1] Verify models milestone (T017, T018)
-
-  **Verification Type**: Milestone Checkpoint
-  
-  **Dependencies**: T017, T018 (all model tasks complete)
-  
-  **Checks**:
-  - Files exist: src/models/user.js, src/models/session.js
-  - Syntax valid (run linter: no errors)
-  - All required methods present
-  ...
-  
-  **Acceptance**: All checks pass, models can be imported and used
-```
+If adding a verification task, follow the verification task format defined in `.cursor/templates/task-format.md`. The template includes:
+- Required elements (Verification Type, Dependencies, Automated Checks, Manual Checks, Test Results, Failure Criteria)
+- Example verification task with full format
+- Verification task placement guidance
 
 ## Context
 

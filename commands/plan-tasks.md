@@ -63,6 +63,7 @@ Load into context:
 - API patterns: .cursor/agent-docs/api.md (if exists)
 - Testing patterns: .cursor/agent-docs/testing.md (if exists)
 - Failure modes: .cursor/agent-docs/failure-modes.md (if exists, for avoiding common mistakes)
+- Task format: .cursor/templates/task-format.md (canonical task format specification)
 - Existing codebase: [Scan for similar implementations in src/]
 - Tasks template example: .cursor/templates/tasks-template-example.md (for reference on expected organization/detail)
 
@@ -184,68 +185,23 @@ The script will:
    - Don't say "follow standard pattern" - specify the pattern
    - Include all context needed to implement without loading other files
 
-**TASK FORMAT** - Every task MUST follow this pattern:
+**TASK FORMAT**: Every task MUST follow the format defined in `.cursor/templates/task-format.md`.
 
-```
-- [ ] [TaskID] [P?] [Story?] [RESEARCH?] Description with file path
+**Reference the template for**:
+- Complete task format template
+- Format rules (checkbox, Task ID, markers, etc.)
+- Test Requirements format (with examples for application code, bash scripts, API endpoints)
+- Verification task format
+- Task self-containment requirements
+- Examples (good and bad patterns)
+- Common mistakes to avoid
 
-  **File**: [exact file path]
-  
-  **Requirements** (from design):
-  - [Detailed requirement 1]
-  - [Detailed requirement 2]
-  
-  **Implementation Details**:
-  - [Specific implementation detail 1]
-  - [Specific implementation detail 2]
-  
-  **Error Handling**:
-  - [Error handling requirements]
-  
-  **Dependencies**: [Task IDs that must be complete first]
-  
-  **Acceptance**: [How to verify this task is complete]
-```
+**Quick Reference**:
+- Task format: `- [ ] [TaskID] [P?] [Story?] [RESEARCH?] Description with file path`
+- Required sections: File, Requirements, Implementation Details, Error Handling, Dependencies, Acceptance, Test Requirements
+- Test Requirements must include: Positive test cases, Negative test cases, Automated/Manual tests
 
-**Optional [RESEARCH] Marker**: Use only if task needs additional investigation:
-- New technology not covered in design/research
-- Ambiguous requirements needing clarification
-- No existing patterns in agents.md or agent-docs/
-- Similar implementations not found in codebase
-
-If [RESEARCH] marker is used, add:
-```
-  **Research Needed**:
-  - Check agents.md for: [specific pattern or convention]
-  - Review codebase for: [similar implementation to reference]
-  - Verify in agent-docs/: [specific domain pattern]
-  - Clarify with design: [specific ambiguity]
-```
-
-**Format Rules:**
-
-1. **Checkbox**: Always start with `- [ ]`
-2. **Task ID**: Sequential number (T001, T002, T003...)
-3. **[P] Marker**: ONLY if task is parallelizable
-   - Different files than other running tasks
-   - No dependencies on incomplete tasks
-   - Example: `[P]`
-4. **[Story] Label**: REQUIRED for user story phases
-   - Format: [US1], [US2], [US3], etc.
-   - Setup phase: NO story label
-   - Foundation phase: NO story label
-   - User Story phases: MUST have story label
-   - Polish phase: NO story label
-5. **[RESEARCH] Marker**: OPTIONAL, use only if task needs additional investigation
-   - New technology not in design/research
-   - Ambiguous requirements
-   - No existing patterns found
-   - Example: `[RESEARCH]`
-6. **Description**: Clear action with exact file path
-7. **Detailed Requirements**: Self-contained details extracted from design
-8. **Dependencies**: Explicitly listed (not inferred)
-
-**Examples:**
+**Examples**: See `.cursor/templates/task-format.md` for complete examples including:
 
 ✅ CORRECT (Detailed, Self-Contained):
 ```
@@ -281,6 +237,40 @@ If [RESEARCH] marker is used, add:
   **Dependencies**: T008-T016 (Foundation tasks must be complete)
   
   **Acceptance**: User model can be imported, instantiated, and all methods work correctly
+  
+  **Test Requirements**:
+  
+  **Automated Tests**:
+  ```bash
+  # Syntax check
+  npm run lint src/models/user.js
+  
+  # Unit tests (if test file exists)
+  npm test -- tests/unit/user.test.js
+  ```
+  Expected: No lint errors, all tests pass
+  
+  **Manual Tests**:
+  - [ ] Import: `const User = require('./src/models/user')` succeeds
+  - [ ] Call create: `User.create({email: "test@example.com", password: "Pass123"})` returns user object
+  - [ ] Verify password hashed: `user.password_hash !== "Pass123"`
+  - [ ] Call findByEmail: `User.findByEmail("test@example.com")` returns user object
+  - [ ] Call findByEmail with non-existent: `User.findByEmail("fake@example.com")` returns null
+  
+  **Positive Test Cases**:
+  - [ ] create with valid data returns user object with hashed password
+  - [ ] findByEmail finds existing user
+  - [ ] updateFailedLoginCount increments count correctly
+  - [ ] lockAccount sets locked_until timestamp
+  
+  **Negative Test Cases**:
+  - [ ] create with invalid email throws ValidationError
+  - [ ] create with duplicate email throws DatabaseError (409)
+  - [ ] findByEmail with null returns null (not error)
+  
+  **Integration Checks**:
+  - [ ] Model works with database connection from foundation tasks
+  - [ ] Error classes (ValidationError, DatabaseError) work correctly
 ```
 
 ✅ CORRECT (With Research Marker):
@@ -308,6 +298,31 @@ If [RESEARCH] marker is used, add:
   **Dependencies**: T035 (PasswordResetService)
   
   **Acceptance**: Emails send successfully, errors logged but don't expose to users
+  
+  **Test Requirements**:
+  
+  **Automated Tests**:
+  ```bash
+  npm test -- tests/unit/email-service.test.js
+  ```
+  Expected: All tests pass
+  
+  **Manual Tests**:
+  - [ ] Import: `const EmailService = require('./src/services/email-service')` succeeds
+  - [ ] Call sendPasswordReset: `EmailService.sendPasswordReset("test@example.com", "token123")` succeeds
+  
+  **Positive Test Cases**:
+  - [ ] sendPasswordReset with valid email sends email via SendGrid
+  - [ ] Email contains reset link with token
+  - [ ] Email contains expiration notice
+  
+  **Negative Test Cases**:
+  - [ ] SendGrid API error is logged but doesn't throw (user sees success)
+  - [ ] Invalid email format is rejected before API call
+  
+  **Integration Checks**:
+  - [ ] Works with SendGrid SDK from dependencies
+  - [ ] Error logging works with logger from foundation tasks
 ```
 
 ✅ CORRECT (Simpler task, still detailed):
@@ -325,6 +340,20 @@ If [RESEARCH] marker is used, add:
   **Dependencies**: None (first task)
   
   **Acceptance**: All directories exist, .gitignore created
+  
+  **Test Requirements**:
+  
+  **Manual Tests**:
+  - [ ] Verify directories exist: `test -d src/models && test -d src/services && test -d tests/unit`
+  - [ ] Verify .gitignore exists: `test -f .gitignore`
+  - [ ] Verify .gitignore contains standard ignores: `grep -q "node_modules" .gitignore`
+  
+  **Positive Test Cases**:
+  - [ ] All required directories created
+  - [ ] .gitignore file created with standard content
+  
+  **Integration Checks**:
+  - [ ] Directory structure matches design requirements
 ```
 
 ❌ WRONG (Too brief, not self-contained):
@@ -350,6 +379,19 @@ T001 [US1] Create model  (missing checkbox)
   - Send emails
 ```
 Problem: [RESEARCH] marker used but no "Research Needed" section provided
+
+**For complete examples and all format details, see `.cursor/templates/task-format.md`**
+
+**Test Requirements Format**: See `.cursor/templates/task-format.md` for complete Test Requirements format with examples for:
+- Application Code (models, services, APIs)
+- Bash Scripts (syntax check, dry-run, test runs)
+- API Endpoints (curl/Postman tests)
+
+**Key Requirements**:
+- Every task MUST include a "Test Requirements" section
+- Must include positive and negative test cases
+- Acceptance criteria must be testable (not vague)
+- See template for detailed examples and structure
 
 ### Step 6: Organize Tasks by Phase
 
@@ -431,6 +473,28 @@ How to verify this story works without other stories:
   **Dependencies**: T008-T016 (Foundation tasks)
   
   **Acceptance**: Model can be imported, all methods work
+  
+  **Test Requirements**:
+  
+  **Automated Tests**:
+  ```bash
+  npm run lint src/models/user.js
+  npm test -- tests/unit/user.test.js
+  ```
+  Expected: No lint errors, all tests pass
+  
+  **Manual Tests**:
+  - [ ] Import: `const User = require('./src/models/user')` succeeds
+  - [ ] Call create: `User.create({email: "test@example.com", password: "Pass123"})` returns user object
+  
+  **Positive Test Cases**:
+  - [ ] create with valid data returns user object
+  - [ ] findByEmail finds existing user
+  
+  **Negative Test Cases**:
+  - [ ] create with invalid email throws ValidationError
+  - [ ] create with duplicate email throws DatabaseError (409)
+```
 
 - [ ] T012 [P] [US1] Create Session model in src/models/session.js
 
@@ -455,6 +519,28 @@ How to verify this story works without other stories:
   **Dependencies**: T008-T016 (Foundation tasks)
   
   **Acceptance**: Model can be imported, all methods work
+  
+  **Test Requirements**:
+  
+  **Automated Tests**:
+  ```bash
+  npm run lint src/models/session.js
+  npm test -- tests/unit/session.test.js
+  ```
+  Expected: No lint errors, all tests pass
+  
+  **Manual Tests**:
+  - [ ] Import: `const Session = require('./src/models/session')` succeeds
+  - [ ] Call create: `Session.create(userId, token)` returns session object
+  
+  **Positive Test Cases**:
+  - [ ] create with valid userId and token returns session object
+  - [ ] findByToken finds existing session
+  
+  **Negative Test Cases**:
+  - [ ] findByToken with invalid token returns null
+  - [ ] create with invalid userId throws DatabaseError
+```
 
 - [ ] T013 [US1] Implement UserService in src/services/user-service.js
 
@@ -473,6 +559,29 @@ How to verify this story works without other stories:
   **Dependencies**: T011 (User model must exist)
   
   **Acceptance**: All methods work, error handling correct
+  
+  **Test Requirements**:
+  
+  **Automated Tests**:
+  ```bash
+  npm test -- tests/unit/user-service.test.js
+  ```
+  Expected: All tests pass, coverage >= 80%
+  
+  **Manual Tests**:
+  - [ ] Import: `const UserService = require('./src/services/user-service')` succeeds
+  - [ ] Call createUser: `UserService.createUser("test@example.com", "Pass123")` returns user object
+  
+  **Positive Test Cases**:
+  - [ ] createUser with valid email/password returns user object
+  - [ ] hashPassword creates valid bcrypt hash
+  - [ ] validateEmail accepts valid emails
+  
+  **Negative Test Cases**:
+  - [ ] createUser with invalid email throws ValidationError
+  - [ ] createUser with weak password throws ValidationError
+  - [ ] createUser with duplicate email throws DatabaseError (409)
+```
 
 - [ ] T014 [US1] Implement AuthService in src/services/auth-service.js
 
@@ -491,6 +600,32 @@ How to verify this story works without other stories:
   **Dependencies**: T011 (User model), T012 (Session model), T013 (UserService)
   
   **Acceptance**: Login flow works, account lockout works after 5 failures
+  
+  **Test Requirements**:
+  
+  **Automated Tests**:
+  ```bash
+  npm test -- tests/unit/auth-service.test.js
+  ```
+  Expected: All tests pass, coverage >= 80%
+  
+  **Manual Tests**:
+  - [ ] Import: `const AuthService = require('./src/services/auth-service')` succeeds
+  - [ ] Call login: `AuthService.login("test@example.com", "Pass123")` returns session token
+  
+  **Positive Test Cases**:
+  - [ ] login with valid credentials returns session token
+  - [ ] generateSessionToken creates 64-byte hex string
+  
+  **Negative Test Cases**:
+  - [ ] login with wrong password throws AuthError (401)
+  - [ ] login with non-existent email throws AuthError (401)
+  - [ ] login after 5 failures throws AuthError (423) for locked account
+  
+  **Edge Cases**:
+  - [ ] Account lock expires after 15 minutes
+  - [ ] Failed login count resets after successful login
+```
 
 - [ ] T015 [US1] Create POST /api/auth/register endpoint in src/routes/auth.js
 
@@ -516,6 +651,32 @@ How to verify this story works without other stories:
   **Dependencies**: T013 (UserService), T012 (Session model)
   
   **Acceptance**: Endpoint accepts valid requests, returns 201 with token
+  
+  **Test Requirements**:
+  
+  **Automated Tests**:
+  ```bash
+  npm test -- tests/integration/auth.test.js
+  ```
+  Expected: All tests pass
+  
+  **Manual Tests**:
+  ```bash
+  curl -X POST http://localhost:3000/api/auth/register \
+    -H "Content-Type: application/json" \
+    -d '{"email":"test@example.com","password":"SecurePass123"}'
+  ```
+  Expected: 201 Created with user object and session token
+  
+  **Positive Test Cases**:
+  - [ ] POST /auth/register with valid email/password returns 201 with token
+  - [ ] Response contains user object and session token
+  
+  **Negative Test Cases**:
+  - [ ] POST /auth/register with invalid email returns 400
+  - [ ] POST /auth/register with weak password returns 400
+  - [ ] POST /auth/register with duplicate email returns 409
+```
 
 - [ ] T016 [US1] Create POST /api/auth/login endpoint in src/routes/auth.js
 
@@ -537,6 +698,31 @@ How to verify this story works without other stories:
   **Dependencies**: T014 (AuthService)
   
   **Acceptance**: Endpoint accepts valid credentials, returns 200 with token
+  
+  **Test Requirements**:
+  
+  **Automated Tests**:
+  ```bash
+  npm test -- tests/integration/auth.test.js
+  ```
+  Expected: All tests pass
+  
+  **Manual Tests**:
+  ```bash
+  curl -X POST http://localhost:3000/api/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{"email":"test@example.com","password":"SecurePass123"}'
+  ```
+  Expected: 200 OK with session token
+  
+  **Positive Test Cases**:
+  - [ ] POST /auth/login with valid credentials returns 200 with token
+  
+  **Negative Test Cases**:
+  - [ ] POST /auth/login with wrong password returns 401
+  - [ ] POST /auth/login with non-existent email returns 401
+  - [ ] POST /auth/login with locked account returns 423
+```
 
 - [ ] T017 [US1] Create authentication middleware in src/middleware/auth.js
 
@@ -556,6 +742,32 @@ How to verify this story works without other stories:
   **Dependencies**: T012 (Session model)
   
   **Acceptance**: Middleware validates tokens, attaches user to request
+  
+  **Test Requirements**:
+  
+  **Automated Tests**:
+  ```bash
+  npm test -- tests/integration/auth.test.js
+  ```
+  Expected: All tests pass
+  
+  **Manual Tests**:
+  ```bash
+  # With valid token
+  curl -X GET http://localhost:3000/api/auth/me \
+    -H "Authorization: Bearer <valid-token>"
+  ```
+  Expected: 200 OK with user profile
+  
+  **Positive Test Cases**:
+  - [ ] GET /auth/me with valid token returns user profile
+  - [ ] Middleware attaches user to req.user
+  
+  **Negative Test Cases**:
+  - [ ] GET /auth/me with invalid token returns 401
+  - [ ] GET /auth/me with expired token returns 401
+  - [ ] GET /auth/me with missing token returns 401
+```
 
 - [ ] T018 [P] [US1] Write unit tests for UserService in tests/unit/user-service.test.js
 
@@ -731,6 +943,10 @@ bash .cursor/scripts/validate-tasks.sh "docs/specs/[feature-name]/tasks.md"
 - [ ] MVP scope clearly defined
 - [ ] Verification tasks included at key milestones (models, services, API, tests, story)
 - [ ] Verification tasks have clear acceptance criteria
+- [ ] **All tasks include "Test Requirements" section**
+- [ ] **Test Requirements include positive and negative test cases**
+- [ ] **Acceptance criteria are testable (not vague)**
+- [ ] **Verification tasks include executable commands**
 - [ ] Tasks with [RESEARCH] marker include "Research Needed" section
 - [ ] Tasks reference existing patterns from agents.md/agent-docs/ where applicable
 
@@ -880,23 +1096,7 @@ Success = All steps work without US2 or US3 implemented
 
 **4. Parallel Task Marking**
 
-Mark tasks [P] ONLY if they:
-- Modify different files
-- Have no dependencies on incomplete tasks
-- Can be safely worked on simultaneously
-
-Example:
-```
-- [ ] T011 [P] [US1] Create User model in src/models/user.js
-- [ ] T012 [P] [US1] Create Session model in src/models/session.js
-```
-These are parallel because different files, no dependencies.
-
-```
-- [ ] T013 [US1] Create UserService (depends on User model)
-- [ ] T014 [US1] Create AuthService (depends on UserService)
-```
-These are NOT parallel - must be sequential.
+See `.cursor/templates/task-format.md` for parallel task marking rules and examples.
 
 ### Verification Tasks
 
@@ -932,11 +1132,10 @@ These are NOT parallel - must be sequential.
    - Verify story works end-to-end
    - Example: T025 [US1] Verify story completion
 
-**Verification Task Format**:
-- Include verification type (Milestone Checkpoint or Story-Level Verification)
-- List all dependencies (which tasks must be complete)
-- Specify checks to run (automated and manual)
-- Define acceptance criteria (what "pass" means)
+**Verification Task Format**: See `.cursor/templates/task-format.md` for complete verification task format including:
+- Required elements (Verification Type, Dependencies, Automated Checks, Manual Checks, Test Results, Failure Criteria)
+- Example verification task with full format
+- Verification task placement guidance
 
 **Benefits**:
 - Makes verification mandatory (can't skip)
@@ -1002,115 +1201,20 @@ Break down: Registration → Login → Session → Verification
 
 ### Common Mistakes to Avoid
 
-❌ **Not organizing by user story**
-- Tasks scattered by type instead of feature
-- Can't test partially complete work
-
-❌ **Missing file paths**
-- "Create User model" → Where?
-- Should be: "Create User model in src/models/user.js"
-
-❌ **Incorrect story labels**
-- Setup tasks with [US1] label
-- Missing [US1] label on story-specific tasks
-
-❌ **No independent test defined**
-- Can't verify story works without other stories
-
-❌ **Wrong parallel markers**
-- Marking dependent tasks as [P]
-- Not marking clearly parallel tasks
-
-❌ **Vague descriptions**
-- "Handle errors" → Which errors? How?
-- "Add validation" → Which fields? What rules?
-
-❌ **Tasks not self-contained**
-- "Create User model" → What fields? What methods? What types?
-- "Implement service" → Which methods? What do they do?
-- Tasks that require loading design doc to understand
-
-❌ **Missing pattern references**
-- "Create model" → Which pattern from agents.md?
-- "Implement API endpoint" → Which conventions from agent-docs/api.md?
-- Not checking for similar implementations in codebase
-
-❌ **Inappropriate research markers**
-- Using [RESEARCH] for tasks with clear patterns in agents.md
-- Using [RESEARCH] without providing "Research Needed" section
-- Not using [RESEARCH] when task introduces new technology
-
-❌ **Missing MVP definition**
-- No clear line between must-have and nice-to-have
+See `.cursor/templates/task-format.md` for complete list of common mistakes. Key mistakes include:
+- Tasks not self-contained
+- Missing test requirements
+- Vague acceptance criteria
+- Missing file paths
+- Incorrect story labels
 
 ### Task Self-Containment Requirements
 
-**CRITICAL**: For `/do-task` to work effectively, each task must be self-contained. This means:
-
-**DO Include:**
-- Exact file paths
-- All fields with types and constraints
-- All methods with signatures and behavior
-- Error handling requirements
-- Dependencies explicitly listed
-- Acceptance criteria for the task
-- Implementation approach (if non-obvious)
-
-**DON'T Rely On:**
-- "See design doc for details" (extract details into task)
-- "Similar to T011" (include full details)
-- "Standard pattern" (specify the pattern)
-- Implied dependencies (list them explicitly)
-- "Follow existing pattern" (reference the specific pattern from agents.md/agent-docs/)
-
-**DO Reference:**
-- Specific patterns from agents.md: "Per agents.md model conventions..."
-- Domain patterns from agent-docs/: "Follow agent-docs/api.md endpoint structure..."
-- Similar codebase files: "Reference src/models/product.js for structure..."
-- Research decisions: "Per research.md decision on email service..."
-
-**Example of Self-Contained Task:**
-
-✅ **Good**:
-```
-- [ ] T017 [US1] Create User model in src/models/user.js
-
-  **File**: src/models/user.js
-  
-  **Fields**:
-  - id: UUID (primary key, auto-generated)
-  - email: string (unique, required, validated with regex)
-  - password_hash: string (required, bcrypt hashed)
-  ...
-  
-  **Methods**:
-  - create(userData): Create new user, hash password, return user object
-  ...
-  
-  **Patterns to Follow**:
-  - Model structure: Reference src/models/product.js (similar pattern)
-  - Error handling: Per agent-docs/database.md conventions
-  - Field validation: Per agents.md code standards
-  
-  **Dependencies**: T008-T016
-  
-  **Acceptance**: Model can be imported, all methods work
-```
-
-❌ **Bad** (not self-contained):
-```
-- [ ] T017 [US1] Create User model in src/models/user.js
-  - See design doc for fields and methods
-  - Follow standard model pattern
-```
-
-❌ **Bad** (missing pattern references):
-```
-- [ ] T017 [US1] Create User model in src/models/user.js
-  - Fields: id, email, password_hash...
-  - Methods: create(), findByEmail()...
-```
-Problem: Doesn't reference existing patterns or similar implementations
+**CRITICAL**: For `/do-task` to work effectively, each task must be self-contained. See `.cursor/templates/task-format.md` for:
+- DO Include guidelines
+- DON'T Rely On guidelines
+- DO Reference guidelines
+- Examples of self-contained vs. non-self-contained tasks
 
 ## Context
 

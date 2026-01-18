@@ -15,37 +15,21 @@ This is a reference template showing what a high-quality task breakdown looks li
 
 ## Task Format
 
-**Every task MUST follow this detailed, self-contained format:**
+**Every task MUST follow the format defined in `.cursor/templates/task-format.md`.**
 
-```
-- [ ] [TaskID] [P?] [Story?] Description with file path
-
-  **File**: [exact file path]
-  
-  **Requirements** (from design):
-  - [Detailed requirement 1]
-  - [Detailed requirement 2]
-  
-  **Implementation Details**:
-  - [Specific implementation detail 1]
-  - [Specific implementation detail 2]
-  
-  **Error Handling**:
-  - [Error handling requirements]
-  
-  **Dependencies**: [Task IDs that must be complete first]
-  
-  **Acceptance**: [How to verify this task is complete]
-```
+**Quick Reference:**
+- Format: `- [ ] [TaskID] [P?] [Story?] [RESEARCH?] Description with file path`
+- Required sections: File, Requirements, Implementation Details, Error Handling, Dependencies, Acceptance, Test Requirements
+- See `.cursor/templates/task-format.md` for complete format specification, rules, examples, and test requirements
 
 ✅ **Good Examples** (see T017, T019, T021 below for full examples):
 - Detailed, self-contained tasks with all context needed
-- Include file paths, fields, methods, error handling, dependencies
-- Clear acceptance criteria
+- Include file paths, fields, methods, error handling, dependencies, test requirements
+- Clear, testable acceptance criteria
 
 ❌ **Bad Examples** (too brief, not self-contained):
-- `- [ ] T017 [US1] Create User model` (missing details, file path, fields, methods)
-- `- [ ] T019 [US1] Implement UserService` (missing methods, error handling, dependencies)
+- `- [ ] T017 [US1] Create User model` (missing details, file path, fields, methods, test requirements)
+- `- [ ] T019 [US1] Implement UserService` (missing methods, error handling, dependencies, test requirements)
 - Tasks that require loading design doc to understand (should extract details into task)
 
 ---
