@@ -1,5 +1,5 @@
 ---
-description: Generate an actionable, dependency-ordered task breakdown organized by user story using Plan Mode for optimal AI planning.
+description: Generate an actionable, dependency-ordered task breakdown organized by user story.
 ---
 
 ## User Input
@@ -12,7 +12,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-This command breaks down the system design into concrete implementation tasks organized by user story. It uses Cursor's Plan Mode to create a high-quality implementation plan before any code is written.
+This command breaks down the system design into concrete implementation tasks organized by user story. It creates a high-quality implementation plan before any code is written.
 
 ### Step 0: Prerequisites
 
@@ -30,27 +30,9 @@ The script will:
 
 If prerequisites fail, instruct user to complete spec and design first.
 
-### Step 1: Open Plan Mode
+### Step 1: Load Context
 
-**CRITICAL**: This command REQUIRES Plan Mode for best results.
-
-**What is Plan Mode?**
-Plan Mode is Cursor's planning interface (distinct from Composer Mode). It allows Claude to think through complex plans before committing to an approach, resulting in higher-quality task breakdowns.
-
-**How to access:**
-```
-Press Shift+Tab+Tab to enter Plan Mode
-```
-
-**Why Plan Mode specifically?**
-- Plan Mode creates significantly better task breakdowns than standard chat
-- Allows AI to think through entire plan before generating tasks
-- Better at handling complex dependencies and parallel work
-- Optimized for strategic planning vs. implementation
-
-### Step 2: Load Context into Plan Mode
-
-Once in Plan Mode, load these files:
+Load these files:
 
 ```markdown
 Load into context:
@@ -75,9 +57,9 @@ Load into context:
 - Review failure-modes.md for common mistakes to avoid in task design
 ```
 
-### Step 3: Generate Task Plan Outline
+### Step 2: Generate Task Plan Outline
 
-Using Plan Mode, create an implementation plan outline:
+Create an implementation plan outline:
 
 ```markdown
 Based on:
@@ -139,7 +121,7 @@ Planning Questions:
    - Your preference?
 ```
 
-### Step 4: Create Task Breakdown
+### Step 3: Create Task Breakdown
 
 After outline approved, generate detailed task breakdown:
 
@@ -159,7 +141,7 @@ The script will:
 - MVP definition clarity
 - Dependency graph examples
 
-### Step 5: Populate Tasks with Detailed, Self-Contained Format
+### Step 4: Populate Tasks with Detailed, Self-Contained Format
 
 **CRITICAL**: Tasks must be self-contained and detailed enough to be implemented without loading other tasks. This enables `/do-task` to work effectively (one task at a time).
 
@@ -393,7 +375,7 @@ Problem: [RESEARCH] marker used but no "Research Needed" section provided
 - Acceptance criteria must be testable (not vague)
 - See template for detailed examples and structure
 
-### Step 6: Organize Tasks by Phase
+### Step 5: Organize Tasks by Phase
 
 **Phase Structure:**
 
@@ -850,7 +832,7 @@ How to verify this story works without other stories:
 - [ ] T0XX Final integration test (all stories together)
 ```
 
-### Step 7: Create Dependency Graph
+### Step 6: Create Dependency Graph
 
 Generate visual dependency graph:
 
@@ -898,7 +880,7 @@ graph TD
 - Avoid context switching between stories
 ```
 
-### Step 8: Define MVP Scope
+### Step 7: Define MVP Scope
 
 ```markdown
 ## MVP Definition
@@ -924,7 +906,7 @@ graph TD
 - [Measurable outcome 2]
 ```
 
-### Step 9: Validate Task Breakdown
+### Step 8: Validate Task Breakdown
 
 Run validation script:
 
@@ -952,7 +934,7 @@ bash .cursor/scripts/validate-tasks.sh "docs/specs/[feature-name]/tasks.md"
 
 If validation fails, fix issues and re-validate.
 
-### Step 10: Validate Against agents.md
+### Step 9: Validate Against agents.md
 
 Check task breakdown against project standards:
 
@@ -988,7 +970,7 @@ Check task breakdown against project standards:
 - [ ] Dependencies can be completed in order
 ```
 
-### Step 11: Report Completion
+### Step 10: Report Completion
 
 Display summary:
 

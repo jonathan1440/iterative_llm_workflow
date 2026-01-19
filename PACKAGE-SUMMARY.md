@@ -58,13 +58,13 @@ A complete, production-ready workflow system for Cursor IDE that transforms AI-a
 - Quality-based clarification
 
 **design-system.md** (718 lines)
-- Architecture design in Composer Mode
+- Architecture design
 - Database schema with SQL
 - API contracts with examples
 - Security considerations
 
 **plan-tasks.md** (605 lines)
-- Task breakdown in Plan Mode
+- Task breakdown
 - Phase organization by user story
 - Dependency management
 - Test scenario definition

@@ -1,5 +1,5 @@
 ---
-description: Create a comprehensive system design from a feature specification using Composer mode for multi-file context and interactive architecture decisions.
+description: Create a comprehensive system design from a feature specification with interactive architecture decisions.
 ---
 
 ## User Input
@@ -12,7 +12,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-This command creates a complete system design from an existing feature specification. It uses Cursor's Composer mode for multi-file context and guides you through architecture decisions interactively.
+This command creates a complete system design from an existing feature specification and guides you through architecture decisions interactively.
 
 ### Step 0: Prerequisites
 
@@ -79,15 +79,9 @@ This creates `docs/specs/[feature-name]/research.md` if unknowns found.
 
 **Present research to user for approval** before proceeding to design.
 
-### Step 2: Open Composer Mode
+### Step 2: Generate System Design
 
-Instruct user to open Composer Mode for multi-file context:
-
-```
-Press Cmd+I (Mac) or Ctrl+I (Windows/Linux) to open Composer Mode
-```
-
-**Load these files into Composer context:**
+Load these files:
 - Spec file: `docs/specs/[feature-name]/spec.md`
 - Research file: `docs/specs/[feature-name]/research.md` (if exists)
 - Project standards: `.cursor/agents.md`
@@ -95,11 +89,9 @@ Press Cmd+I (Mac) or Ctrl+I (Windows/Linux) to open Composer Mode
 - Failure modes: `.cursor/agent-docs/failure-modes.md` (if exists, for avoiding common design mistakes)
 - Design template example: `.cursor/templates/design-template-example.md` (for reference on expected quality/detail)
 
-### Step 3: Generate System Design
+Create comprehensive system design.
 
-Using Composer Mode, create comprehensive system design.
-
-**Prompt for Composer Mode:**
+**Prompt:**
 
 ```markdown
 Based on:
@@ -126,7 +118,7 @@ Before generating, ask me questions about:
 - Technology choices alignment with team expertise
 ```
 
-### Step 4: Interactive Design Questions
+### Step 3: Interactive Design Questions
 
 **Ask strategic questions before finalizing design:**
 
@@ -166,7 +158,7 @@ Approve recommendation or discuss alternatives?
 
 **Maximum 5 design decisions to discuss** - Focus on highest impact choices.
 
-### Step 5: Create Design Document
+### Step 4: Create Design Document
 
 Generate comprehensive design document:
 
@@ -566,7 +558,7 @@ graph TB
 6. Rollback if error rate > 1%
 ```
 
-### Step 6: Validate Design Against agents.md
+### Step 5: Validate Design Against agents.md
 
 Load `.cursor/agents.md` and validate design decisions:
 
@@ -602,7 +594,7 @@ Load `.cursor/agents.md` and validate design decisions:
 
 If validation fails, iterate on design until aligned.
 
-### Step 7: Update agents.md (If Needed)
+### Step 6: Update agents.md (If Needed)
 
 If design reveals new patterns or principles:
 
@@ -630,7 +622,7 @@ Example:
 
 Prompt user: "Should we add any new principles or mistakes to agents.md based on this design?"
 
-### Step 8: Report Completion
+### Step 7: Report Completion
 
 Display summary:
 

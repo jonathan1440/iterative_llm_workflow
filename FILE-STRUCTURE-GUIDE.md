@@ -528,7 +528,7 @@ cp .cursor/agents.md .cursor/agents-backup-$(date +%Y%m%d).md
    → Validates alignment
    → Outputs report
 
-6. implement-story (Composer Mode)
+6. implement-story
    → Reads tasks file
    → Writes to src/
    → Updates task checkboxes
@@ -539,7 +539,7 @@ cp .cursor/agents.md .cursor/agents-backup-$(date +%Y%m%d).md
    → Calculates metrics
    → Displays dashboard
 
-8. refactor (Composer Mode)
+8. refactor
    → Creates checkpoint
    → Modifies src/
    → Runs tests

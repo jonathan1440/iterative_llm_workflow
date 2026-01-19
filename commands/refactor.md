@@ -120,10 +120,10 @@ Checkpoint saved ✓
 
 ### Step 3: Plan Refactoring
 
-Generate refactoring plan using Composer Mode:
+Generate refactoring plan:
 
 ```markdown
-**Load into Composer context:**
+**Load into context:**
 - Target files: [files to refactor]
 - Related tests: [test files]
 - Project standards: .cursor/agents.md
@@ -188,10 +188,10 @@ Proceed with this plan? [yes/edit/no]
 
 ### Step 4: Execute Refactoring
 
-Use Composer Mode for actual refactoring:
+Execute refactoring:
 
 ```markdown
-**Prompt for Composer Mode:**
+**Prompt:**
 
 Using the approved refactoring plan, refactor these files:
 - [list of files]

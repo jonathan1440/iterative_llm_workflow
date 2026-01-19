@@ -109,30 +109,14 @@ This outputs:
 Ready to implement? [yes]
 ```
 
-### Step 2: Open Composer Mode
-
-**CRITICAL**: This command works best with Composer Mode.
-
-Instruct user:
-
-```
-Press Cmd+I (Mac) or Ctrl+I (Windows/Linux) to open Composer Mode
-
-Composer Mode is essential for implementation because:
-- Multi-file context (see models, services, tests together)
-- Better at handling file dependencies
-- Can create/edit multiple related files
-- Understands larger code context
-```
-
-### Step 3: Load Focused Context (ONE TASK ONLY)
+### Step 2: Load Focused Context (ONE TASK ONLY)
 
 **CRITICAL DIFFERENCE**: Only load this ONE task, not all tasks.
 
-Once in Composer Mode, load these files:
+Load these files:
 
 ```markdown
-Load into Composer context:
+Load into context:
 
 **CURRENT TASK (ONLY THIS ONE)**:
 - Task: T017 [US1] Create User model in src/models/user.js
@@ -171,9 +155,9 @@ Load into Composer context:
 - Forces focus on completing THIS task fully
 - Reduces context bloat (one task vs 13+ tasks)
 
-### Step 4: Implement the Task
+### Step 3: Implement the Task
 
-Using Composer Mode, implement ONLY this task:
+Implement ONLY this task:
 
 ```markdown
 Based on the design document, implement T017: Create User model in src/models/user.js
@@ -210,7 +194,7 @@ Based on the design document, implement T017: Create User model in src/models/us
 - Create file with proper imports/exports
 - **NOT** implement other tasks, even if they seem related
 
-### Step 5: Verify Task Completion
+### Step 4: Verify Task Completion
 
 After implementation, verify the task is complete:
 
@@ -237,7 +221,7 @@ Is this task complete? [yes/no]
 
 If not complete, fix issues before proceeding.
 
-### Step 6: Mark Task Complete
+### Step 5: Mark Task Complete
 
 After verification:
 
@@ -255,7 +239,7 @@ Display progress:
 Progress: 1/13 tasks in User Story 1 (8%)
 ```
 
-### Step 7: Check for Verification Checkpoints
+### Step 6: Check for Verification Checkpoints
 
 After completing key milestones, run automated verification:
 
@@ -309,7 +293,7 @@ Expected:
 - No linting errors
 ```
 
-### Step 8: Move to Next Task
+### Step 7: Move to Next Task
 
 After task completion, automatically find next task:
 
@@ -349,7 +333,7 @@ Or: /do-task (will automatically find next task)
 3. Start next story: /do-task "User Story $((STORY_NUM + 1))"
 ```
 
-### Step 9: Optional Learning Capture
+### Step 8: Optional Learning Capture
 
 After completing significant tasks, check if new patterns emerged:
 

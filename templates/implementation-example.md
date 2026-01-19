@@ -78,7 +78,7 @@ Ready to start? [yes]
 Start implementation? [yes]
 ```
 
-### Implementation (Composer Mode)
+### Implementation
 
 ```javascript
 // src/models/user.js

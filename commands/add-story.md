@@ -80,7 +80,7 @@ Generate new story using spec format:
 Load existing design and extend it:
 
 ```markdown
-**Prompt for Composer Mode:**
+**Prompt:**
 
 Based on:
 - New user story specification
@@ -178,7 +178,7 @@ Apply these changes to design file? [yes/edit/no]
 Create tasks for the new story:
 
 ```markdown
-**Load into Plan Mode:**
+**Load into context:**
 - New user story specification
 - Updated design
 - Existing tasks: docs/specs/[feature-name]/tasks.md

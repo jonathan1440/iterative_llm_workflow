@@ -74,28 +74,12 @@ This outputs:
 Ready to start? [yes]
 ```
 
-### Step 2: Open Composer Mode
+### Step 2: Load Implementation Context
 
-**CRITICAL**: This command works best with Composer Mode.
-
-Instruct user:
-
-```
-Press Cmd+I (Mac) or Ctrl+I (Windows/Linux) to open Composer Mode
-
-Composer Mode is essential for implementation because:
-- Multi-file context (see models, services, tests together)
-- Better at handling file dependencies
-- Can create/edit multiple related files
-- Understands larger code context
-```
-
-### Step 3: Load Implementation Context
-
-Once in Composer Mode, load these files:
+Load these files:
 
 ```markdown
-Load into Composer context:
+Load into context:
 - Tasks: docs/specs/[feature-name]/tasks.md
 - Design: docs/specs/[feature-name]/design.md
 - Spec: docs/specs/[feature-name]/spec.md
@@ -110,7 +94,7 @@ Load into Composer context:
 - Existing code: src/ (if any files exist)
 ```
 
-### Step 4: Work Through Tasks Sequentially
+### Step 3: Work Through Tasks Sequentially
 
 **For each task in the story:**
 
@@ -138,9 +122,9 @@ Load into Composer context:
 Start implementation? [yes]
 ```
 
-#### 4.2: Implement Task
+#### 3.2: Implement Task
 
-Using Composer Mode, implement the task:
+Implement the task:
 
 ```markdown
 Based on the design document, create src/models/user.js with:
@@ -170,7 +154,7 @@ Follow agents.md standards for:
 - Include documentation
 - Create file with proper imports/exports
 
-#### 4.3: Mark Task Complete
+#### 3.3: Mark Task Complete
 
 After implementation:
 
@@ -188,7 +172,7 @@ Display progress:
 Progress: 1/13 tasks in User Story 1 (8%)
 ```
 
-#### 4.4: Verification Checkpoints
+#### 3.4: Verification Checkpoints
 
 After completing key milestones, run automated verification:
 
@@ -251,7 +235,7 @@ Expected:
 [If tests fail, fix implementation or tests before proceeding]
 ```
 
-### Step 5: Capture Learnings in agents.md
+### Step 4: Capture Learnings in agents.md
 
 After each significant milestone, check if new patterns emerged:
 
@@ -299,7 +283,7 @@ What should we add to agents.md?
 
 Update agents.md with approved additions.
 
-### Step 6: Story Completion Verification
+### Step 5: Story Completion Verification
 
 After all tasks complete, run the independent test scenario:
 
@@ -363,7 +347,7 @@ Verification Results: 7/7 steps passed
 Fix the issue and re-run verification.
 ```
 
-### Step 7: Update Acceptance Criteria
+### Step 6: Update Acceptance Criteria
 
 Mark all acceptance criteria as complete:
 
@@ -382,7 +366,7 @@ All criteria met? [yes/no]
 [If no, identify which criteria failed and address before marking story complete]
 ```
 
-### Step 8: Final Story Report
+### Step 7: Final Story Report
 
 Display completion summary:
 
