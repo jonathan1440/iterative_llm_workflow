@@ -5,7 +5,7 @@
 **Turn AI coding from chaotic prompting into systematic, high-quality development.**
 
 [![Workflow Completeness](https://img.shields.io/badge/completeness-10%2F10-brightgreen)]()
-[![Commands](https://img.shields.io/badge/commands-12-blue)]()
+[![Commands](https://img.shields.io/badge/commands-13-blue)]()
 [![Scripts](https://img.shields.io/badge/scripts-20+-orange)]()
 [![Quality](https://img.shields.io/badge/quality-production--grade-success)]()
 
@@ -15,7 +15,7 @@
 
 A complete workflow system for Cursor IDE that transforms AI-assisted development from ad-hoc prompting into a structured, repeatable process. Includes:
 
-- **12 custom Cursor commands** covering the entire development lifecycle
+- **13 custom Cursor commands** covering the entire development lifecycle
 - **20+ bash scripts** for automation and validation
 - **4 comprehensive templates** with production-quality examples
 - **Complete documentation** with examples and best practices
@@ -79,7 +79,8 @@ flowchart TD
     
     DoTask --> TaskComplete{Task complete?}
     TaskComplete -->|No| DoTask
-    TaskComplete -->|Yes| MissingTask{Missing task<br/>discovered?}
+    TaskComplete -->|Yes| Commit[//commit/]
+    Commit --> MissingTask{Missing task<br/>discovered?}
     MissingTask -->|Yes| AddTask[//add-task/]
     MissingTask -->|No| MoreTasks{More tasks in story?}
     AddTask --> MoreTasks
@@ -88,7 +89,8 @@ flowchart TD
     
     ImplementStory --> StoryComplete{Story complete?}
     StoryComplete -->|No| ImplementStory
-    StoryComplete -->|Yes| TrackProgress[//status/]
+    StoryComplete -->|Yes| Commit2[//commit/]
+    Commit2 -->TrackProgress[//status/]
     
     TrackProgress --> NeedScope{Need to add<br/>scope?}
     NeedScope -->|Single task| AddTask[//add-task/]
@@ -116,6 +118,8 @@ flowchart TD
     style Refactor fill:#f8d7da
     style Review fill:#d1ecf1
     style StatusCheck fill:#d1ecf1
+    style Commit fill:#d1ecf1
+    style Commit2 fill:#d1ecf1
     style DoTask fill:#cfe2ff
     style ImplementStory fill:#cfe2ff
     style AddTask fill:#fff3cd
@@ -139,11 +143,12 @@ flowchart TD
 - `/do-task` - Implement one task at a time (maximum focus)
 - `/implement-story` - Build one user story at a time (full context)
 
-**Phase 4: Iteration (Commands 9-12)**
+**Phase 4: Iteration (Commands 9-13)**
 - `/status` - Track progress
 - `/add-task` - Add a single missing task
 - `/add-story` - Expand scope safely
 - `/refactor` - Improve code quality
+- `/commit` - Generate meaningful commit messages
 - `/review-agents` - Capture learnings
 - `/update-agent-docs` - Update domain patterns with best practices
 
@@ -172,6 +177,7 @@ flowchart TD
 | `/add-task` | Add a single task to tasks.md | When a task was missed or needs to be added |
 | `/add-story` | Add new user story to feature | When scope expands |
 | `/refactor` | Safely improve code with tests | After completing features |
+| `/commit` | Generate meaningful commit messages | After completing tasks or making changes |
 | `/review-agents` | Maintain learnings in agents.md | Monthly, after milestones |
 | `/update-agent-docs` | Update agent-docs with recent best practices | Quarterly, or when patterns change |
 
@@ -182,7 +188,7 @@ flowchart TD
 ```
 your-project/
 ├── .cursor/
-│   ├── commands/              # 12 custom commands
+│   ├── commands/              # 13 custom commands
 │   │   ├── init-project.md
 │   │   ├── spec-feature.md
 │   │   ├── design-system.md
@@ -194,6 +200,7 @@ your-project/
 │   │   ├── status.md
 │   │   ├── add-story.md
 │   │   ├── refactor.md
+│   │   ├── commit.md
 │   │   ├── review-agents.md
 │   │   └── update-agent-docs.md
 │   │
@@ -475,6 +482,34 @@ cp agents.md .cursor/agents.md
 # If tests fail, rollback is automatic
 ```
 
+### Committing Changes
+
+```bash
+# After completing a task or making changes
+/commit
+
+# The command will:
+# 1. Analyze staged and unstaged changes
+# 2. Connect changes to tasks and stories when possible
+# 3. Generate meaningful commit message with high-level overview
+# 4. Show suggested message with task references
+# 5. Allow editing or using custom message
+# 6. Execute commit after confirmation
+
+# Example output:
+# "Add user registration and login endpoints
+#
+# Implements User Story 1 MVP: users can create accounts and
+# log in to access the system.
+#
+# - Create User model with email/password fields (T017)
+# - Add AuthService with register/login methods (T019)
+# - Add integration tests for auth flow (T025)"
+
+# You can also provide a custom message:
+/commit "Custom commit message"
+```
+
 ### Maintaining Knowledge
 
 ```bash
@@ -507,6 +542,7 @@ cp agents.md .cursor/agents.md
 # Creates: docs/specs/core-task-management-with-boards-and-cards/tasks.md
 /analyze-consistency docs/specs/core-task-management-with-boards-and-cards/spec.md
 /do-task  # Work through tasks one at a time
+/commit   # Commit after each task
 # Or: /implement-story "User Story 1: Create and organize tasks"
 /status  # MVP Complete!
 
@@ -919,9 +955,10 @@ Production-quality examples in `.cursor/templates/`:
    - Use `/add-task` for a single task
    - Use `/add-story` for multiple related tasks or a new user story
 6. Check `/status` daily to track progress
-7. Run `/review-agents` monthly to capture learnings
-8. Use `/refactor` after completing features
-9. Keep agents.md updated with project patterns
+7. Use `/commit` after completing tasks to generate meaningful commit messages
+8. Run `/review-agents` monthly to capture learnings
+9. Use `/refactor` after completing features
+10. Keep agents.md updated with project patterns
 
 ### Advanced Topics
 1. Creating custom commands for your stack
@@ -981,7 +1018,7 @@ Track these to measure workflow effectiveness:
 ## 🗺️ Roadmap
 
 ### Current Version: 1.0
-- ✅ 12 core commands (including do-task, add-task, and update-agent-docs)
+- ✅ 13 core commands (including do-task, add-task, commit, and update-agent-docs)
 - ✅ 20+ automation scripts
 - ✅ 4 production templates
 - ✅ agent-docs system for domain-specific patterns
@@ -1054,6 +1091,7 @@ Inspired by:
 /add-task "Task description" ["User Story 1"]  # Add missing task
 /add-story docs/specs/[feature]/spec.md "Story"     # When scope grows
 /refactor "Description" [target]                # After features
+/commit                                         # After completing tasks
 /review-agents                                  # Monthly
 /update-agent-docs                              # Quarterly, update patterns
 ```
