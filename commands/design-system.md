@@ -91,6 +91,21 @@ Load these files:
 
 Create comprehensive system design.
 
+**Design Completeness Criteria**: Design is complete when it includes:
+- All components specified (models, services, APIs, middleware)
+- All database tables defined with schemas
+- All API endpoints documented with request/response examples
+- All error cases handled (not just happy paths)
+- All security measures defined (auth, encryption, rate limiting)
+- All performance targets addressed (with specific numbers)
+- All failure modes considered (what breaks, how to recover)
+
+**Technology Choice Assumptions** (defaulting to these unless spec indicates otherwise):
+- **API**: RESTful API design (unless GraphQL needed for complex queries)
+- **Database**: Relational database (PostgreSQL/MySQL) unless NoSQL needed for scale
+- **Authentication**: Session-based auth (unless spec indicates OAuth/token-based)
+- **Deployment**: Standard cloud hosting (unless on-premise required)
+
 **Prompt:**
 
 ```markdown
@@ -102,25 +117,29 @@ Based on:
 
 Create a system design at docs/specs/[feature-name]/design.md with:
 
-1. Architecture Overview
-2. Database Schema
-3. API Contracts
-4. Authentication & Authorization
-5. Error Handling Strategy
-6. Security Considerations
-7. Performance Strategy
-8. Deployment Architecture
+1. Architecture Overview (components, data flow, sequence diagrams)
+2. Database Schema (all tables, relationships, indexes, constraints)
+3. API Contracts (all endpoints, request/response formats, error codes)
+4. Authentication & Authorization (auth flow, session management, permissions)
+5. Error Handling Strategy (error categories, logging, user messages)
+6. Security Considerations (threats, defenses, rate limiting, encryption)
+7. Performance Strategy (targets with numbers, optimization approaches)
+8. Deployment Architecture (environments, infrastructure, scaling)
 
-Before generating, ask me questions about:
-- Trade-offs between complexity and maintainability
-- Data consistency vs. performance choices
-- Security depth vs. development speed
-- Technology choices alignment with team expertise
+**Default assumptions applied** (will use these unless you specify otherwise):
+- RESTful API design
+- Relational database (PostgreSQL/MySQL)
+- Session-based authentication
+- Standard cloud deployment
+
+If you want different defaults, specify now. Otherwise proceeding with these assumptions.
 ```
 
 ### Step 3: Interactive Design Questions
 
-**Ask strategic questions before finalizing design:**
+**Default to Recommendations (Only Ask if Ambiguous):**
+
+**Design Decision Strategy**: Present recommendations with analysis, only ask if genuinely ambiguous or high-impact trade-offs need discussion.
 
 **Question Format:**
 
@@ -145,10 +164,10 @@ Design Decision: [Topic - e.g., "Database Choice"]
 - agents.md Architecture Principles: [How this aligns]
 - agents.md Code Standards: [How this supports]
 
-Approve recommendation or discuss alternatives?
+**Default Applied**: Using [recommended option] unless you specify otherwise.
 ```
 
-**Categories for design decisions:**
+**Categories for design decisions** (focus on highest impact):
 1. **Data Storage** - Database choice, schema design, indexing strategy
 2. **API Design** - REST vs GraphQL, versioning, authentication
 3. **State Management** - Where state lives, consistency model
@@ -156,7 +175,7 @@ Approve recommendation or discuss alternatives?
 5. **Error Handling** - Logging strategy, user-facing errors, recovery
 6. **Deployment** - Hosting choice, scaling strategy, environments
 
-**Maximum 5 design decisions to discuss** - Focus on highest impact choices.
+**Question Threshold**: Focus on highest impact choices (typically 3-5 decisions). Can discuss more if needed, but prioritize decisions that significantly affect architecture, security, or cost.
 
 ### Step 4: Create Design Document
 
@@ -176,6 +195,15 @@ The script will:
 - How to structure diagrams (Mermaid syntax)
 - Code examples and SQL schemas
 - Documentation style and completeness
+
+**Design Completion Criteria** (design is complete when):
+- [ ] All components specified (models, services, APIs, middleware) with clear responsibilities
+- [ ] All database tables defined with complete schemas (fields, types, constraints, indexes)
+- [ ] All API endpoints documented (request/response formats, error codes, auth requirements)
+- [ ] All error cases handled (not just happy paths, include failure modes)
+- [ ] All security measures defined (specific mechanisms, not vague "secure")
+- [ ] All performance targets addressed (specific numbers from spec, optimization strategies)
+- [ ] All failure modes considered (what breaks, how to recover, monitoring strategy)
 
 **Design Document Structure:**
 
@@ -670,37 +698,48 @@ graph TB
 
 Load `.cursor/agents.md` and validate design decisions:
 
-**Validation Checklist:**
+**Validation Checklist** (explicit quality gates):
 
 ```markdown
 ## Design Validation
 
-### Alignment with Code Standards
-- [ ] Testing strategy defined for all components
-- [ ] Security measures align with security standard
-- [ ] Error handling follows standard (no internal errors exposed)
-- [ ] Code formatting approach specified
+### Alignment with Code Standards (Quality Gate)
+- [ ] Testing strategy defined for all components (unit, integration, e2e)
+- [ ] Security measures align with security standard (reference agents.md security section)
+- [ ] Error handling follows standard (no internal errors exposed, user-friendly messages)
+- [ ] Code formatting approach specified (ESLint, Prettier, or project-specific)
 
-### Alignment with Architecture Principles
-- [ ] Design follows all MUST principles from agents.md
+### Alignment with Architecture Principles (Quality Gate)
+- [ ] Design follows all MUST principles from agents.md (check Architecture Principles section)
 - [ ] Design considers all SHOULD principles from agents.md
-- [ ] Deviations from principles are justified with rationale
+- [ ] Deviations from principles are justified with rationale (document why)
 
-### Technical Quality
-- [ ] All components have clear responsibilities
-- [ ] Data flow is unambiguous
-- [ ] Failure modes identified
-- [ ] Performance targets addressed
-- [ ] Security threats mitigated
+### Technical Quality (Quality Gate)
+- [ ] All components have clear responsibilities (no overlapping concerns)
+- [ ] Data flow is unambiguous (can trace data from input to output)
+- [ ] Failure modes identified (what breaks, how to recover)
+- [ ] Performance targets addressed (specific numbers, not vague "fast")
+- [ ] Security threats mitigated (authentication, authorization, input validation, rate limiting)
 
-### Implementation Readiness
-- [ ] All technology choices justified
-- [ ] Dependencies documented
-- [ ] Migration strategy defined
-- [ ] Deployment approach clear
+### Implementation Readiness (Quality Gate)
+- [ ] All technology choices justified (why this choice, what trade-offs)
+- [ ] Dependencies documented (external services, libraries, infrastructure)
+- [ ] Migration strategy defined (how to deploy, rollback plan)
+- [ ] Deployment approach clear (environments, scaling, monitoring)
+
+### Completeness Quality (Quality Gate)
+- [ ] All components from spec have design (no missing pieces)
+- [ ] All database tables defined (schemas, indexes, constraints)
+- [ ] All API endpoints documented (request/response, errors, auth requirements)
+- [ ] All error cases handled (not just happy paths)
+- [ ] All security measures defined (specific mechanisms, not "secure")
 ```
 
-If validation fails, iterate on design until aligned.
+**Validation Iteration Limit**: If validation fails:
+1. List the failing items with specific issues
+2. Update the design to address each issue
+3. Re-validate (maximum 3 iterations)
+4. If still failing after 3 iterations, document remaining issues and warn user (may need spec changes or architecture review)
 
 ### Step 6: Update agents.md (If Needed)
 

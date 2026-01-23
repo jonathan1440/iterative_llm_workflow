@@ -80,9 +80,11 @@ Create a task breakdown that:
 
 2. **Breaks implementation into smallest possible pieces** (CRITICAL)
    - Each task should implement a single unit of work
+   - Target task size: 30-60 minutes of focused work
+   - If a task exceeds 2 hours, break it down further
    - If a goal requires multiple functions, each function should be a separate task
    - If a goal requires multiple files, break into tasks per file
-   - Smaller tasks increase AI accuracy and make progress clearer
+   - Smaller tasks (30-60 min) increase AI accuracy and make progress clearer
    - Example: Instead of "Create User model with all methods", break into:
      - Task 1: Create User model file with class structure
      - Task 2: Add create() method
@@ -102,35 +104,43 @@ Create a task breakdown that:
    - Usually just User Story 1
    - What's minimum to validate core value?
 
+**Outline Quality Checklist** (outline is complete when):
+- [ ] All user stories from spec have corresponding phases
+- [ ] Dependencies between stories identified
+- [ ] MVP scope clearly defined (which stories included)
+- [ ] Task granularity appropriate (30-60 min per task, max 2 hours)
+- [ ] Parallel work opportunities identified ([P] markers planned)
+- [ ] Independent test scenarios defined for each story
+
 Before generating tasks, present the outline for approval.
 ```
 
-**Ask strategic questions:**
+**Default to Recommendations (Only Ask if Ambiguous):**
 
 ```markdown
-Planning Questions:
+Planning Decisions (Defaults Applied):
 
-1. **MVP Scope**: Spec has [N] user stories (P1/P2/P3).
-   - Recommend: P1 only for MVP (validate core value first)
-   - Alternative: P1 + P2 (if P2 is critical for usability)
-   - Your preference?
+**Assumptions Made** (will use these unless you specify otherwise):
 
-2. **Testing Approach**: 
-   - Option A: Write tests alongside implementation (TDD)
-   - Option B: Write tests after implementation (test-after)
-   - Option C: Only test critical paths (minimal)
-   - Recommendation: [Based on agents.md testing standard]
-   - Your preference?
+1. **MVP Scope**: Defaulting to P1 only for MVP
+   - Rationale: Validates core value proposition with minimal scope, enables faster feedback
+   - Alternative: P1 + P2 if P2 is critical for usability (specify if needed)
 
-3. **Implementation Order** within each story:
-   - Recommend: Database → Business Logic → API → Tests → Integration
-   - This order catches data model issues early
-   - Alternative order if needed?
+2. **Testing Approach**: Defaulting to TDD (Test-Driven Development - write tests before implementation)
+   - Rationale: Tests drive design, catch issues early, ensure testability from start
+   - Check agents.md for testing standard: [If agents.md specifies test-after, use test-after instead]
+   - Alternative: Test-after if agents.md requires it, or minimal testing for prototypes (specify if needed)
 
-4. **Parallel Work**: 
-   - Can we work on multiple stories simultaneously?
-   - Recommend: Complete P1 fully before starting P2 (avoid partial features)
-   - Your preference?
+3. **Implementation Order**: Defaulting to Database → Business Logic → API → Integration Tests → Integration
+   - Rationale: Catches data model issues early, enables incremental testing, follows dependency order
+   - **Note**: With TDD (default), within each phase (Business Logic, API), write tests BEFORE implementation code. The "Integration Tests" phase refers to end-to-end tests after all components are built.
+   - Alternative order if needed? (specify if different order required)
+
+4. **Parallel Work**: Defaulting to sequential story completion (complete P1 fully before starting P2)
+   - Rationale: Avoids partial features, maintains focus, reduces context switching
+   - Alternative: Can work on multiple stories simultaneously if multi-developer team (specify if needed)
+
+**If you want different defaults, specify now. Otherwise proceeding with these assumptions.**
 ```
 
 ### Step 3: Create Task Breakdown
@@ -1019,23 +1029,39 @@ Run validation script:
 bash .cursor/scripts/validate-tasks.sh "docs/specs/[feature-name]/tasks.md"
 ```
 
-**Validation checks:**
+**Validation checks** (explicit quality gates):
+
+**Format Quality**:
 - [ ] All tasks follow format: `- [ ] [TaskID] [P?] [Story?] [RESEARCH?] Description`
-- [ ] Task IDs are sequential (T001, T002, T003...)
+- [ ] Task IDs are sequential (T001, T002, T003...) with no gaps
 - [ ] Every user story phase has [US1], [US2] labels on tasks
 - [ ] Setup and Foundation phases have NO story labels
-- [ ] Each story has independent test defined
-- [ ] File paths included in task descriptions
+- [ ] File paths included in task descriptions (exact paths, not vague)
+
+**Completeness Quality**:
+- [ ] Each story has independent test defined (can test story without others)
+- [ ] MVP scope clearly defined (which stories/phases included)
+- [ ] All tasks include "Test Requirements" section
+- [ ] Test Requirements include positive and negative test cases
+- [ ] Acceptance criteria are testable (specific, measurable, not vague like "works correctly")
+- [ ] Verification tasks include executable commands (bash scripts, curl commands, etc.)
+
+**Dependency Quality**:
 - [ ] Dependencies are logical (no circular dependencies)
-- [ ] MVP scope clearly defined
+- [ ] All referenced dependencies exist (no T999 references)
+- [ ] Dependencies can be completed in order (no blocking issues)
+
+**Milestone Quality**:
 - [ ] Verification tasks included at key milestones (models, services, API, tests, story)
-- [ ] Verification tasks have clear acceptance criteria
-- [ ] **All tasks include "Test Requirements" section**
-- [ ] **Test Requirements include positive and negative test cases**
-- [ ] **Acceptance criteria are testable (not vague)**
-- [ ] **Verification tasks include executable commands**
+- [ ] Verification tasks have clear acceptance criteria (what "pass" means)
+
+**Research Quality**:
 - [ ] Tasks with [RESEARCH] marker include "Research Needed" section
+- [ ] Research tasks specify what to research and why
+
+**Pattern Alignment Quality**:
 - [ ] Tasks reference existing patterns from agents.md/agent-docs/ where applicable
+- [ ] Similar codebase implementations referenced when relevant
 
 If validation fails, fix issues and re-validate.
 
@@ -1235,6 +1261,11 @@ See `.cursor/templates/task-format.md` for parallel task marking rules and examp
 
 **Good Task Size**: 30-60 minutes of focused work
 
+**Size Guidelines**:
+- Target: 30-60 minutes per task
+- Maximum: 2 hours (if task exceeds 2 hours, break it down further)
+- Minimum: 15 minutes (don't create tasks for trivial operations like "import library")
+
 **Too Small**:
 ```
 - [ ] T001 Import bcrypt
@@ -1269,20 +1300,22 @@ Break down: Registration → Login → Session → Verification
 
 ### Testing Task Rules
 
+**Testing Approach Assumption**: Defaulting to TDD (Test-Driven Development - write tests before implementation) unless agents.md explicitly specifies test-after approach. Check agents.md testing standard section to determine approach.
+
 **If testing standard in agents.md requires tests:**
 - Include test tasks for each component
-- Place test tasks after implementation tasks in same story
+- Place test tasks before implementation tasks in same story (TDD) OR after implementation tasks (test-after)
 - Mark test tasks [P] if they test different components
 
-**If TDD approach:**
+**If TDD approach** (default assumption):
 - Test task BEFORE implementation task
 - Example: T018 Write UserService tests → T019 Implement UserService
 
-**If test-after approach:**
+**If test-after approach** (only if agents.md specifies it):
 - Implementation task first
 - Test task after: T018 Implement UserService → T019 Test UserService
 
-**Minimal testing:**
+**Minimal testing** (only if explicitly chosen):
 - Only integration tests for critical paths
 - Unit tests only for complex business logic
 

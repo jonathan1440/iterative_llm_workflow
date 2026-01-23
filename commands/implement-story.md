@@ -14,6 +14,13 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 This command implements a complete user story from the task breakdown. It works through tasks sequentially, runs automated verification after key milestones, captures learnings in agents.md, and verifies story completion with the independent test scenario.
 
+**Key Milestones Defined**: Verification checkpoints after:
+- Models complete (all model tasks done)
+- Services complete (all service tasks done)
+- API complete (all API/endpoint tasks done)
+- Tests complete (all test tasks done)
+- Story complete (all tasks done, independent test passes)
+
 ### Step 0: Prerequisites
 
 Verify that tasks file exists and story is ready:
@@ -70,6 +77,8 @@ This outputs:
 **Independent Test**: Defined (will run at end)
 
 **Estimated**: ~2-3 days
+- **Estimate assumption**: Rough estimate based on task count and standard complexity. Actual time depends on task complexity, dependencies, and unexpected issues.
+- **Factors affecting time**: Complex tasks may take longer, dependencies may cause delays, research tasks add time
 
 Ready to start? [yes]
 ```
@@ -367,6 +376,13 @@ All criteria met? [yes/no]
 ```
 
 ### Step 7: Final Story Report
+
+**Story Completion Criteria** (story is complete when ALL are true):
+- [ ] All tasks marked complete (no incomplete tasks in story)
+- [ ] All acceptance criteria met (verified through independent test scenario)
+- [ ] Independent test scenario passes (all steps succeed)
+- [ ] No critical errors in code review (security issues, logical errors)
+- [ ] All milestone verifications passed (models, services, API, tests)
 
 Display completion summary:
 

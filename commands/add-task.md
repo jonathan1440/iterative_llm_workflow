@@ -49,6 +49,8 @@ fi
 TASK_DESC=$(echo "$ARGUMENTS" | cut -d'"' -f2)
 STORY_NAME=$(echo "$ARGUMENTS" | grep -oE "(User Story [0-9]+|US[0-9]+)" | head -1 || echo "")
 INSERT_AFTER=$(echo "$ARGUMENTS" | grep -oE "T[0-9]+" | head -1 || echo "")
+
+**Task Placement Assumption**: Assuming task belongs to current feature (tasks file being edited) unless story name specified. If story name not provided, task will be added to the most appropriate phase based on task description.
 ```
 
 ### Step 1: Determine Task Details
@@ -94,6 +96,14 @@ Load into context:
 ### Step 3: Create Detailed Task
 
 **CRITICAL**: Task must be detailed and self-contained, following the format defined in `.cursor/templates/task-format.md`.
+
+**Task Quality Bar** (task meets quality when):
+- [ ] Follows task-format.md template exactly (all required sections present)
+- [ ] Includes all required sections (File, Requirements, Implementation Details, Error Handling, Dependencies, Acceptance, Test Requirements)
+- [ ] File path specified (exact path, not vague "create model")
+- [ ] Dependencies valid (all referenced tasks exist)
+- [ ] Test Requirements include positive and negative test cases
+- [ ] Acceptance criteria testable (specific, measurable, not vague)
 
 **Reference the template for**:
 - Complete task format template

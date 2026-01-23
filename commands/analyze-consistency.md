@@ -13,9 +13,12 @@ You **MUST** consider the user input before proceeding (if not empty).
 ## Outline
 
 This command performs comprehensive validation including:
-1. **Format validation**: Ensures spec, design, and tasks follow proper template formats
-2. **Cross-artifact consistency**: Validates that documents remain consistent with each other
+1. **Format validation**: Ensures spec, design, and tasks follow proper template formats (required sections, proper syntax, correct structure)
+2. **Cross-artifact consistency**: Validates that documents remain consistent with each other (requirements have tasks, design matches spec, tasks match design)
 3. **Deep accuracy review**: Analyzes plan files for logical errors, gotchas, security issues, performance problems, and ambiguities
+   - **Scope**: Reviews all plan files (spec, design, tasks) for content quality
+   - **Categories**: Logical errors, security vulnerabilities, performance problems, data integrity issues, error handling gaps, edge cases, ambiguities
+   - **Depth**: Checks relationships between components, analyzes failure modes, identifies missing edge cases
 
 It catches common issues like:
 - Requirements without tasks, database tables without migrations, API endpoints without implementation plans
@@ -31,6 +34,8 @@ It catches common issues like:
 ### Step 0: Prerequisites
 
 Verify that all required documents exist:
+
+**File Location Assumption**: Assuming standard file locations (docs/specs/[feature-name]/spec.md, design.md, tasks.md). If files are in different locations, specify paths in $ARGUMENTS.
 
 ```bash
 bash .cursor/scripts/check-consistency-prerequisites.sh "$ARGUMENTS"
@@ -245,6 +250,12 @@ Check for:
 - Unrealistic timelines (tasks don't account for complexity)
 - Missing dependencies (external services not accounted for)
 - Missing deployment considerations
+
+**Review Report Quality Bar**: Report is complete when:
+- [ ] All categories reviewed (logical errors, security, performance, data integrity, error handling, edge cases, integration, testing, ambiguities, feasibility)
+- [ ] All issues categorized (critical errors, gotchas, clarifying questions, feasibility concerns)
+- [ ] All fixes actionable (specific location, clear solution, implementation steps)
+- [ ] All issues prioritized (critical first, then warnings, then questions)
 
 **Generate comprehensive review report:**
 
@@ -542,6 +553,14 @@ Recommendation: Fix format errors, critical consistency issues, and critical acc
 
 ### Step 5: Address Accuracy Review Issues
 
+**Priority Order for Fixing Issues**:
+1. **Format errors first** (blocks proper parsing of consistency checks)
+2. **Critical consistency issues** (missing tasks, circular dependencies)
+3. **Critical accuracy errors** (security vulnerabilities, logical errors)
+4. **Warnings** (recommended fixes, may cause confusion)
+5. **Gotchas** (common pitfalls, should address)
+6. **Clarifying questions** (ambiguities, need answers)
+
 For each critical error and gotcha identified, provide actionable fixes:
 
 ```markdown
@@ -604,6 +623,8 @@ Your choice? [1/2/3/4]
 ```
 
 ### Step 6: Fix Format Issues
+
+**Priority Rationale**: Address format validation errors first because they may prevent proper parsing of consistency checks. If format is wrong, consistency checks may fail or produce incorrect results.
 
 Address format validation errors first (they may affect consistency checks):
 
@@ -738,6 +759,13 @@ This creates `docs/specs/[feature-name]/consistency-report.md` with:
 - Rerun instructions
 
 ### Step 11: Final Summary
+
+**Analysis Completion Criteria** (analysis is complete when):
+- [ ] All format errors identified and categorized
+- [ ] All consistency issues identified and categorized (critical, warnings, good)
+- [ ] All accuracy issues identified and categorized (critical errors, gotchas, questions, feasibility)
+- [ ] All issues have actionable fixes (specific location, clear solution)
+- [ ] Report generated with all findings
 
 ```markdown
 ✅ Consistency & Format Analysis Complete
@@ -890,7 +918,16 @@ Why it's actually fine: This is a performance requirement tested at the end
 Action: Mark as "Understood - will verify in testing phase"
 ```
 
-Add `--skip-checks` flag to suppress specific checks on re-run.
+**Skip Checks Flag**: Add `--skip-checks` flag to suppress specific checks on re-run.
+
+**Available checks to skip** (if you know a check is a false positive):
+- `--skip-checks=format` (skip format validation)
+- `--skip-checks=consistency` (skip consistency checks)
+- `--skip-checks=accuracy` (skip accuracy review)
+- `--skip-checks=security` (skip security gotchas)
+- `--skip-checks=performance` (skip performance gotchas)
+
+**When to use**: Only if you've verified the check is a false positive. Most issues should be fixed, not skipped.
 
 ## Context
 

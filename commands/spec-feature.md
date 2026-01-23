@@ -42,18 +42,35 @@ Based on the user's feature description (`$ARGUMENTS`), fill out the specificati
 **Guidelines for AI Generation:**
 
 1. **Make Informed Guesses**: Use context, industry standards, and common patterns to fill gaps
+   - **Bounds**: Use industry standards, common patterns, but flag when assumptions are significant (affect architecture, security, or cost)
+   - **When to guess**: For standard web app patterns (session-based auth, REST APIs, relational databases)
+   - **When to flag**: When assumption significantly affects scope, security, or cost (document in spec with "Assumed: [X] based on [reasoning]")
+
 2. **Be Specific**: Use real examples, not abstract descriptions
    - ✅ "Sarah, a property manager overseeing 47 rental units"
    - ❌ "A property manager"
-3. **Document Assumptions**: Record reasonable defaults in context
+
+3. **Document Assumptions Explicitly**: Record reasonable defaults in a "Assumptions" section
+   - **Default assumptions** (use these unless specified otherwise):
+     - Standard web app performance (<500ms API response for 95% of requests)
+     - Session-based authentication (unless spec indicates OAuth needed)
+     - RESTful API design patterns
+     - Relational database (PostgreSQL/MySQL) unless NoSQL needed
+     - Standard error handling (user-friendly messages, logged internally)
+   - **Document format**: Add "## Assumptions" section listing all defaults used
+
 4. **High-Quality Clarifications**: Only ask questions that meet ALL three criteria:
-   - (a) High impact - significantly affects architecture, security, cost, or UX
-   - (b) Genuine ambiguity - multiple reasonable interpretations with different implications
-   - (c) No safe default - cannot make reasonable assumption from context
+   - (a) **High impact** - significantly affects architecture, security, cost, or UX
+     - Examples: "Does this require real-time updates?" (affects architecture), "What data must be encrypted?" (affects security), "Expected user volume?" (affects cost)
+   - (b) **Genuine ambiguity** - multiple reasonable interpretations with different implications
+     - Example: "Session expires after 24 hours" - from creation or inactivity? (different security implications)
+   - (c) **No safe default** - cannot make reasonable assumption from context
+     - Example: "Email verification required before login?" - no standard answer, affects UX significantly
+
 5. **Prioritize by Impact**: 
-   - Critical: Scope boundaries, Security/Privacy, Cost implications
-   - Important: User Experience, Data model ambiguities
-   - Low priority: Technical preferences with standard answers
+   - **Critical** (must clarify): Scope boundaries, Security/Privacy, Cost implications
+   - **Important** (should clarify): User Experience, Data model ambiguities
+   - **Low priority** (use defaults): Technical preferences with standard answers (auth method, database type, etc.)
 
 **Specification Sections to Complete:**
 
@@ -282,9 +299,21 @@ If any validation fails:
 3. Re-validate (max 3 iterations)
 4. If still failing, document issues and warn user
 
-### Step 5: Interactive Clarification (Max 5 Questions)
+### Step 5: Interactive Clarification
 
 **ONLY if critical ambiguities remain** after initial generation.
+
+**Clarification Strategy**: Ask as many questions as needed, BUT each question must meet ALL three criteria (high impact, genuine ambiguity, no safe default). There is no hard limit on number of questions, but each must be genuinely important.
+
+**Question Quality Bar**: Each question must meet ALL three criteria:
+1. **High Impact**: Answer significantly affects architecture, security, cost, or UX
+2. **Genuine Ambiguity**: Multiple reasonable interpretations with different implications
+3. **No Safe Default**: Cannot make reasonable assumption from context
+
+**This means**:
+- Clear spec → 0 questions (use defaults)
+- Ambiguous on critical issues → Ask every necessary question (could be 15+)
+- Each question must be genuinely important (not "nice to know")
 
 Scan for ambiguities in these categories (prioritized):
 
@@ -312,10 +341,6 @@ Scan for ambiguities in these categories (prioritized):
    - Performance targets missing
    - Scalability limits undefined
    - Observability requirements unclear
-
-**Clarification Strategy:**
-
-**No hard limit on questions** - ask as many as needed, BUT each question must meet a high bar.
 
 **Ask ONLY if ALL three conditions met:**
 1. **High Impact**: Answer significantly affects architecture, security, cost, or UX
@@ -353,13 +378,19 @@ For each question:
 Reply with option letter (A/B/C), "yes" to accept recommendation, or provide custom answer (≤5 words).
 ```
 
-3. **After user answers:**
+3. **Present questions sequentially** (one at a time, not all at once):
+   - Ask first question, wait for answer
+   - Update spec with answer
+   - Then ask next question (if needed)
+   - This avoids overwhelming user with multiple questions
+
+4. **After user answers:**
    - If "yes", "recommended", or "suggested" → Use your recommendation
    - Otherwise validate answer maps to option or fits ≤5 word constraint
    - If ambiguous, ask for quick clarification (doesn't count as new question)
    - Record answer and immediately update spec
 
-4. **Integration after each answer:**
+5. **Integration after each answer:**
    - Add to `## Clarifications` section: `- Q: [question] → A: [answer]`
    - Update appropriate spec section (Functional Requirements, Data Model, etc.)
    - Remove any conflicting earlier statements
@@ -385,16 +416,30 @@ Reply with A/B/C, "yes" for recommendation, or provide alternative (≤5 words).
 
 After clarification (or if none needed), perform final validation:
 
-**Final Checklist:**
+**Final Checklist** (explicit quality gates):
 
 ```markdown
+**Completeness Quality**:
 - [ ] Zero [NEEDS CLARIFICATION] markers remain
-- [ ] All user stories have acceptance criteria
-- [ ] Success criteria measurable and technology-agnostic
-- [ ] Edge cases identified
-- [ ] No vague terminology without metrics
-- [ ] Consistent terminology throughout
-- [ ] No violations of agents.md standards
+- [ ] All user stories have acceptance criteria (specific, testable)
+- [ ] Success criteria measurable and technology-agnostic (numbers, not adjectives)
+- [ ] Edge cases identified (null values, boundary conditions, error states)
+- [ ] Assumptions section documents all defaults used
+
+**Clarity Quality**:
+- [ ] No vague terminology without metrics ("fast" → "< 500ms", "scalable" → "supports 10k users")
+- [ ] Consistent terminology throughout (same terms used consistently)
+- [ ] All requirements testable (can verify without knowing implementation)
+
+**Standards Quality**:
+- [ ] No violations of agents.md standards (check Code Standards, Architecture Principles)
+- [ ] No implementation details in spec (technology choices belong in design)
+- [ ] No placeholder markers (TODO, TBD, ???) remain
+
+**Validation Quality**:
+- [ ] All acceptance criteria have measurable outcomes
+- [ ] Success criteria contain specific numbers (time, percentage, count, rate)
+- [ ] Problem statement uses concrete examples (real personas, not abstract)
 ```
 
 If any items fail, report them clearly and suggest next steps.
@@ -467,12 +512,16 @@ This will:
 - User permission models if multiple conflicting interpretations
 - Performance targets when highly variable by use case
 
-**Examples of reasonable defaults** (don't ask about these):
-- Data retention: Industry-standard practices
-- Performance targets: Standard web/mobile app expectations
-- Error handling: User-friendly messages with fallbacks
-- Authentication method: Session-based or OAuth2 for web apps
-- Integration patterns: RESTful APIs unless specified
+**Examples of reasonable defaults** (use these without asking, document in Assumptions section):
+- **Data retention**: Industry-standard practices (document specific period if significant)
+- **Performance targets**: Standard web app expectations (<500ms API response for 95% of requests)
+- **Error handling**: User-friendly messages with fallbacks (never expose internal errors)
+- **Authentication method**: Session-based for web apps (unless spec indicates OAuth needed)
+- **Integration patterns**: RESTful APIs unless specified otherwise
+- **Database type**: Relational database (PostgreSQL/MySQL) unless NoSQL needed for scale
+- **Deployment**: Standard cloud hosting unless on-premise required
+
+**Document these in spec**: Add "## Assumptions" section listing all defaults used, so they're explicit and can be changed if needed.
 
 ### Writing Quality Success Criteria
 

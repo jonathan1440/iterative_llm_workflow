@@ -209,9 +209,17 @@ Before writing any code, predict edge cases and create a comprehensive test plan
 
 #### 3.3. Write Tests
 
+**Testing Approach Assumption**: Defaulting to TDD (Test-Driven Development - write tests BEFORE implementation) unless agents.md explicitly specifies test-after approach. Check agents.md testing standard section to determine approach.
+
 Write tests for the code to be implemented. Tests should cover all cases identified in the test plan.
 
-**Important**: Write tests BEFORE writing the implementation code. This ensures:
+**TDD Workflow** (default):
+- Write tests BEFORE writing implementation code
+- Tests define expected behavior and drive design
+- Implementation makes tests pass
+- Ensures testability from the start
+
+**Important**: When writing tests, ensure:
 - Clear understanding of expected behavior
 - Tests verify the planned feature, not just make tests pass
 - Implementation focuses on the feature requirements
@@ -227,16 +235,18 @@ Write tests for the code to be implemented. Tests should cover all cases identif
 
 #### 3.4. Write the Code
 
-Write code to implement the planned feature. Tests verify correctness, but don't drive the implementation. Avoid writing code just to pass tests.
+**TDD Implementation** (default): Write code to make the tests pass. Tests drive the implementation - write the minimum code needed to pass all tests, then refactor for clarity and maintainability.
+
+**If test-after approach** (only if agents.md specifies it): Write code to implement the planned feature. Tests verify correctness after implementation.
 
 **Implementation Guidelines**:
 - Follow the implementation plan from step 3.1
 - Reference diagrams to understand relationships
 - Implement the feature as specified in the task
 - Make tests pass, but focus on implementing the feature correctly
-- Follow agents.md standards
-- Include proper error handling
-- Add documentation (JSDoc, comments)
+- Follow agents.md standards (reference specific sections: Code Standards, Architecture Principles, Testing patterns)
+- Include proper error handling: catch all exceptions, log errors with context, return user-friendly error messages (never expose internal errors in UIs), use error classes from agents.md conventions
+- Add documentation: JSDoc comments for all public methods (parameters, return values, exceptions), inline comments for complex business logic, no comments for obvious code
 
 ```markdown
 **Writing Implementation**:
@@ -251,6 +261,8 @@ Write code to implement the planned feature. Tests verify correctness, but don't
 
 Execute the tests to verify the implementation:
 
+**Test Runner Assumption**: Assuming npm test command exists. If project uses other test runner (jest, mocha, vitest directly), use the appropriate command. Check package.json scripts if uncertain.
+
 ```bash
 # Run tests for this task
 npm test -- [test-file-path]
@@ -258,7 +270,14 @@ npm test -- [test-file-path]
 npm test
 ```
 
-**Expected**: All tests should pass. If any tests fail, proceed to step 3.6.
+**Test Pass Criteria**: All tests must pass with:
+- Zero test failures
+- Zero skipped tests (unless explicitly marked as skip)
+- Coverage ≥80% for new code (if coverage tool configured)
+- No test timeouts
+- All assertions pass
+
+If any tests fail, proceed to step 3.6.
 
 #### 3.6. Fix Errors and Re-run Tests
 
@@ -270,7 +289,7 @@ If tests fail, fix the errors and re-run tests. Repeat until all tests pass.
 3. Fix the implementation (or if you think the test is incorrect, ask the user for help)
 4. Re-run tests
 5. Repeat until all tests pass
-6. After getting the same error 3+ times in a row, your approach isn't working. Take a step back and revisit first-principles.
+6. **Stuck detection**: After getting the same error 3+ times in a row (same error message, same test, same line number), your approach isn't working. Take a step back and revisit first-principles. Consider: Is the test correct? Is the approach fundamentally wrong? Do you need to research a different solution?
 
 ```markdown
 **Fixing Errors**:
@@ -323,20 +342,25 @@ After implementation, verify the task is complete:
 ```markdown
 ## Task Completion Verification
 
-**Checklist**:
-- [ ] File created: src/models/user.js
-- [ ] All fields defined (id, email, password_hash, etc.)
-- [ ] All methods implemented (create, findByEmail, etc.)
-- [ ] Error handling follows agents.md standard
-- [ ] JSDoc comments added
-- [ ] Code follows formatting standards
-- [ ] Imports/exports correct
-- [ ] No syntax errors (run linter if available)
+**Definition of Done Checklist**:
+- [ ] File created/modified: src/models/user.js (exact path from task)
+- [ ] All fields defined: id, email, password_hash, etc. (all fields from task description)
+- [ ] All methods implemented: create(), findByEmail(), etc. (all methods from task with correct signatures)
+- [ ] Error handling: All exceptions caught, errors logged with context, user-friendly messages returned, uses error classes from agents.md (reference specific error handling section)
+- [ ] JSDoc comments: All public methods documented (parameters, return types, exceptions), complex logic has inline comments
+- [ ] Code formatting: Passes linter (run `npm run lint` if package.json has lint script, or check for .eslintrc/.prettierrc files)
+- [ ] Imports/exports: All dependencies imported correctly, exports match usage patterns
+- [ ] No syntax errors: Code compiles/runs without errors (verify with test run or syntax check)
+
+**Linter Detection**: Check for linter by looking for:
+- `npm run lint` in package.json scripts
+- `.eslintrc*` or `.prettierrc*` files in project root
+- If found, run linter and fix all errors before marking complete
 
 **Manual test** (if applicable):
-- Can import the model?
-- Do methods have correct signatures?
-- Does error handling work?
+- Can import the model? `const User = require('./src/models/user')` succeeds
+- Do methods have correct signatures? Method calls match task specification
+- Does error handling work? Invalid inputs throw expected errors
 
 Is this task complete? [yes/no]
 ```
@@ -409,10 +433,12 @@ Running automated tests:
 npm test
 ```
 
-Expected:
-- All tests pass
-- Coverage > 80% for new code
-- No linting errors
+**Test Pass Criteria** (explicit quality bar):
+- All tests pass (zero failures, zero skipped unless explicitly marked)
+- Coverage ≥80% for new code (if coverage tool configured)
+- No linting errors (run `npm run lint` if available, or check for .eslintrc/.prettierrc)
+- All test assertions pass
+- No test timeouts
 ```
 
 ### Step 7: Move to Next Task
@@ -579,17 +605,41 @@ Tasks marked `[P]` can be worked on simultaneously, but `/do-task` still process
 
 ### Task Completion Criteria
 
-A task is complete when:
-1. **Code implemented**: File created/modified as specified
-2. **Requirements met**: All fields, methods, functionality from task description
-3. **Standards followed**: agents.md standards applied
-4. **No syntax errors**: Code compiles/runs
-5. **Documentation**: Comments/JSDoc added if required
+**Explicit Definition of Done**: A task is complete when ALL of the following are true:
+
+1. **Code implemented**: 
+   - File created/modified at exact path specified in task
+   - All code compiles/runs without syntax errors
+
+2. **Requirements met**: 
+   - All fields, methods, functionality from task description implemented
+   - Method signatures match task specification exactly
+   - All edge cases from test plan handled
+
+3. **Standards followed**: 
+   - Code follows agents.md Code Standards section (reference specific standards)
+   - Error handling follows agents.md error handling conventions
+   - Architecture aligns with agents.md Architecture Principles
+
+4. **Quality gates passed**:
+   - Linter passes (if linter configured: check package.json for lint script, or .eslintrc/.prettierrc files)
+   - All tests pass (if tests exist for this task)
+   - Code coverage ≥80% for new code (if coverage tool configured)
+
+5. **Documentation complete**:
+   - JSDoc comments for all public methods (parameters, return types, exceptions)
+   - Inline comments for complex business logic
+   - No documentation for obvious/self-explanatory code
+
+**Testing Approach Assumption**: Defaulting to TDD (Test-Driven Development). Tests ARE required for task completion unless:
+- agents.md explicitly specifies test-after approach (write tests after implementation)
+- The task is specifically a non-code task (e.g., "Create migration file", "Update documentation")
+- Task description explicitly states tests not needed
 
 **Not required for task completion:**
-- Tests (unless task is specifically a test task)
-- Integration with other components (unless specified)
-- Story-level verification (happens after all tasks)
+- Integration with other components (unless task specifies integration)
+- Story-level verification (happens after all tasks complete)
+- End-to-end testing (happens at story level)
 
 ### Error Handling
 
