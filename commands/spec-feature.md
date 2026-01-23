@@ -98,7 +98,152 @@ Based on the user's feature description (`$ARGUMENTS`), fill out the specificati
 - Explicitly excluded features
 - Future iterations
 
-### Step 3: Validate Against agents.md
+### Step 3: Generate Diagrams
+
+**CRITICAL**: Diagrams are the primary way users validate the plan. Create comprehensive diagrams for all relevant aspects of the specification.
+
+After completing the initial specification, generate the following diagrams and add them to the spec file:
+
+#### 1. User Journey Flowcharts (One per User Story)
+
+For each user story (P1, P2, P3), create a flowchart showing the complete user journey from start to finish. These illustrate the flow of steps and state changes.
+
+**Format**: Mermaid flowchart (preferred) or ASCII diagram for simple flows
+
+**Include**:
+- Entry points (where user starts)
+- Decision points (user choices, validation checks)
+- State transitions (what changes in the system)
+- Error paths (what happens when things go wrong)
+- Success outcomes (what the user achieves)
+
+**Example structure**:
+```mermaid
+flowchart TD
+    Start([User wants to register]) --> EnterEmail[Enter email and password]
+    EnterEmail --> Validate{Valid format?}
+    Validate -->|No| ShowError[Show validation error]
+    ShowError --> EnterEmail
+    Validate -->|Yes| CheckExists{Email exists?}
+    CheckExists -->|Yes| ShowExistsError[Show 'email already registered']
+    CheckExists -->|No| CreateAccount[Create account]
+    CreateAccount --> SendEmail[Send confirmation email]
+    SendEmail --> Login[User can log in]
+    Login --> Success([Account created])
+```
+
+#### 2. Data Model Relation Diagram
+
+Create a diagram showing all entities in the data model and their relationships.
+
+**Format**: Mermaid ER diagram (preferred)
+
+**Include**:
+- All entities from the Data Model section
+- Relationships between entities (one-to-one, one-to-many, many-to-many)
+- Key fields that establish relationships
+- Cardinality indicators
+
+**Example structure**:
+```mermaid
+erDiagram
+    User ||--o{ Session : has
+    User ||--o{ PasswordReset : requests
+    User {
+        uuid id PK
+        string email UK
+        string password_hash
+        boolean email_verified
+        enum status
+    }
+    Session {
+        uuid id PK
+        uuid user_id FK
+        string token UK
+        timestamp expires_at
+    }
+    PasswordReset {
+        uuid id PK
+        uuid user_id FK
+        string token UK
+        timestamp expires_at
+    }
+```
+
+#### 3. Third-Party Dependencies Diagram
+
+If the spec includes third-party dependencies, create a diagram showing how they relate to the project and each other.
+
+**Format**: Mermaid flowchart or graph
+
+**Include**:
+- Project components that use each dependency
+- Relationships between dependencies (if any)
+- Data flow to/from dependencies
+- Authentication/authorization flows if applicable
+
+**Example structure**:
+```mermaid
+graph LR
+    App[Application] --> SendGrid[SendGrid API]
+    App --> Database[(Database)]
+    SendGrid --> Email[Email Delivery]
+    App --> Auth[Auth Service]
+    Auth --> Database
+```
+
+#### 4. Dependencies Diagram
+
+Create a diagram showing project dependencies (internal dependencies, prerequisites, etc.) and how they relate.
+
+**Format**: Mermaid flowchart or graph
+
+**Include**:
+- Feature dependencies (what must exist before this feature)
+- Infrastructure dependencies (HTTPS, database, etc.)
+- Service dependencies (if feature depends on other services)
+- Dependency relationships (what depends on what)
+
+**Example structure**:
+```mermaid
+graph TD
+    Feature[This Feature] --> Auth[Authentication System]
+    Feature --> Database[(Database Schema)]
+    Feature --> HTTPS[HTTPS/TLS]
+    Auth --> Database
+    Auth --> TokenGen[Token Generation]
+```
+
+#### 5. Additional Flow Diagrams
+
+Create diagrams for any other flows, state transitions, or multi-concept relationships:
+
+- **State transition diagrams**: For entities with state machines (e.g., user status: active → locked → inactive)
+- **Process flow diagrams**: For multi-step processes (e.g., password reset flow)
+- **Concept relationship diagrams**: For complex relationships between concepts (e.g., user roles and permissions)
+
+**Guidelines for Diagram Creation**:
+
+1. **Use Mermaid syntax** for all diagrams (preferred standard)
+2. **Use ASCII diagrams** only for very simple cases (2-3 nodes)
+3. **Make diagrams comprehensive**: Include all relevant paths, not just happy paths
+4. **Label clearly**: Use descriptive node names and relationship labels
+5. **Show error paths**: Include what happens when things fail
+6. **Keep diagrams readable**: If a diagram becomes too complex, split into multiple diagrams
+
+**Where to place diagrams in spec**:
+- User Journey Flowcharts: After each user story section
+- Data Model Relation Diagram: In the Data Model section
+- Third-Party Dependencies Diagram: In the Third-Party Dependencies section
+- Dependencies Diagram: In the Assumptions & Dependencies section
+- Additional diagrams: In relevant sections or a new "Diagrams" section
+
+**After generating diagrams**:
+- Verify all diagrams render correctly in Mermaid
+- Ensure diagrams match the written specification
+- Update specification text if diagrams reveal inconsistencies
+
+### Step 4: Validate Against agents.md
 
 Load `.cursor/agents.md` and validate the spec:
 
@@ -137,7 +282,7 @@ If any validation fails:
 3. Re-validate (max 3 iterations)
 4. If still failing, document issues and warn user
 
-### Step 4: Interactive Clarification (Max 5 Questions)
+### Step 5: Interactive Clarification (Max 5 Questions)
 
 **ONLY if critical ambiguities remain** after initial generation.
 
@@ -236,7 +381,7 @@ Question 1: User Authentication
 Reply with A/B/C, "yes" for recommendation, or provide alternative (≤5 words).
 ```
 
-### Step 5: Final Validation
+### Step 6: Final Validation
 
 After clarification (or if none needed), perform final validation:
 
@@ -254,7 +399,7 @@ After clarification (or if none needed), perform final validation:
 
 If any items fail, report them clearly and suggest next steps.
 
-### Step 6: Report Completion
+### Step 7: Report Completion
 
 Display summary:
 

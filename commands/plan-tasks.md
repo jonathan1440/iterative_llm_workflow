@@ -78,15 +78,27 @@ Create a task breakdown that:
    - Phase 5: User Story 3 (P3)
    - Phase N: Polish & Cross-Cutting
 
-2. **Makes each story independently testable**
+2. **Breaks implementation into smallest possible pieces** (CRITICAL)
+   - Each task should implement a single unit of work
+   - If a goal requires multiple functions, each function should be a separate task
+   - If a goal requires multiple files, break into tasks per file
+   - Smaller tasks increase AI accuracy and make progress clearer
+   - Example: Instead of "Create User model with all methods", break into:
+     - Task 1: Create User model file with class structure
+     - Task 2: Add create() method
+     - Task 3: Add findByEmail() method
+     - Task 4: Add updateFailedLoginCount() method
+     - Task 5: Add lockAccount() method
+
+3. **Makes each story independently testable**
    - What test proves this story works?
    - Can I test without other stories complete?
 
-3. **Identifies parallelizable work**
+4. **Identifies parallelizable work**
    - Which tasks touch different files?
    - Which tasks have no dependencies?
 
-4. **Defines MVP scope**
+5. **Defines MVP scope**
    - Usually just User Story 1
    - What's minimum to validate core value?
 
@@ -144,6 +156,99 @@ The script will:
 ### Step 4: Populate Tasks with Detailed, Self-Contained Format
 
 **CRITICAL**: Tasks must be self-contained and detailed enough to be implemented without loading other tasks. This enables `/do-task` to work effectively (one task at a time).
+
+**For each task in the outline, create a detailed implementation plan:**
+
+#### 4.1. Plan Precisely How to Implement (with Diagrams)
+
+For each task, create a detailed implementation plan that includes:
+
+1. **Implementation approach**: Step-by-step plan for how to implement the code
+2. **Diagrams**: Create diagrams to illustrate:
+   - Relationships between state changes (if applicable)
+   - Object relationships (if creating/modifying data structures)
+   - Concept relationships (if implementing business logic)
+   - Dependencies (what this task depends on and what depends on it)
+   - Data flow (how data moves through the implementation)
+
+**Diagram Guidelines**:
+- Use Mermaid syntax (preferred) or ASCII for simple cases
+- Focus on relationships that help understand the implementation
+- Include state transitions if the task involves state changes
+- Show data flow if the task processes or transforms data
+- Illustrate object relationships if creating/modifying data structures
+
+**Example task planning with diagram**:
+```markdown
+- [ ] T017 [US1] Create User.create() method in src/models/user.js
+
+  **Implementation Plan**:
+  
+  1. Define method signature: create(userData: {email: string, password: string}): Promise<User>
+  2. Validate email format using regex
+  3. Check if email already exists (call findByEmail)
+  4. Hash password using bcrypt (cost 10)
+  5. Create user record in database
+  6. Return user object (without password_hash)
+  
+  **Implementation Flow Diagram**:
+  ```mermaid
+  flowchart TD
+      Start([create called]) --> ValidateEmail[Validate email format]
+      ValidateEmail -->|Invalid| ThrowError[Throw ValidationError]
+      ValidateEmail -->|Valid| CheckExists[Check if email exists]
+      CheckExists -->|Exists| ThrowExistsError[Throw DatabaseError 409]
+      CheckExists -->|Not exists| HashPassword[Hash password with bcrypt]
+      HashPassword --> SaveDB[Save to database]
+      SaveDB -->|Success| ReturnUser[Return user object]
+      SaveDB -->|Error| ThrowDBError[Throw DatabaseError]
+      ReturnUser --> End([Complete])
+  ```
+  
+  **Object Relationships**:
+  ```mermaid
+  graph LR
+      UserData[userData input] --> Validation[Validation Layer]
+      Validation --> HashedData[Hashed User Data]
+      HashedData --> Database[(Database)]
+      Database --> UserObject[User Object]
+      UserObject --> Response[Response]
+  ```
+```
+
+#### 4.2. Predict Edge Cases and Plan Tests
+
+For each task, predict edge cases and plan comprehensive tests:
+
+1. **Edge cases to consider**:
+   - Invalid inputs (null, undefined, wrong types, empty strings)
+   - Boundary conditions (max length, min values, empty arrays)
+   - Error conditions (database failures, network timeouts, permission errors)
+   - Concurrent operations (race conditions, duplicate requests)
+   - State transitions (invalid state changes, edge state values)
+
+2. **Test plan**:
+   - Positive test cases (happy path)
+   - Negative test cases (all edge cases and errors)
+   - Integration test cases (how this interacts with dependencies)
+   - Performance test cases (if applicable)
+
+**Example edge case prediction**:
+```markdown
+**Edge Cases**:
+- Email validation: null, undefined, empty string, invalid format, SQL injection attempt
+- Password: null, undefined, empty string, too short, too long, special characters
+- Database: connection failure, duplicate key error, transaction rollback
+- Concurrent: two requests with same email at same time
+
+**Test Plan**:
+- Positive: Valid email and password creates user successfully
+- Negative: Invalid email throws ValidationError
+- Negative: Duplicate email throws DatabaseError (409)
+- Negative: Database connection failure throws DatabaseError
+- Integration: User.create() works with existing findByEmail() method
+- Integration: Created user can be retrieved with findByEmail()
+```
 
 **Before finalizing each task, verify:**
 

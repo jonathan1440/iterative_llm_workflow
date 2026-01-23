@@ -157,42 +157,164 @@ Load into context:
 
 ### Step 3: Implement the Task
 
-Implement ONLY this task:
+Follow this development cycle for implementing the task. Each step should be completed before moving to the next.
 
+#### 3.1. Plan Precisely How to Implement (with Diagrams)
+
+Review the task's implementation plan from tasks.md. If the task includes diagrams, use them as reference. If not, create diagrams to illustrate:
+
+- Relationships between state changes (if applicable)
+- Object relationships (if creating/modifying data structures)
+- Concept relationships (if implementing business logic)
+- Dependencies (what this task depends on and what depends on it)
+- Data flow (how data moves through the implementation)
+
+**Create or reference implementation diagrams**:
 ```markdown
-Based on the design document, implement T017: Create User model in src/models/user.js
+**Implementation Plan Review**:
+- Check tasks.md for existing implementation plan and diagrams
+- If diagrams exist, review them to understand relationships
+- If diagrams don't exist or are incomplete, create them now
+- Ensure diagrams show all relevant relationships and flows
 
-**Requirements**:
-1. Create src/models/user.js
-2. Define User class with all fields from design:
-   - id, email, password_hash, email_verified, status, failed_login_count, locked_until
-3. Implement all methods specified in design:
-   - create(), findByEmail(), updateFailedLoginCount(), lockAccount()
-4. Error handling per agents.md standard
-5. Input validation where appropriate
-6. JSDoc documentation for all public methods
-
-**Reference design for**:
-- Exact field types and constraints
-- Method signatures
-- Error handling patterns
-
-**Follow agents.md standards for**:
-- Code formatting
-- Error handling (never expose internal details)
-- Documentation requirements
-
-**Focus**: Complete THIS task only. Don't implement related tasks (T018, T019, etc.) even if they're similar.
+**Implementation Approach**:
+[Based on task description and diagrams, outline step-by-step approach]
 ```
 
-**AI should:**
-- Generate complete, working code for THIS task only
-- Follow design specifications exactly
-- Apply standards from agents.md
-- Add proper error handling
-- Include documentation
-- Create file with proper imports/exports
-- **NOT** implement other tasks, even if they seem related
+#### 3.2. Predict Edge Cases and Plan Tests
+
+Before writing any code, predict edge cases and create a comprehensive test plan:
+
+**Edge cases to consider**:
+- Invalid inputs (null, undefined, wrong types, empty strings)
+- Boundary conditions (max length, min values, empty arrays)
+- Error conditions (database failures, network timeouts, permission errors)
+- Concurrent operations (if applicable)
+- State transitions (if applicable)
+
+**Test plan**:
+- Positive test cases (happy path)
+- Negative test cases (all edge cases and errors)
+- Integration test cases (how this interacts with dependencies)
+
+```markdown
+**Edge Cases Identified**:
+[List all edge cases for this specific task]
+
+**Test Plan**:
+- Positive: [List happy path tests]
+- Negative: [List all edge case and error tests]
+- Integration: [List integration tests with dependencies]
+```
+
+#### 3.3. Write Tests
+
+Write tests for the code to be implemented. Tests should cover all cases identified in the test plan.
+
+**Important**: Write tests BEFORE writing the implementation code. This ensures:
+- Clear understanding of expected behavior
+- Tests verify the planned feature, not just make tests pass
+- Implementation focuses on the feature requirements
+
+```markdown
+**Writing Tests**:
+- Create/update test file for this task
+- Write tests for all positive cases
+- Write tests for all negative cases (edge cases, errors)
+- Write integration tests if applicable
+- Ensure tests are comprehensive and cover the test plan
+```
+
+#### 3.4. Write the Code
+
+Write code to implement the planned feature. Tests verify correctness, but don't drive the implementation. Avoid writing code just to pass tests.
+
+**Implementation Guidelines**:
+- Follow the implementation plan from step 3.1
+- Reference diagrams to understand relationships
+- Implement the feature as specified in the task
+- Make tests pass, but focus on implementing the feature correctly
+- Follow agents.md standards
+- Include proper error handling
+- Add documentation (JSDoc, comments)
+
+```markdown
+**Writing Implementation**:
+- Follow implementation plan step-by-step
+- Reference design document for specifications
+- Apply agents.md standards
+- Focus on implementing the feature correctly
+- Make tests pass as verification, not as the goal
+```
+
+#### 3.5. Run Tests
+
+Execute the tests to verify the implementation:
+
+```bash
+# Run tests for this task
+npm test -- [test-file-path]
+# Or run all tests if test file doesn't exist yet
+npm test
+```
+
+**Expected**: All tests should pass. If any tests fail, proceed to step 3.6.
+
+#### 3.6. Fix Errors and Re-run Tests
+
+If tests fail, fix the errors and re-run tests. Repeat until all tests pass.
+
+**Error fixing process**:
+1. Identify the failing test
+2. Revisit first-principles to understand why it's failing
+3. Fix the implementation (or if you think the test is incorrect, ask the user for help)
+4. Re-run tests
+5. Repeat until all tests pass
+6. After getting the same error 3+ times in a row, your approach isn't working. Take a step back and revisit first-principles.
+
+```markdown
+**Fixing Errors**:
+- Review test failures
+- Identify root cause
+- Fix implementation
+- Re-run tests
+- Continue until all tests pass
+```
+
+#### 3.7. Submit Generated Code to User Review
+
+After all tests pass, present the implementation to the user for review:
+
+```markdown
+## Implementation Complete
+
+**Task**: [Task ID and description]
+
+**Files Changed**:
+- [List of files created/modified]
+
+**Implementation Summary**:
+- [Brief summary of what was implemented]
+
+**Tests**:
+- [Number] tests written
+- [Number] tests passing
+- Coverage: [if applicable]
+
+**Code Review**:
+[Show the generated code]
+
+**Next Steps**:
+- Review the code above
+- If code looks good, user commits
+- If changes needed, specify what to fix
+```
+
+#### 3.8. User Commits if Code Looks Good
+
+After user review and approval, the user commits the code. The `/commit` command can be used to generate a meaningful commit message.
+
+**Focus**: Complete THIS task only. Don't implement related tasks (T018, T019, etc.) even if they're similar.
 
 ### Step 4: Verify Task Completion
 

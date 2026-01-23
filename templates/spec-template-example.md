@@ -28,6 +28,26 @@ As a property manager, I want to create my own account with email and password s
 - [ ] User can log in immediately after registration
 - [ ] Failed login shows clear error message without exposing security details
 
+**User Journey Flowchart:**
+
+```mermaid
+flowchart TD
+    Start([User wants to register]) --> EnterEmail[Enter email and password]
+    EnterEmail --> Validate{Valid format?}
+    Validate -->|No| ShowError[Show validation error]
+    ShowError --> EnterEmail
+    Validate -->|Yes| CheckExists{Email exists?}
+    CheckExists -->|Yes| ShowExistsError[Show 'email already registered']
+    ShowExistsError --> LoginLink[Offer login link]
+    CheckExists -->|No| CreateAccount[Create account]
+    CreateAccount --> HashPassword[Hash password]
+    HashPassword --> SaveUser[Save user to database]
+    SaveUser --> SendEmail[Send confirmation email]
+    SendEmail --> CreateSession[Create session]
+    CreateSession --> Login[User can log in]
+    Login --> Success([Account created and logged in])
+```
+
 ### P2 - Password Recovery
 
 As a property manager, I want to reset my password if I forget it so that I don't lose access to important tenant data.
@@ -112,11 +132,60 @@ PasswordReset
   - used_at: timestamp (nullable)
 ```
 
+**Data Model Relation Diagram:**
+
+```mermaid
+erDiagram
+    User ||--o{ Session : has
+    User ||--o{ PasswordReset : requests
+    User {
+        uuid id PK
+        string email UK
+        string password_hash
+        boolean email_verified
+        enum status
+        integer failed_login_count
+        timestamp locked_until
+        timestamp created_at
+        timestamp updated_at
+    }
+    Session {
+        uuid id PK
+        uuid user_id FK
+        string token UK
+        timestamp created_at
+        timestamp expires_at
+        timestamp last_activity_at
+        string ip_address
+        string user_agent
+    }
+    PasswordReset {
+        uuid id PK
+        uuid user_id FK
+        string token UK
+        timestamp created_at
+        timestamp expires_at
+        timestamp used_at
+    }
+```
+
 ## Third-Party Dependencies
 
 - **Email Service**: SendGrid or Amazon SES
   - Alternatives considered: Mailgun, Postmark
   - Decision rationale: SendGrid has free tier (100 emails/day), good deliverability
+
+**Third-Party Dependencies Diagram:**
+
+```mermaid
+graph LR
+    App[Application] --> SendGrid[SendGrid API]
+    App --> Database[(Database)]
+    SendGrid --> Email[Email Delivery]
+    App --> Auth[Auth Service]
+    Auth --> Database
+    Auth --> SendGrid
+```
 
 ## Constraints
 
@@ -179,6 +248,20 @@ PasswordReset
 - HTTPS/TLS certificates configured for all environments
 - Database schema supports user and session tables
 - Environment has capability to generate secure random tokens
+
+**Dependencies Diagram:**
+
+```mermaid
+graph TD
+    Feature[User Authentication Feature] --> Auth[Authentication System]
+    Feature --> Database[(Database Schema)]
+    Feature --> HTTPS[HTTPS/TLS]
+    Feature --> SendGrid[SendGrid API]
+    Auth --> Database
+    Auth --> TokenGen[Token Generation Service]
+    Auth --> SendGrid
+    HTTPS --> Certificates[TLS Certificates]
+```
 
 ## Open Questions
 

@@ -224,6 +224,114 @@ graph TD
 - Data consistency
 ```
 
+#### 1.1. Data Flow Diagrams
+
+Create data flow diagrams showing how data moves through the system for key operations.
+
+**Format**: Mermaid flowchart
+
+**Include**:
+- Data sources (user input, database, external APIs)
+- Processing steps (validation, transformation, business logic)
+- Data destinations (database, cache, external services, user)
+- Data transformations (what changes at each step)
+
+**Example**:
+```mermaid
+flowchart LR
+    UserInput[User Input] --> Validate[Validation Layer]
+    Validate --> Transform[Transform Data]
+    Transform --> BusinessLogic[Business Logic]
+    BusinessLogic --> Database[(Database)]
+    BusinessLogic --> Cache[(Cache)]
+    Database --> Response[Response Data]
+    Cache --> Response
+    Response --> UserOutput[User Output]
+```
+
+#### 1.2. Sequence Diagrams
+
+Create sequence diagrams for key API operations showing the interaction between components.
+
+**Format**: Mermaid sequence diagram
+
+**Include**:
+- Actors (user, external service)
+- Components (API, services, database)
+- Message flow (requests, responses, errors)
+- Timing considerations (async operations)
+
+**Example**:
+```mermaid
+sequenceDiagram
+    participant User
+    participant API
+    participant AuthService
+    participant Database
+    participant EmailService
+
+    User->>API: POST /auth/register
+    API->>API: Validate input
+    API->>AuthService: Create user
+    AuthService->>Database: Hash password
+    AuthService->>Database: Save user
+    Database-->>AuthService: User created
+    AuthService->>EmailService: Send confirmation
+    EmailService-->>AuthService: Email sent
+    AuthService-->>API: User + session
+    API-->>User: 201 Created
+```
+
+#### 1.3. State Transition Diagrams
+
+Create state transition diagrams for entities with state machines (user status, order status, etc.).
+
+**Format**: Mermaid state diagram
+
+**Include**:
+- All possible states
+- Valid transitions between states
+- Triggers for transitions (events, conditions)
+- Invalid transitions (what can't happen)
+
+**Example**:
+```mermaid
+stateDiagram-v2
+    [*] --> active: User registered
+    active --> locked: 5 failed logins
+    locked --> active: Lock expires
+    active --> inactive: Admin deactivates
+    inactive --> active: Admin reactivates
+    active --> [*]: Account deleted
+    locked --> [*]: Account deleted
+    inactive --> [*]: Account deleted
+```
+
+#### 1.4. Component Interaction Diagrams
+
+Create diagrams showing how components interact with each other for complex operations.
+
+**Format**: Mermaid flowchart or graph
+
+**Include**:
+- Component boundaries
+- Interaction patterns (synchronous, asynchronous, events)
+- Data flow between components
+- Error handling paths
+
+**Example**:
+```mermaid
+graph TD
+    Client[Client] -->|HTTP| API[API Gateway]
+    API -->|Auth| AuthService[Auth Service]
+    API -->|Business Logic| UserService[User Service]
+    UserService -->|Read/Write| Database[(Database)]
+    UserService -->|Cache| Redis[(Redis)]
+    UserService -->|Events| Queue[Message Queue]
+    Queue -->|Process| EmailService[Email Service]
+    EmailService -->|Send| SendGrid[SendGrid API]
+```
+
 #### 2. Database Schema
 
 ```markdown
